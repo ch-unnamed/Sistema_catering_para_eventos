@@ -4,25 +4,35 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using System.Web.Security; // Para autenticación basada en Forms Authentication
+using IUVendedor.Permisos;
+
 namespace IUVendedor.Controllers
 {
+    [Authorize] // Solo usuarios autenticados pueden acceder a este controlador
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
+            
             return View();
         }
 
-        public ActionResult About()
+        [PermisosRol(Models.Rol.Gerente, Models.Rol.Vendedor)]
+        public ActionResult Eventos()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        [PermisosRol(Models.Rol.Vendedor)]
+        public ActionResult Clientes()
         {
-            ViewBag.Message = "Your contact page.";
+            return View();
+        }
+
+        public ActionResult SinPermiso()
+        {
+            ViewBag.Message = "No tenes permisos.";
 
             return View();
         }
