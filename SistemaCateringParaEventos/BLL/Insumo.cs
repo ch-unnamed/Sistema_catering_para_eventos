@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BE
+namespace BLL
 {
-    public class Class1
+    internal class Insumo
     {
     }
 }
