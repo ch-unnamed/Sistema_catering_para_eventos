@@ -6,101 +6,83 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    // Puede acceder el Vendedor y el Gerente
+
     public class Evento
     {
-        private int _idEvento;
-        public int IdEvento
-        {
-            get { return _idEvento; }
-            set { _idEvento = value; }
-        }
+		private int _id;
 
-        private string _nombre;
-        public string Nombre
-        {
-            get { return _nombre; }
-            set { _nombre = value; }
-        }
+		public int Id
+		{
+			get { return _id; }
+			set { _id = value; }
+		}
 
-        private DateTime _fecha;
-        public DateTime Fecha
-        {
-            get { return _fecha; }
-            set { _fecha = value; }
-        }
+		private string _nombre;
 
-        private int _capacidad;
-        public int Capacidad
-        {
-            get { return _capacidad; }
-            set
-            {
-                if (value > 0)
-                {
-                    _capacidad = value;
-                }
-                else
-                {
-                    throw new ArgumentException("La capacidad debe ser mayor a 0.");
-                }
-            }
-        }
+		public string Nombre
+		{
+			get { return _nombre; }
+			set { _nombre = value; }
+		}
 
-        private string _tipo;
-        public string Tipo
-        {
-            get { return _tipo; }
-            set { _tipo = value; }
-        }
+		private DateTime _fechaDeCreacion;
 
-        private Ubicacion _ubicacionId;
+		public DateTime FechaDeCreacion
+		{
+			get { return _fechaDeCreacion; }
+			set { _fechaDeCreacion = value; }
+		}
 
-        public Ubicacion UbicacionId
-        {
-            get { return _ubicacionId; }
-            set { _ubicacionId = value; }
-        }
+		private string _estadoDelEvento;
 
-        private Usuario _vendedorId;
+		public string EstadoDelEvento
+		{
+			get { return _estadoDelEvento; }
+			set { _estadoDelEvento = value; }
+		}
 
-        public Usuario MyProperty
-        {
-            get { return _vendedorId; }
-            set { _vendedorId = value; }
-        }
+		private Cliente _cliente;
 
-        private Cliente _clienteId;
+		public Cliente Cliente
+		{
+			get { return _cliente; }
+			set { _cliente = value; }
+		}
 
-        public Cliente ClienteId
-        {
-            get { return _clienteId; }
-            set { _clienteId = value; }
-        }
+		private Menu _menu;
 
-        private EstadoEvento _estadoId;
+		public Menu Menu
+		{
+			get { return _menu; }
+			set { _menu = value; }
+		}
 
-        public EstadoEvento EstadoId
-        {
-            get { return _estadoId; }
-            set { _estadoId = value; }
-        }
+		private float _cotizacion;
 
-        private decimal _cotizacion;
-        public decimal Cotizacion
-        {
-            get { return _cotizacion; }
-            set
-            {
-                if (value >= 0)
-                {
-                    _cotizacion = value;
-                }
-                else
-                {
-                    throw new ArgumentException("La cotización no puede ser negativa.");
-                }
-            }
-        }
-    }
+		public float Cotizacion
+		{
+			get { return _cotizacion; }
+			set { _cotizacion = value; }
+		}
+
+		private string _region;
+
+		public string Region
+		{
+			get { return _region; }
+			set { _region = value; }
+		}
+
+		private string _notaAdicional;
+
+		public string NotaAdicional
+		{
+			get { return _notaAdicional; }
+			set { _notaAdicional = value; }
+		}
+
+
+
+	}
 }
+
