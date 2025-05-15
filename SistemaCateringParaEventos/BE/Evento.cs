@@ -9,6 +9,27 @@ namespace BE
 
     public class Evento
     {
+        private int _idEvento;
+        public int IdEvento
+        {
+            get { return _idEvento; }
+            set { _idEvento = value; }
+        }
+
+        private string _nombre;
+        public string Nombre
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
+        }
+
+        private DateTime _fecha;
+        public DateTime Fecha
+        {
+            get { return _fecha; }
+            set { _fecha = value; }
+        }
+
         private int _capacidad;
         public int Capacidad
         {
