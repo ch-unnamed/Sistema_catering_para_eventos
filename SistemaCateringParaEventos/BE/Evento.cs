@@ -9,80 +9,75 @@ namespace BE
 
     public class Evento
     {
-		private int _id;
+        private int _capacidad;
+        public int Capacidad
+        {
+            get { return _capacidad; }
+            set
+            {
+                if (value > 0)
+                {
+                    _capacidad = value;
+                }
+                else
+                {
+                    throw new ArgumentException("La capacidad debe ser mayor a 0.");
+                }
+            }
+        }
 
-		public int Id
-		{
-			get { return _id; }
-			set { _id = value; }
-		}
+        private string _tipo;
+        public string Tipo
+        {
+            get { return _tipo; }
+            set { _tipo = value; }
+        }
 
-		private string _nombre;
+        private Ubicacion _ubicacion;
+        public Ubicacion Ubicacion
+        {
+            get { return _ubicacion; }
+            set { _ubicacion = value; }
+        }
 
-		public string Nombre
-		{
-			get { return _nombre; }
-			set { _nombre = value; }
-		}
+        private Usuario _vendedor;
+        public Usuario Vendedor
+        {
+            get { return _vendedor; }
+            set { _vendedor = value; }
+        }
 
-		private DateTime _fechaDeCreacion;
+        private Cliente _cliente;
+        public Cliente Cliente
+        {
+            get { return _cliente; }
+            set { _cliente = value; }
+        }
 
-		public DateTime FechaDeCreacion
-		{
-			get { return _fechaDeCreacion; }
-			set { _fechaDeCreacion = value; }
-		}
+        private EstadoEvento _estado;
+        public EstadoEvento Estado
+        {
+            get { return _estado; }
+            set { _estado = value; }
+        }
 
-		private string _estadoDelEvento;
-
-		public string EstadoDelEvento
-		{
-			get { return _estadoDelEvento; }
-			set { _estadoDelEvento = value; }
-		}
-
-		private Cliente _cliente;
-
-		public Cliente Cliente
-		{
-			get { return _cliente; }
-			set { _cliente = value; }
-		}
-
-		private Menu _menu;
-
-		public Menu Menu
-		{
-			get { return _menu; }
-			set { _menu = value; }
-		}
-
-		private float _cotizacion;
-
-		public float Cotizacion
-		{
-			get { return _cotizacion; }
-			set { _cotizacion = value; }
-		}
-
-		private string _region;
-
-		public string Region
-		{
-			get { return _region; }
-			set { _region = value; }
-		}
-
-		private string _notaAdicional;
-
-		public string NotaAdicional
-		{
-			get { return _notaAdicional; }
-			set { _notaAdicional = value; }
-		}
+        private decimal _cotizacion;
+        public decimal Cotizacion
+        {
+            get { return _cotizacion; }
+            set
+            {
+                if (value >= 0)
+                {
+                    _cotizacion = value;
+                }
+                else
+                {
+                    throw new ArgumentException("La cotización no puede ser negativa.");
+                }
+            }
+        }
 
 
-
-	}
+    }
 }
-
