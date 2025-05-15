@@ -43,7 +43,7 @@
                             if (usuario.IdRol == Rol.Gerente || usuario.IdRol == Rol.Vendedor)
                             {
                                 <a class="nav-link" href="@Url.Action("Eventos", "Home")">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
                                     Eventos
                                 </a>
                             }
@@ -52,7 +52,7 @@
                             if (usuario.IdRol == Rol.Vendedor)
                             {
                                 <a class="nav-link" href="@Url.Action("Clientes", "Home")">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                     Clientes
                                 </a>
                             }
