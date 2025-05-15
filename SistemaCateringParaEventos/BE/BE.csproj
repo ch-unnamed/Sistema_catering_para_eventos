@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Insumo.cs" />
+    <Compile Include="Lote.cs" />
+    <Compile Include="Plato.cs" />
     <Compile Include="Cliente.cs" />
     <Compile Include="EstadoEvento.cs" />
     <Compile Include="Evento.cs" />
