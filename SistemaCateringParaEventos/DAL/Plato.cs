@@ -95,14 +95,14 @@ namespace DAL
             return filasAfectadas;
         }
 
-        public BE.Plato Buscar(int id)
+        public BE.Plato Buscar(string nombrePlato)
         {
             SqlParameter[] parametros = new SqlParameter[]
             {
-                objConexion.crearParametro("@id", id)
+        objConexion.crearParametro("@nombre", nombrePlato)
             };
 
-            DataTable dt = objConexion.LeerPorStoreProcedure("sp_Plato_BuscarPorId", parametros);
+            DataTable dt = objConexion.LeerPorStoreProcedure("sp_Plato_BuscarPorNombre", parametros);
 
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -119,7 +119,10 @@ namespace DAL
                 // Obtener los insumos con cantidades para este plato
                 plato.PlatoInsumos = new List<PlatoInsumo>();
 
-                DataTable dtInsumos = objConexion.LeerPorStoreProcedure("sp_PlatoInsumo_ObtenerPorPlato", parametros);
+                DataTable dtInsumos = objConexion.LeerPorStoreProcedure("sp_PlatoInsumo_ObtenerPorPlato", new SqlParameter[]
+                {
+            objConexion.crearParametro("@id", plato.Id)
+                });
 
                 foreach (DataRow insumoRow in dtInsumos.Rows)
                 {
@@ -143,6 +146,7 @@ namespace DAL
 
             return null;
         }
+
 
         public int Eliminar(BE.Plato plato)
         {
