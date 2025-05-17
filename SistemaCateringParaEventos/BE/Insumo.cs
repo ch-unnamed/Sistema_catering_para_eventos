@@ -10,10 +10,18 @@ namespace BE
     {
         private int _id;
 
-        public int id
+        public int Id
         {
             get { return _id; }
             set { _id = value; }
+        }
+
+        private string _nombre;
+
+        public string Nombre
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
         }
 
         private int _stockMinimo;
@@ -40,5 +48,21 @@ namespace BE
             set { _tipo = value; }
         }
 
+        private double _costo;
+
+        public double Costo
+        {
+            get { return _costo; }
+            set { _costo = value; }
+        }
+
+
+        private DateTime _fechaDeCreacion;
+
+        public DateTime FechaDeCreacion
+        {
+            get { return _fechaDeCreacion; }
+            set { _fechaDeCreacion = value; }
+        }
     }
 }

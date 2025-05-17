@@ -9,12 +9,12 @@ namespace BLL
     public class Plato
     {
         private readonly DAL.Plato objPlatoDAL;
-        // private readonly DAL.Insumo objInsumo;
+        private readonly DAL.Insumo objInsumoDAL;
 
         public Plato()
         {
             objPlatoDAL = new DAL.Plato();
-            //objInsumo = new DAL.Insumo();
+            objInsumoDAL = new DAL.Insumo();
         }
 
         public void CrearPlato(BE.Plato objPlato)
