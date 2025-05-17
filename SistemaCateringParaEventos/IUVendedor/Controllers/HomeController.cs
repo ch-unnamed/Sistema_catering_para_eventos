@@ -43,6 +43,24 @@ namespace IUVendedor.Controllers
             return Json(new {data = oLista}, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
         }
 
+        [HttpPost]
+        public JsonResult GuardarCliente(BE.Cliente oCliente)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            if(oCliente.IdCliente == 0)
+            {
+                resultado = new BLL.Cliente().CrearCliente(oCliente, out mensaje);
+            }
+            else
+            {
+                resultado = new BLL.Cliente().EditarCliente(oCliente, out mensaje);
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult SinPermiso()
         {
             ViewBag.Message = "No tenes permisos.";

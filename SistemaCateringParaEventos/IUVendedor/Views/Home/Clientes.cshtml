@@ -14,7 +14,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success">Crear Nuevo</button>
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
             </div>
         </div>
 
@@ -42,20 +42,84 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    @* Ocultar id para que solo se maneje con ajax *@
+                    <input type="text" id="id" value="0" />
+
+                    <div class="col-sm-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="apellido" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="dni" class="form-label">DNI</label>
+                        <input type="text" class="form-control" id="dni" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="tel" class="form-control" id="telefono" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="region" class="form-label">Region</label>
+                        <input type="text" class="form-control" id="region" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <select id="tipo" class="form-select">
+                            <option selected>Elija una opcion</option>
+                            <option value="1">Particular</option>
+                            <option value="2">Empresarial</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @* t0d0s los scripts son renderizados a layour, en la parte de RenderSection *@
 @section Scripts {
     <script>
-    var tabledata;
+        var tabledata;
+        var filaSeleccionada; // para acceder a, por ej, editar desde ver el contenido de fila y cambiar el valor de fila
 
-    jQuery.ajax({
-        url: '@Url.Action("ListarClientes", "Home")',
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            console.log(data)
-        }
-    })
 
         tabledata = $('#tabla').DataTable({ // convertir la tabla a dataTable de jquery en donde hay paginado, busqueda
             responsive: true, // para pantallas pequeñas
@@ -64,7 +128,7 @@
                 "url": '@Url.Action("ListarClientes", "Home")',
                 "type": "GET",
                 "datatype": "json"
-            },  
+            },
             "columns": [
                 { "data": "Dni" },
                 { "data": "Nombre" },
@@ -72,16 +136,139 @@
                 { "data": "Email" },
                 { "data": "Region" },
                 { "data": "Telefono" },
-                { "data": "Tipo" }, 
+                { "data": "Tipo" },
                 {
                     "data": null,
-                    "defaultContent": '<button class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></button>' +
+                    "defaultContent": '<button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
                         '<button class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash"></i></button>',
-                    "orderable": false, 
+                    "orderable": false,
                     "searchable": false
                 }
-            ]
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json',
+            }
         });
+
+        // Funcion para abrir el modal
+        function abrirModal(json) {
+
+            // Limpiar campos para que no queden datos de otras filas
+            $("#id").val(0);
+            $("#nombre").val("");
+            $("#apellido").val("");
+            $("#dni").val("");
+            $("#email").val("");
+            $("#region").val("");
+            $("#telefono").val("");
+            $("#tipo").val(""); // asignar segun el value
+
+
+            $("#msjError").hide(); 
+
+
+            if (json != null) { // entra aca si le da a editar, ya que habrian datos en la fila
+
+                // le damos el valor al campo especifico del json q obtuvimos con ajax anteriormente
+
+                $("#id").val(json.IdCliente);
+                $("#nombre").val(json.Nombre);
+                $("#apellido").val(json.Apellido);
+                $("#dni").val(json.Dni);
+                $("#email").val(json.Email);
+                $("#region").val(json.Region);
+                $("#telefono").val(json.Telefono);
+                $("#tipo").val(json.Tipo == 'Particular' ? 1 : 2); // asignar segun el value
+            }
+
+            $("#FormModal").modal("show");
+        }
+
+        // Funcionalidad de que al hacer click en editar se muestren los valores de la fila seleccionada
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+
+            filaSeleccionada = $(this).closest("tr");
+
+            console.log(tabledata.row(filaSeleccionada).data());
+
+            var data = tabledata.row(filaSeleccionada).data(); // los datos de la fila seleccionada
+
+            abrirModal(data);
+        });
+
+        // crear nuevo cliente
+        function guardar() {
+
+            // trabajamos de la misma forma que tabledata, se puede ver en la consola web
+            var Cliente = {
+                IdCliente: $("#id").val(),
+                Nombre: $("#nombre").val(),
+                Apellido: $("#apellido").val(),
+                Dni: $("#dni").val(),
+                Email: $("#email").val(),
+                Region: $("#region").val(),
+                Telefono: $("#telefono").val(),
+                Tipo: $("#tipo option:selected").text()
+
+            }
+            console.log("Cliente antes de enviar:", Cliente);
+            // usamos el metodo del controlador
+            $.ajax({
+                url: '@Url.Action("GuardarCliente", "Home")',
+                type: "POST",
+                data: JSON.stringify(Cliente),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+
+                success: function (data) { // el data es el json que retorna GuardarUsuario
+
+                    //debugger;
+
+                    if (Cliente.IdCliente == 0) {
+                        // se crea un usuario
+
+                        if (data.resultado != 0) {
+
+                            Cliente.IdCliente = data.resultado; // asignar el id al cliente
+
+                            tabledata.row.add(Cliente).draw(false); // agregar la fila a la tabla
+
+                            $("#FormModal").modal("hide");
+                        } else {
+                            $("#msjError").text(data.mensaje); 
+                            $("#msjError").show();
+                            return;
+                        }
+                       
+                    } else {
+                        // se edita un usuario
+                        if (data.resultado) {
+                            // se edito correctamente
+                            tabledata.row(filaSeleccionada).data(Cliente).draw(false);
+                            filaSeleccionada = null;
+
+                            $("#FormModal").modal("hide");
+                        } else {
+                            $("#msjError").text(data.mensaje);
+                            $("#msjError").show();
+                            return;
+                        }
+
+                        tabledata.row(filaSeleccionada).data(Cliente).draw(false); // agregar la fila a la tabla
+                        $("#FormModal").modal("hide");
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+                    // se puede mostrar un loader o algo, ya que es lo que se ejecuta antes de la llamada ajax
+                }
+            });
+
+            
+        }
+
 
     </script>
 }
