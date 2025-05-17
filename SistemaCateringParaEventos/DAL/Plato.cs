@@ -151,7 +151,7 @@ namespace DAL
             // Primero elimino relaciones en la tabla intermedia
             SqlParameter[] parametrosEliminarRelacion = new SqlParameter[]
             {
-                objConexion.crearParametro("@plato_id", plato.id)
+                objConexion.crearParametro("@plato_id", plato.Id)
             };
             objConexion.EscribirPorStoreProcedure("sp_PlatoInsumo_EliminarPorPlato", parametrosEliminarRelacion);
 

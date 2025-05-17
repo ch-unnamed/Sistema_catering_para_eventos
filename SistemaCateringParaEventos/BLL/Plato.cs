@@ -35,7 +35,7 @@ namespace BLL
 
         }
 
-        public BE.Plato BuscarPlato(string NombrePlato)
+        public BE.Plato BuscarPlato(int NombrePlato)
         {
             BE.Plato PlatoEncontrado = objPlatoDAL.Buscar(NombrePlato);
             return PlatoEncontrado;
