@@ -15,7 +15,8 @@ namespace IUVendedor.Data
             return new List<Usuario>()
             {
                 new Usuario{Nombre = "Sasha", Correo = "gerente01@gmail.com", Clave = "123", IdRol = Rol.Gerente},
-                new Usuario{Nombre = "Matias", Correo = "vendedor01@gmail.com", Clave = "456", IdRol = Rol.Vendedor}
+                new Usuario{Nombre = "Matias", Correo = "vendedor01@gmail.com", Clave = "456", IdRol = Rol.Vendedor},
+                new Usuario {Nombre = "Anabela", Correo = "chef01@gmail.com", Clave = "111", IdRol = Rol.Chef}
             };
         }
         public Usuario ValidarUsuario(string _correo, string _clave)

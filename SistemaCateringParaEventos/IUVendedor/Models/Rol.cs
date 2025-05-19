@@ -8,6 +8,7 @@ namespace IUVendedor.Models
 	public enum Rol
 	{
 		Vendedor = 1,
-		Gerente = 2
+		Gerente = 2,
+		Chef = 3
 	}
 }

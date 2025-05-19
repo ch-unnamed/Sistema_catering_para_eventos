@@ -17,7 +17,6 @@ namespace IUVendedor.Controllers
     {
         public ActionResult Index()
         {
-            
             return View();
         }
 
@@ -59,6 +58,11 @@ namespace IUVendedor.Controllers
             }
 
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Insumos()
+        {
+            return View();
         }
 
         public ActionResult SinPermiso()
