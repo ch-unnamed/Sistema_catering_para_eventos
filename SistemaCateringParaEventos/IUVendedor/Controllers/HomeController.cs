@@ -60,6 +60,17 @@ namespace IUVendedor.Controllers
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult EliminarCliente(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new BLL.Cliente().EliminarCliente(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Insumos()
         {
             return View();
