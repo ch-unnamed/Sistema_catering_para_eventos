@@ -1,33 +1,49 @@
-﻿@{
+﻿@using IUVendedor.Models
+@{
     ViewBag.Title = "Home Page";
+    var usuario = Session["usuario"] as Usuario;
 }
 
 <main>
+    @if (usuario != null)
+    {
+        <section class="row" aria-labelledby="bienvenida">
+            <h2>Bienvenido, @usuario.Nombre!</h2>
+            <p class="lead">Has iniciado sesión como <strong>@usuario.Email</strong>.</p>
+            <p>Tu rol es: <strong>@usuario.Rol_id</strong></p>
+        </section>
+    }
+    else
+    {
+        <section class="row" aria-labelledby="noSesion">
+            <h2>No has iniciado sesión</h2>
+            <p class="lead">Por favor, <a href="@Url.Action("Index", "Acceso")">inicia sesión</a> para continuar.</p>
+        </section>
+    }
+
+    <hr />
+
     <section class="row" aria-labelledby="aspnetTitle">
         <h1 id="title">ASP.NET INDEXX</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+        <p class="lead">ASP.NET es un framework gratuito para crear excelentes sitios web y aplicaciones web usando HTML, CSS y JavaScript.</p>
+        <p><a href="https://asp.net" class="btn btn-primary btn-md">Aprende más &raquo;</a></p>
     </section>
 
     <div class="row">
         <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            <h2 id="gettingStartedTitle">Primeros pasos</h2>
+            <p>ASP.NET MVC te da una forma poderosa y basada en patrones para construir sitios dinámicos con una separación clara de responsabilidades.</p>
+            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Aprende más &raquo;</a></p>
         </section>
         <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+            <h2 id="librariesTitle">Obtén más librerías</h2>
+            <p>NuGet es una extensión gratuita de Visual Studio que facilita agregar, quitar y actualizar librerías y herramientas.</p>
+            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Aprende más &raquo;</a></p>
         </section>
         <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+            <h2 id="hostingTitle">Hospedaje web</h2>
+            <p>Puedes encontrar fácilmente una empresa de hosting que ofrezca la combinación adecuada de características y precio.</p>
+            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Aprende más &raquo;</a></p>
         </section>
     </div>
 </main>

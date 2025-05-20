@@ -20,7 +20,7 @@ namespace IUVendedor.Permisos
     {
         var usuario = HttpContext.Current.Session["Usuario"] as Usuario; //obtener el usuario desde la sesion actual
             
-        if (usuario == null || !rolesPermitidos.Contains(usuario.IdRol)) // no va a pasar pero es para preveer
+        if (usuario == null || !rolesPermitidos.Contains(usuario.Rol_id)) // no va a pasar pero es para preveer
         {
             filterContext.Result = new RedirectResult("~/Home/SinPermiso");
         }

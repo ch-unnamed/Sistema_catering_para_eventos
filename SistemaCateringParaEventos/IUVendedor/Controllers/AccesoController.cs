@@ -14,42 +14,38 @@ namespace IUVendedor.Controllers
 {
     public class AccesoController : Controller
     {
-        // GET: Acceso
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Index(Usuario _usuario)
         {
-            
             DA_Logica _da_usuario = new DA_Logica();
+            var usuario = _da_usuario.ValidarUsuario(_usuario.Email, _usuario.PasswordHash);
 
-            var usuario = _da_usuario.ValidarUsuario(_usuario.Correo, _usuario.Clave);
-
-            // Si encuentra un usuario lo redirijo a su dashboard correspondinete
             if (usuario != null)
             {
-                // Crear la cookie de autenticación
-                FormsAuthentication.SetAuthCookie(usuario.Correo, false);
-
+                FormsAuthentication.SetAuthCookie(usuario.Email, false);
                 Session["usuario"] = usuario;
-
                 return RedirectToAction("Index", "Home");
             }
             else
             {
+                ViewBag.Error = "Correo o contraseña incorrectos.";
                 return View();
             }
         }
 
         public ActionResult Salir()
         {
-            FormsAuthentication.SignOut(); // Cierra la sesión del usuario
-            Session["usuario"] = null;
-
-            return RedirectToAction("Index", "Acceso");
+            Session["Usuario"] = null;
+            return RedirectToAction("Index", "Acceso"); 
         }
+
+
     }
 }
