@@ -8,3 +8,364 @@
     <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
     <li class="breadcrumb-item active">Insumos</li>
 </ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-box"></i> Lista de Insumos
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear nuevo Insumo</button>
+                <button type="button" class="btn btn-success" onclick="abrirModalNuevoLote(null)">Agregar nuevo Lote</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Unidades</th>
+                    <th>Ver lotes</th> <!-- TODO agregar opcion para ver lotes del respectivo insumo -->
+                </tr>
+            </thead>
+            <tbody>
+                @* AJAX *@
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Insumo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    <div class="col-sm-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="cantidad" class="form-label">Cantidad</label>
+                        <input type="number" class="form-control" id="cantidad" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <input type="text" class="form-control" id="tipo" autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal Nuevo Lote -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Lote</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    <div class="col-sm-6">
+                        <label for="nombre" class="form-label">Cantidad</label>
+                        <input type="text" class="form-control" id="Cantidad" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="codigoLote" class="form-label">Costo unitario</label>
+                        <input type="number" class="form-control" id="codigoLote" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="fechaVencimiento" class="form-label">Fecha de ingreso</label>
+                        <input type="date" class="form-control" id="fechaIngreso" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="fechaVencimiento" class="form-label">Fecha de vencimiento</label>
+                        <input type="date" class="form-control" id="fechaVencimiento" autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* t0d0s los scripts son renderizados a layout, en la parte de RenderSection *@
+<!--@section Scripts {
+    <script>
+        var tabledata;
+        var filaSeleccionada; // para acceder a, por ej, editar desde ver el contenido de fila y cambiar el valor de fila
+
+        tabledata = $('#tabla').DataTable({ // convertir la tabla a dataTable de jquery en donde hay paginado, busqueda
+            responsive: true, // para pantallas pequeñas
+            ordening: false, // para que no ordene por defecto
+            "ajax": {
+                "url": '@Url.Action("ListarInsumos", "Home")',
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "Id" },
+                { "data": "Nombre" },
+                { "data": "StockMinimo" },
+                { "data": "Tipo" },
+                { "data": "Costo" },
+                { "data": "FechaDeCreacion" },
+                {
+                    "data": "Lotes",
+                    "render": function (data, type, row) {
+                        if (!data || data.length === 0) return 'Sin lotes';
+
+                        // Opción simple: mostrar solo los códigos
+                        // return data.map(l => l.Codigo || l.Id).join(', ');
+
+                        // Opción más completa con fecha de vencimiento (requiere propiedad FechaVencimiento en tu BE)
+                        return '<ul>' + data.map(l => `<li>${l.Codigo} - vence: ${new Date(l.FechaVencimiento).toLocaleDateString()}</li>`).join('') + '</ul>';
+                    }
+                },
+
+                {
+                    "data": null,
+                    "defaultContent": '<button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
+                    "orderable": false,
+                    "searchable": false
+                }
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json',
+            }
+        });
+
+        // Funcion para abrir el modal
+        function abrirModal(json) {
+
+            // Limpiar campos para que no queden datos de otras filas
+            $("#id").val(0);
+            $("#nombre").val("");
+            $("#stockMinimo").val("");
+            $("#tipo").val("");
+            $("#costo").val("");
+            $("#fechaDeCreacion").val("");
+
+            $("#msjError").hide();
+
+
+            if (json != null) { // entra aca si le da a editar, ya que habrian datos en la fila
+
+                // le damos el valor al campo especifico del json q obtuvimos con ajax anteriormente
+
+                $("#id").val(json.Id);
+                $("#nombre").val(json.Nombre);
+                $("#stockMinimo").val(json.StockMinimo);
+                $("#tipo").val(json.Tipo);
+                $("#costo").val(json.Costo);
+                $("#fechaDeCreacion").val(json.FechaDeCreacion);
+            }
+
+            $("#FormModal").modal("show");
+        }
+
+        function abrirModalLote() {
+            // Limpiar campos
+            $("#codigoLote").val("");
+            $("#cantidadLote").val("");
+            $("#fechaVencimientoLote").val("");
+
+            $("#msjErrorLote").addClass("d-none");
+
+            $("#ModalLote").modal("show");
+        }
+
+        function guardarLote() {
+            const lote = {
+                CodigoLote: $("#codigoLote").val(),
+                Cantidad: $("#cantidadLote").val(),
+                FechaVencimiento: $("#fechaVencimientoLote").val()
+            };
+
+            if (!lote.Codigo || !lote.Cantidad || !lote.FechaVencimiento) {
+                $("#msjErrorLote").text("Todos los campos son obligatorios").removeClass("d-none");
+                return;
+            }
+
+            console.log("Lote cargado:", lote);
+
+            $("#ModalLote").modal("hide");
+        }
+
+
+        // Funcionalidad de que al hacer click en editar se muestren los valores de la fila seleccionada
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+
+            filaSeleccionada = $(this).closest("tr");
+
+            var data = tabledata.row(filaSeleccionada).data(); // los datos de la fila seleccionada
+
+            console.log(tabledata.row(filaSeleccionada).data());
+
+            abrirModal(data);
+        });
+
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+
+            var insumoSeleccionado = $(this).closest("tr");
+
+            var data = tabledata.row(insumoSeleccionado).data(); // los datos de la fila seleccionada
+
+            console.log(data);
+
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Queres Eliminar el Insumo?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+                function () {
+                    // Accion que realiza si se presiona que se quiere eliminar
+                    $.ajax({
+                        url: '@Url.Action("EliminarInsumo", "Home")',
+                        type: "POST",
+                        data: JSON.stringify({ id: data.Id }),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+
+                        success: function (data) { // este data es el json que retorna EliminarInsumo
+
+                            //debugger;
+
+                            if (data.resultado) {
+                                tabledata.row(insumoSeleccionado).remove().draw(false);
+                            } else {
+                                swal("No se pudo eliminar", data.mensaje, "error");
+                                return;
+                            }
+                        },
+                        error: function (error) {
+                            $("#msjError").text("Error Ajax");
+                            console.log(error)
+                        }
+                    });
+                });
+
+        });
+
+        function guardar() {
+
+            // trabajamos de la misma forma que tabledata, se puede ver en la consola web
+            var Insumo = {
+                Id: $("#id").val(),
+                Nombre: $("#nombre").val(),
+                StockMinimo: $("stockMinimo").val(),
+                Tipo: $("#tipo").val(),
+                Costo: $("#costo").val(),
+                FechaDeCreacion: $("#fechaDeCreacion").val()
+            }
+            console.log("Insumo antes de enviar:", Insumo);
+            // usamos el metodo del controlador
+            $.ajax({
+                url: '@Url.Action("GuardarInsumo", "Home")',
+                type: "POST",
+                data: JSON.stringify(Insumo),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+
+                success: function (data) { // el data es el json que retorna GuardarInsumo
+
+                    //debugger;
+
+                    if (Insumo.Id == 0) {
+                        // se crea un insumo
+
+                        if (data.resultado != 0) {
+
+                            Insumo.Id = data.resultado; // asignar el id al insumo
+
+                            tabledata.row.add(Insumo).draw(false); // agregar la fila a la tabla
+
+                            $("#FormModal").modal("hide");
+                        } else {
+                            $("#msjError").text(data.mensaje);
+                            $("#msjError").show();
+                            return;
+                        }
+
+                    } else {
+                        // se edita un insumo
+                        if (data.resultado) {
+                            // se edito correctamente
+                            tabledata.row(filaSeleccionada).data(Insumo).draw(false);
+                            filaSeleccionada = null;
+
+                            $("#FormModal").modal("hide");
+                        } else {
+                            $("#msjError").text(data.mensaje);
+                            $("#msjError").show();
+                            return;
+                        }
+
+                        $("#FormModal").modal("hide");
+                    }
+                },
+                error: function (error) {
+                    $("#msjError").text("Error Ajax");
+                    console.log(error)
+                },
+                beforeSend: function () {
+                    // se puede mostrar un loader o algo, ya que es lo que se ejecuta antes de la llamada ajax
+                }
+            });
+        }
+    </script>
+}-->
