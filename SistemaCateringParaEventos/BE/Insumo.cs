@@ -24,22 +24,6 @@ namespace BE
             set { _nombre = value; }
         }
 
-        private int _stockMinimo;
-
-        public int StockMinimo
-        {
-            get { return _stockMinimo; }
-            set { _stockMinimo = value; }
-        }
-
-        private List<Lote> _lotes;
-
-        public List<Lote> Lotes
-        {
-            get { return Lotes; }
-            set { Lotes = value; }
-        }
-
         private string _tipo;
 
         public string Tipo
@@ -48,21 +32,39 @@ namespace BE
             set { _tipo = value; }
         }
 
-        private double _costo;
+        private decimal _unidades; //TODO se podrian sumar las unidades de LOTES (ver dps)
 
-        public double Costo
+        public decimal Unidades
         {
-            get { return _costo; }
-            set { _costo = value; }
+            get { return _unidades; }
+            set { _unidades = value; }
         }
 
+        // este lo quitaria, no me acuerdo como funcionaba pero creo que esta de más
+        private int _stockMinimo;
 
+        public int StockMinimo
+        {
+            get { return _stockMinimo; }
+            set { _stockMinimo = value; }
+        }
+
+        // este para mi va dentro de LOTES, seria la "fecha de ingreso" del respectivo lote
         private DateTime _fechaDeCreacion;
 
         public DateTime FechaDeCreacion
         {
             get { return _fechaDeCreacion; }
             set { _fechaDeCreacion = value; }
+        }
+
+        // dentro de LOTES tmb
+        private double _costo;
+
+        public double Costo
+        {
+            get { return _costo; }
+            set { _costo = value; }
         }
     }
 }

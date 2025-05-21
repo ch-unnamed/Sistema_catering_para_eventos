@@ -8,12 +8,29 @@ namespace BE
 {
     public class Lote
     {
+
         private int _codigo;
 
         public int Codigo
         {
             get { return _codigo; }
             set { _codigo = value; }
+        }
+
+        private decimal _cantidad;
+
+        public decimal Cantidad
+        {
+            get { return _cantidad; }
+            set { _cantidad = value; }
+        }
+
+        private DateTime _fechaDeIngreso;
+
+        public DateTime FechaDeIngreso
+        {
+            get { return _fechaDeIngreso; }
+            set { _fechaDeIngreso = value; }
         }
 
         private DateTime _fechaDeVencimiento;
@@ -24,13 +41,20 @@ namespace BE
             set { _fechaDeVencimiento = value; }
         }
 
-        private int _cantidad;
+        private decimal _costoUnitario;
 
-        public int Cantidad
+        public decimal CostoUnitario
         {
-            get { return _cantidad; }
-            set { _cantidad = value; }
+            get { return _costoUnitario; }
+            set { _costoUnitario = value; }
         }
 
+        private bool _estado;
+
+        public bool  Estado
+        {
+            get { return _estado; }
+            set { _estado = value; }
+        }
     }
 }
