@@ -29,8 +29,6 @@ namespace BLL
             }
 
 
-
-            objInsumo.FechaDeCreacion = DateTime.Now;
             objInsumoDAL.Insertar(objInsumo);
         }
 

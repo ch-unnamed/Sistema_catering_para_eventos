@@ -32,9 +32,9 @@ namespace BE
             set { _tipo = value; }
         }
 
-        private decimal _unidades; //TODO se podrian sumar las unidades de LOTES (ver dps)
+        private int _unidades; //TODO se podrian sumar las unidades de LOTES (ver dps)
 
-        public decimal Unidades
+        public int Unidades
         {
             get { return _unidades; }
             set { _unidades = value; }
@@ -47,15 +47,6 @@ namespace BE
         {
             get { return _stockMinimo; }
             set { _stockMinimo = value; }
-        }
-
-        // este para mi va dentro de LOTES, seria la "fecha de ingreso" del respectivo lote
-        private DateTime _fechaDeCreacion;
-
-        public DateTime FechaDeCreacion
-        {
-            get { return _fechaDeCreacion; }
-            set { _fechaDeCreacion = value; }
         }
 
         // dentro de LOTES tmb

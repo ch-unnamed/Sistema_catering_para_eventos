@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 
 using IUVendedor.Models;
-using IUVendedor.Models.Data;
+using IUVendedor.Data;
 using System.Web.Security;  // Para manejar la autenticación con Forms Authentication
 using System.Security.Principal; // Para obtener información del usuario autenticado
 
@@ -24,6 +24,8 @@ namespace IUVendedor.Controllers
         [AllowAnonymous]
         public ActionResult Index(Usuario _usuario)
         {
+            System.Diagnostics.Debug.WriteLine($"Intento login con Email: {_usuario.Email} / Password: {_usuario.PasswordHash}");
+
             DA_Logica _da_usuario = new DA_Logica();
             var usuario = _da_usuario.ValidarUsuario(_usuario.Email, _usuario.PasswordHash);
 
@@ -42,7 +44,7 @@ namespace IUVendedor.Controllers
 
         public ActionResult Salir()
         {
-            Session["Usuario"] = null;
+            Session["usuario"] = null;
             return RedirectToAction("Index", "Acceso"); 
         }
 

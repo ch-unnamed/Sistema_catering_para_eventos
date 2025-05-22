@@ -55,17 +55,20 @@
 
                     <div class="col-sm-6">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                        <input type="text" class="form-control" id="nombre" autocomplete="off" required>
+                        <div id="NombreError" class="alert alert-danger" role="alert">Error en el nombre ingresado</div>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="cantidad" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidad" autocomplete="off">
+                        <input type="number" class="form-control" id="cantidad" autocomplete="off" required>
+                        <div id="CantidadError" class="alert alert-danger" role="alert">Error en la cantidad ingresada</div>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="tipo" class="form-label">Tipo</label>
-                        <input type="text" class="form-control" id="tipo" autocomplete="off">
+                        <input type="text" class="form-control" id="tipo" autocomplete="off" required>
+                        <div id="TipoError" class="alert alert-danger" role="alert">Error en el tipo ingresado</div>
                     </div>
 
                 </div>
@@ -73,7 +76,7 @@
                 <div class="row mt-2">
                     <div class="col-12">
                         <div id="msjError" class="alert alert-danger" role="alert">
-                            A simple danger alert—check it out!
+                            Error en los datos ingresados
                         </div>
                     </div>
                 </div>
@@ -87,8 +90,8 @@
     </div>
 </div>
 
-    <!-- Modal Nuevo Lote -->
-<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<!-- Modal Nuevo Lote -->
+<div class="modal fade" id="FormModalLote" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
@@ -100,30 +103,34 @@
 
                     <div class="col-sm-6">
                         <label for="nombre" class="form-label">Cantidad</label>
-                        <input type="text" class="form-control" id="Cantidad" autocomplete="off">
+                        <input type="text" class="form-control" id="Cantidad" autocomplete="off" required>
+                        <div id="CantidadLoteError" class="alert alert-danger" role="alert">Error en la cantidad ingresada</div>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="codigoLote" class="form-label">Costo unitario</label>
-                        <input type="number" class="form-control" id="codigoLote" autocomplete="off">
+                        <input type="number" class="form-control" id="codigoLote" autocomplete="off" required>
+                        <div id="CostoError" class="alert alert-danger" role="alert">Error en el costo </div>
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="fechaVencimiento" class="form-label">Fecha de ingreso</label>
-                        <input type="date" class="form-control" id="fechaIngreso" autocomplete="off">
+                        <label for="fechaIngreso" class="form-label">Fecha de ingreso</label>
+                        <input type="date" class="form-control" id="fechaIngreso" autocomplete="off" required>
+                        <div id="FechaIngresoError" class="alert alert-danger" role="alert">Error en la fecha ingresada</div>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="fechaVencimiento" class="form-label">Fecha de vencimiento</label>
-                        <input type="date" class="form-control" id="fechaVencimiento" autocomplete="off">
+                        <input type="date" class="form-control" id="fechaVencimiento" autocomplete="off" required>
+                        <div id="FechaVencimientoError" class="alert alert-danger" role="alert">Error en la fecha</div>
                     </div>
 
                 </div>
 
                 <div class="row mt-2">
                     <div class="col-12">
-                        <div id="msjError" class="alert alert-danger" role="alert">
-                            A simple danger alert—check it out!
+                        <div id="msjErrorLote" class="alert alert-danger" role="alert">
+                            Error en los datos ingresados
                         </div>
                     </div>
                 </div>
@@ -213,7 +220,7 @@
             $("#FormModal").modal("show");
         }
 
-        function abrirModalLote() {
+        function abrirModalNuevoLote() {
             // Limpiar campos
             $("#codigoLote").val("");
             $("#cantidadLote").val("");
@@ -221,7 +228,7 @@
 
             $("#msjErrorLote").addClass("d-none");
 
-            $("#ModalLote").modal("show");
+            $("#FormModalLote").modal("show");
         }
 
         function guardarLote() {

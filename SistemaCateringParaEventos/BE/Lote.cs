@@ -9,17 +9,17 @@ namespace BE
     public class Lote
     {
 
-        private int _codigo;
+        private int _id;
 
-        public int Codigo
+        public int id
         {
-            get { return _codigo; }
-            set { _codigo = value; }
+            get { return _id; }
+            set { _id = value; }
         }
 
-        private decimal _cantidad;
+        private int _cantidad;
 
-        public decimal Cantidad
+        public int Cantidad
         {
             get { return _cantidad; }
             set { _cantidad = value; }
@@ -39,14 +39,6 @@ namespace BE
         {
             get { return _fechaDeVencimiento; }
             set { _fechaDeVencimiento = value; }
-        }
-
-        private decimal _costoUnitario;
-
-        public decimal CostoUnitario
-        {
-            get { return _costoUnitario; }
-            set { _costoUnitario = value; }
         }
 
         private bool _estado;

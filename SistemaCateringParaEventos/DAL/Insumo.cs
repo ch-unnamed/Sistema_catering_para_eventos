@@ -15,8 +15,9 @@ namespace DAL
             {
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
                 conexion.crearParametro("@Tipo", objInsumo.Tipo),
+                conexion.crearParametro("@Unidades",objInsumo.Unidades),
                 conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
-                conexion.crearParametro("@FechaDeCreacion", objInsumo.FechaDeCreacion)
+                conexion.crearParametro("@Costo", objInsumo.Costo)
             };
 
             conexion.EscribirPorStoreProcedure("sp_InsertarInsumo", parametros);
@@ -26,10 +27,11 @@ namespace DAL
         {
             var parametros = new SqlParameter[]
             {
-                conexion.crearParametro("@Id", objInsumo.Id),
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
                 conexion.crearParametro("@Tipo", objInsumo.Tipo),
-                conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo)
+                conexion.crearParametro("@Unidades",objInsumo.Unidades),
+                conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
+                conexion.crearParametro("@Costo", objInsumo.Costo)
             };
 
             conexion.EscribirPorStoreProcedure("sp_EditarInsumo", parametros);
@@ -64,7 +66,7 @@ namespace DAL
                 Nombre = row["Nombre"].ToString(),
                 Tipo = row["Tipo"].ToString(),
                 StockMinimo = Convert.ToInt32(row["StockMinimo"]),
-                FechaDeCreacion = Convert.ToDateTime(row["FechaDeCreacion"])
+                //FechaDeCreacion = Convert.ToDateTime(row["FechaDeCreacion"])
             };
         }
     }
