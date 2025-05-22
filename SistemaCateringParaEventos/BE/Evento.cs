@@ -23,13 +23,6 @@ namespace BE
             set { _nombre = value; }
         }
 
-        private DateTime _fecha;
-        public DateTime Fecha
-        {
-            get { return _fecha; }
-            set { _fecha = value; }
-        }
-
         private int _capacidad;
         public int Capacidad
         {
@@ -60,45 +53,5 @@ namespace BE
             get { return _ubicacion; }
             set { _ubicacion = value; }
         }
-
-        private Usuario _vendedor;
-        public Usuario Vendedor
-        {
-            get { return _vendedor; }
-            set { _vendedor = value; }
-        }
-
-        private Cliente _cliente;
-        public Cliente Cliente
-        {
-            get { return _cliente; }
-            set { _cliente = value; }
-        }
-
-        private EstadoEvento _estado;
-        public EstadoEvento Estado
-        {
-            get { return _estado; }
-            set { _estado = value; }
-        }
-
-        private decimal _cotizacion;
-        public decimal Cotizacion
-        {
-            get { return _cotizacion; }
-            set
-            {
-                if (value >= 0)
-                {
-                    _cotizacion = value;
-                }
-                else
-                {
-                    throw new ArgumentException("La cotización no puede ser negativa.");
-                }
-            }
-        }
-
-
     }
 }

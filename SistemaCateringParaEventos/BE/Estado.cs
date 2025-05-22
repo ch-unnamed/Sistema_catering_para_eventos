@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BE
 {   // Esta es una clase de una tabla intermedia
-    public class EstadoEvento
+    public class Estado
     {
         private int _idEstadoEvento;
         public int IdEstadoEvento

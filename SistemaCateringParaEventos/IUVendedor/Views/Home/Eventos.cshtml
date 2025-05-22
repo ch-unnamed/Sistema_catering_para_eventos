@@ -4,6 +4,296 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Eventos</h2>
+<ol class="breadcrumb mb-4 mt-2">
+    <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
+    <li class="breadcrumb-item active">Eventos</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-1"></i> Lista de Eventos
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+            </div>
+        </div>
 
-<p>Aca debe ir una lista de los Eventos</p>
+        <hr />
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Capacidad</th>
+                    <th>Tipo</th>
+                    <th>Ubicacion</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @* AJAX *@
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                     @* Luego ocultar id para que solo se maneje con ajax*@ 
+                    <input type="text" id="id" value="0" />
+
+                    <div class="col-sm-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="capacidad" class="form-label">Capacidad</label>
+                        <input type="text" class="form-control" id="capacidad" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="tipo" class="form-label">Tìpo</label>
+                        <input type="text" class="form-control" id="tipo" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="direccion" class="form-label">Direccion</label>
+                        <input type="text" class="form-control" id="direccion" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="ciudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="ciudad" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="pais" class="form-label">Pais</label>
+                        <input type="text" class="form-control" id="pais" autocomplete="off">
+                    </div>
+
+
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        var tabledata;
+        var filaSeleccionada;
+
+        tabledata = $('#tabla').DataTable({ // convertir la tabla a dataTable de jquery
+            responsive: true,
+            ordening: false,
+            "ajax": {
+                "url": '@Url.Action("ListarEventos", "Home")',
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                {"data": "Nombre"},
+                { "data": "Capacidad"},
+                { "data": "Tipo"},
+                {   // modifco visualmente para que el vendedor pueda ver todo el detalle de Evento + Ubicacion
+                    "data": "Ubicacion",
+                    "title": "Ubicación Completa",
+                    "render": function (data, type, row) {
+                        return row.Ubicacion.Direccion + ', ' + row.Ubicacion.Ciudad + ', ' + row.Ubicacion.Pais;
+                    }
+                },
+                {
+                    "data": null,
+                    "defaultContent": '<button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
+                    "ordenable": false,
+                    "searchable": false
+                }
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json',
+            }
+        });
+
+
+        //Abrir el modal para crear Evento
+        function abrirModal(json) {
+
+            $("#id").val(0);
+            $("#nombre").val("");
+            $("#capacidad").val("");
+            $("#tipo").val("");
+            $("#ubicacion").val("");
+
+            // por primera vez no mostrar error, ya que no estan los campos pero se van a completar
+            $("#msjError").hide();
+
+            // si el json contiene valores presiono editar
+            if (json != null) {
+                $("#id").val(json.IdEvento);
+                $("#nombre").val(json.Nombre);
+                $("#capacidad").val(json.Capacidad);
+                $("#tipo").val(json.Tipo);
+                $("#direccion").val(json.Ubicacion.Direccion);
+                $("#ciudad").val(json.Ubicacion.Ciudad);
+                $("#pais").val(json.Ubicacion.Pais);
+            }
+
+            $("#FormModal").modal("show");
+        }
+
+        // ver fila para editar
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            filaSeleccionada = $(this).closest("tr");
+
+            var data = tabledata.row(filaSeleccionada).data(); // los datos de la fila seleccionada
+
+            console.log(data);
+
+            abrirModal(data);
+        });
+
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+
+    var eventoSeleccionado = $(this).closest("tr");
+
+    var data = tabledata.row(eventoSeleccionado).data(); // los datos de la fila seleccionada
+
+    console.log(data);
+
+    swal({
+        title: "¿Esta Seguro?",
+        text: "¿Queres Eliminar el Evento?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-primary",
+        confirmButtonText: "Si",
+        cancelButtonText: "No",
+        closeOnConfirm: true
+    },
+        function () {
+            // Accion que realiza si se presiona que se quiere eliminar
+            $.ajax({
+                url: '@Url.Action("EliminarEvento", "Home")',
+                type: "POST",
+                data: JSON.stringify({ id: data.IdEvento }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+
+                success: function (data) { // este data es el json que retorna EliminarCliente
+
+                    //debugger;
+
+                    if (data.resultado) {
+                        tabledata.row(eventoSeleccionado).remove().draw(false);
+                    } else {
+                        swal("No se pudo eliminar", data.mensaje, "error");
+                        return;
+                    }
+                },
+                error: function (error) {
+                    $("#msjError").text("Error Ajax");
+                    console.log(error)
+                }
+            });
+        });
+
+});
+
+        // Funcionalidad de crear evento o editarlo
+        function guardar() {
+            var Evento = {
+                IdEvento: $("#id").val(),
+                Nombre: $("#nombre").val(),
+                Capacidad: $("#capacidad").val(),
+                Tipo: $("#tipo").val(),
+                Ubicacion: {
+                    Direccion: $("#direccion").val(),
+                    Ciudad: $("#ciudad").val(),
+                    Pais: $("#pais").val()
+                }
+            };
+            console.log("Evento antes de enviar:", Evento);
+
+            $.ajax({
+    url: '@Url.Action("GuardarEvento", "Home")',
+    type: "POST",
+    data: JSON.stringify(Evento),
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+
+    success: function (data) { // el data es el json que retorna GuardarUsuario
+
+        //debugger;
+
+        if (Evento.IdEvento == 0) {
+            // se crea un evento
+
+            if (data.resultado != 0) {
+
+                Evento.IdEvento = data.resultado; // asignar el id al cliente
+
+                tabledata.row.add(Evento).draw(false); // agregar la fila a la tabla
+
+                $("#FormModal").modal("hide");
+            } else {
+                $("#msjError").text(data.mensaje);
+                $("#msjError").show();
+                return;
+            }
+
+        } else {
+            // se edita un usuario
+            if (data.resultado) {
+                // se edito correctamente
+                tabledata.row(filaSeleccionada).data(Evento).draw(false);
+                filaSeleccionada = null;
+
+                $("#FormModal").modal("hide");
+            } else {
+                $("#msjError").text(data.mensaje);
+                $("#msjError").show();
+                return;
+            }
+
+            $("#FormModal").modal("hide");
+        }
+    },
+    error: function (error) {
+        $("#msjError").text("Error Ajax");
+        console.log(error)
+    },
+    beforeSend: function () {
+        // se puede mostrar un loader o algo, ya que es lo que se ejecuta antes de la llamada ajax
+    }
+});
+        }
+
+    </script>
+
+
+}
