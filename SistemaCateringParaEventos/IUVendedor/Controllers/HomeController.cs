@@ -132,6 +132,55 @@ namespace IUVendedor.Controllers
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        [HttpGet]
+        public JsonResult ListarInsumos()
+        {
+            List<BE.Insumo> oLista = new List<BE.Insumo>();
+
+            oLista = new BLL.Insumo().Listar();
+
+            var InsumosFormateados = oLista.Select(e => new
+            {
+                e.Id,
+                e.Nombre,
+                e.Unidades,
+                e.Tipo,
+                e.Costo,
+                e.StockMinimo,
+                e.LoteId
+            });
+
+            return Json(new { data = InsumosFormateados }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GuardarInsumo(BE.Insumo oInsumo)
+        {
+            string mensaje = string.Empty;
+            bool exito = true;
+
+            try
+            {
+                if (oInsumo.Id == 0)
+                {
+                    new BLL.Insumo().CrearInsumo(oInsumo);
+                    mensaje = "Insumo creado correctamente.";
+                }
+                else
+                {
+                    new BLL.Insumo().EditarInsumo(oInsumo);
+                    mensaje = "Insumo editado correctamente.";
+                }
+            }
+            catch (Exception ex)
+            {
+                exito = false;
+                mensaje = ex.Message;
+            }
+
+            return Json(new { resultado = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+
         public ActionResult Insumos()
         {
             return View();

@@ -15,7 +15,12 @@ namespace BLL
             objInsumoDAL = new DAL.Insumo();
         }
 
-        public void CrearPlato(BE.Insumo objInsumo)
+        public List<BE.Insumo> Listar()
+        {
+            DAL.Insumo InsumoDAL = new DAL.Insumo();
+            return InsumoDAL.ListarInsumos();
+        }
+        public void CrearInsumo(BE.Insumo objInsumo)
         {
             //validaciones
             if (string.IsNullOrEmpty(objInsumo.Nombre))
@@ -32,13 +37,13 @@ namespace BLL
             objInsumoDAL.Insertar(objInsumo);
         }
 
-        public void EditarPlato(BE.Insumo objInsumo)
+        public void EditarInsumo(BE.Insumo objInsumo)
         {
             objInsumoDAL.Editar(objInsumo);
 
         }
 
-        public BE.Insumo BuscarPlato(string NombreInsumo)
+        public BE.Insumo Buscar(string NombreInsumo)
         {
             BE.Insumo InsumoEncontrado = objInsumoDAL.Buscar(NombreInsumo);
             return InsumoEncontrado;

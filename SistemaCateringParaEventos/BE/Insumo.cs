@@ -57,5 +57,14 @@ namespace BE
             get { return _costo; }
             set { _costo = value; }
         }
+
+        private int _LoteId;
+
+        public int LoteId
+        {
+            get { return _LoteId; }
+            set { _LoteId = value; }
+        }
+
     }
 }

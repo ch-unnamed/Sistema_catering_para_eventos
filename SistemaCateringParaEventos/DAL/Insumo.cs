@@ -9,6 +9,33 @@ namespace DAL
     {
         private readonly Conexion conexion = new Conexion();
 
+        public List<BE.Insumo> ListarInsumos(string nombre = null, string tipo = null)
+        {
+            Conexion conexion = new Conexion();
+
+            List<BE.Insumo> Insumos = new List<BE.Insumo>();
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_Insumo");
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Insumo unInsumo = new BE.Insumo();
+
+                // tomar cada fila como se usa en el procedimiento almacenado
+
+                unInsumo.Id = Convert.ToInt32(fila["id"]);
+                unInsumo.Nombre = fila["nombre"].ToString();
+                unInsumo.Unidades = Convert.ToInt32(fila["unidad"]);
+                unInsumo.Tipo = fila["tipo"].ToString();
+                unInsumo.Costo = Convert.ToInt32(fila["costo"]);
+                unInsumo.StockMinimo = Convert.ToInt32(fila["stock_minimo"]);
+
+                Insumos.Add(unInsumo);
+            }
+
+            return Insumos;
+        }
+
         public void Insertar(BE.Insumo objInsumo)
         {
             var parametros = new SqlParameter[]
