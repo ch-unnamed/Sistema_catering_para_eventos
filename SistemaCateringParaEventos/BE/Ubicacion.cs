@@ -35,19 +35,5 @@ namespace BE
             get { return _pais; }
             set { _pais = value; }
         }
-
-        private decimal _latitud;
-        public decimal Latitud
-        {
-            get { return _latitud; }
-            set { _latitud = value; }
-        }
-
-        private decimal _longitud;
-        public decimal Longitud
-        {
-            get { return _longitud; }
-            set { _longitud = value; }
-        }
     }
 }

@@ -9,6 +9,7 @@ using IUVendedor.Permisos;
 
 using BE;
 using BLL;
+using System.Web.Helpers;
 
 namespace IUVendedor.Controllers
 {
@@ -19,6 +20,9 @@ namespace IUVendedor.Controllers
         {
             return View();
         }
+
+        //VENDEDOR (mati)
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         [PermisosRol(Models.Rol.Gerente, Models.Rol.Vendedor)]
         public ActionResult Eventos()
@@ -70,6 +74,63 @@ namespace IUVendedor.Controllers
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult ListarEventos()
+        {
+            List<BE.Evento> oLista = new List<BE.Evento>();
+
+            oLista = new BLL.Evento().Listar();
+
+            var eventosFormateados = oLista.Select(e => new
+            {
+                e.IdEvento,
+                e.Nombre,
+                e.Capacidad,
+                e.Tipo,
+                Ubicacion = new
+                {
+                    e.Ubicacion.Direccion,
+                    e.Ubicacion.Ciudad,
+                    e.Ubicacion.Pais
+                }
+            });
+
+            return Json(new { data = eventosFormateados }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GuardarEvento(BE.Evento oEvento)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            if(oEvento.IdEvento == 0)
+            {
+                resultado = new BLL.Evento().CrearEvento(oEvento, out mensaje);
+            } else
+            {
+                resultado = new BLL.Evento().EditarEvento(oEvento, out mensaje);
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EliminarEvento(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new BLL.Evento().EliminarEvento(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        // me va a servir para la cotizacion
+        //Fecha = e.Fecha.ToString("dd/MM/yyyy"), // Formato personalizado
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public ActionResult Insumos()
         {
