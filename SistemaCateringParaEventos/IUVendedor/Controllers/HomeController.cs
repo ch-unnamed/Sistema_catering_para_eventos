@@ -192,5 +192,11 @@ namespace IUVendedor.Controllers
 
             return View();
         }
+
+        [PermisosRol(Models.Rol.Gerente)]
+        public ActionResult Temporadas()
+        {
+            return View();
+        }
     }
 }
