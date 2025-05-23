@@ -25,9 +25,9 @@ namespace IUVendedor.Data
         //{
         //    return ListaUsuario().Where(item => item.Correo == _correo && item.Clave == _clave).FirstOrDefault();
         //}
-        public Usuario ValidarUsuario(string _correo, string _clave)
+        public IUVendedor.Models.Usuario ValidarUsuario(string _correo, string _clave)
         {
-            Usuario usuario = null;
+            IUVendedor.Models.Usuario usuario = null;
             Conexion conexion = new Conexion();
 
             SqlParameter[] parametros = new SqlParameter[]
@@ -41,7 +41,7 @@ namespace IUVendedor.Data
             if (tabla != null && tabla.Rows.Count > 0)
             {
                 DataRow row = tabla.Rows[0];
-                usuario = new Usuario()
+                usuario = new IUVendedor.Models.Usuario()
                 {
                     Nombre = row["nombre"].ToString(),
                     Apellido = row["apellido"].ToString(),
