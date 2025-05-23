@@ -442,7 +442,7 @@
     <Content Include="Views\Home\Insumos.cshtml" />
     <Content Include="Views\Home\Temporadas.cshtml" />
     <Content Include="Views\Home\Menus.cshtml" />
-    <Content Include="Views\Home\Usuarios .cshtml" />
+    <Content Include="Views\Home\Usuarios.cshtml" />
     <Content Include="Views\Home\ConfigurarSistema.cshtml" />
   </ItemGroup>
   <ItemGroup>
