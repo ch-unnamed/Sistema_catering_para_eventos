@@ -112,7 +112,7 @@ namespace DAL
             {
                 new SqlParameter("@IdEvento", idEvento),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
-                new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
+                new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
             };
 
             // Ejecupar el proc.almc
