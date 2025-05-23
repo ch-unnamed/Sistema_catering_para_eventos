@@ -211,5 +211,31 @@ namespace IUVendedor.Controllers
 
             return View();
         }
+
+        [PermisosRol(Models.Rol.Gerente)]
+        public ActionResult Temporadas()
+        {
+            return View();
+        }
+
+        [PermisosRol(Models.Rol.Administrador)]
+        public ActionResult Usuarios()
+        {
+            return View();
+        }
+        
+        [PermisosRol(Models.Rol.Administrador)]
+        public ActionResult ConfigurarSistema()
+        {
+            return View();
+        }
+
+        [PermisosRol(Models.Rol.Gerente, Models.Rol.Chef)]
+        public ActionResult Menus()
+        {
+            return View();
+        }
+
+
     }
 }

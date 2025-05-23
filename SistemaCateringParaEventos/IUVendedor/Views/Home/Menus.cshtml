@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "Menus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<ol class="breadcrumb mb-4 mt-2">
+    <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
+    <li class="breadcrumb-item active">Munús</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-1"></i> Lista de Menús
+    </div>
+    <div class="card-body">
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID_Menu</th>
+                    <th>Nombre</th>
+                    <th>Fecha de creación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Menú 1</td>
+                    <td>01/01/2025</td>
+                    <td class="d-flex justify-content-end">
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalPlatos">Platos</button>
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSugerirCambios">Sugerir Cambios</button>
+                        </div>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSugerirCambios" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Sugerir Cambios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    <div class="col-sm-6">
+                        <label for="nota" class="form-label">Nota</label>
+                        <textarea name="nota" rows="5" cols="50" placeholder="Escribe aquí..."></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="enviarSugerencia()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalPlatos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Platos del Menú</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="tablaPlatos" class="display table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre del Plato</th>
+                                        <th>Categoria</th>
+                                        <th>Cantidad en Menú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

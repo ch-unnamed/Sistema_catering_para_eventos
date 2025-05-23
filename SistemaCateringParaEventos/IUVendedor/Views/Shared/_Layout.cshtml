@@ -63,8 +63,45 @@
                             if (usuario.Rol_id == Rol.Chef)
                             {
                                 <a class="nav-link" href="@Url.Action("Insumos","Home")">
-                                  <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
                                     Insumos
+                                </a>
+                            }
+
+
+                            // Solo el Chef y el Gerente puede ver Menus
+                            if (usuario.Rol_id == Rol.Chef || usuario.Rol_id == Rol.Gerente)
+                            {
+                                <a class="nav-link" href="@Url.Action("Menus","Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
+                                    Menús
+                                </a>
+                            }
+
+                            // Solo el Gerente puede ver temporadas
+                            if (usuario.Rol_id == Rol.Gerente)
+                            {
+                                <a class="nav-link" href="@Url.Action("Temporadas","Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
+                                    Temporadas
+                                </a>
+                            }
+
+                            // Solo el Administrador puede ver usuarios
+                            if (usuario.Rol_id == Rol.Administrador)
+                            {
+                                <a class="nav-link" href="@Url.Action("Usuarios","Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
+                                    Usuarios
+                                </a>
+                            }
+
+                            // Solo el Administrador puede ver configurar sistema
+                            if (usuario.Rol_id == Rol.Administrador)
+                            {
+                                <a class="nav-link" href="@Url.Action("ConfigurarSistema","Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
+                                    Configurar Sistema
                                 </a>
                             }
                         }

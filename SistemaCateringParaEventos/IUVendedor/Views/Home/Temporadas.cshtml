@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Eventos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    <script src="~/Scripts/Temporada.js"></script>
+}
+
+<ol class="breadcrumb mb-4 mt-2">
+    <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
+    <li class="breadcrumb-item active">Temporadas</li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-1"></i> Lista de Temporadas
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTemporada">Comparar Temporadas</button>
+            </div>
+        </div>
+        <table id="tablaTemporada" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Fin</th>
+                    <th>Ventas</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalTemporada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title">Comparar Temporadas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label>Temporadas</label>
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="temporada1" placeholder="ID Temporada 1">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="temporada2" placeholder="ID Temporada 2">
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-sm-6">
+                        <div class="table-responsive">
+                            <table id="tablaDosTemporadas1" class="display table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Fecha de Inicio</th>
+                                        <th>Fecha de Fin</th>
+                                        <th>Ventas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="table-responsive">
+                            <table id="tablaDosTemporadas2" class="display table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Fecha de Inicio</th>
+                                        <th>Fecha de Fin</th>
+                                        <th>Ventas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="resultadoComparacion" class=""></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="compararVentas()">Comparar Ventas</button>
+                <button type="button" class="btn btn-primary" onclick="compararDuracion()">Comparar Duración</button>
+            </div>
+
+        </div>
+    </div>
+</div>

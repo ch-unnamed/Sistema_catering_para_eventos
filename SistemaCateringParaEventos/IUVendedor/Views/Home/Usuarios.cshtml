@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<ol class="breadcrumb mb-4 mt-2">
+    <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
+    <li class="breadcrumb-item active">Usuarios</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-1"></i> Lista de Usuarios
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearUsuario">Crear Usuario</button>
+            </div>
+        </div>
+
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Fecha de creación</th>
+                    <th>Rol</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCrearUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    <div class="col-sm-6">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="apellido" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="¨contraseña" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="contraseña" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="rol" class="form-label">Rol</label>
+                        <select id="rol" class="form-select">
+                            <option selected disabled></option>
+                            <option value="chef">Chef</option>
+                            <option value="vendedor">Vendedor</option>
+                            <option value="gerente">Gerente</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
