@@ -25,7 +25,7 @@ namespace DAL
 
                 unInsumo.Id = Convert.ToInt32(fila["id"]);
                 unInsumo.Nombre = fila["nombre"].ToString();
-                unInsumo.Unidades = Convert.ToInt32(fila["unidad"]);
+                unInsumo.Unidad = Convert.ToInt32(fila["unidad"]);
                 unInsumo.Tipo = fila["tipo"].ToString();
                 unInsumo.Costo = Convert.ToInt32(fila["costo"]);
                 unInsumo.StockMinimo = Convert.ToInt32(fila["stock_minimo"]);
@@ -42,7 +42,7 @@ namespace DAL
             {
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
                 conexion.crearParametro("@Tipo", objInsumo.Tipo),
-                conexion.crearParametro("@Unidades",objInsumo.Unidades),
+                conexion.crearParametro("@Unidades",objInsumo.Unidad),
                 conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
                 conexion.crearParametro("@Costo", objInsumo.Costo)
             };
@@ -56,7 +56,7 @@ namespace DAL
             {
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
                 conexion.crearParametro("@Tipo", objInsumo.Tipo),
-                conexion.crearParametro("@Unidades",objInsumo.Unidades),
+                conexion.crearParametro("@Unidades",objInsumo.Unidad),
                 conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
                 conexion.crearParametro("@Costo", objInsumo.Costo)
             };
