@@ -58,5 +58,10 @@ namespace DAL
 
         //    return eventos;
         //}
+
+        public void GenerarDescuento()
+        {
+            // Logica de generar descuento
+        }
     }
 }
