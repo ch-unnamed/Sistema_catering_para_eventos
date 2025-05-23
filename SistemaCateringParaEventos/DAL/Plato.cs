@@ -23,6 +23,8 @@ namespace DAL
             SqlParameter[] parametrosPlato = new SqlParameter[]
             {
                 objConexion.crearParametro("@nombre", plato.Nombre),
+                objConexion.crearParametro("@precio", (double)plato.Precio),
+                objConexion.crearParametro("@descripcion", plato.Descripcon),
                 objConexion.crearParametro("@fechaDeCreacion", plato.FechaDeCreacion),
                 objConexion.crearParametro("@categoria", plato.Categoria)
             };
@@ -63,6 +65,8 @@ namespace DAL
             {
                 objConexion.crearParametro("@id", plato.Id),
                 objConexion.crearParametro("@nombre", plato.Nombre),
+                objConexion.crearParametro("@precio", (double)plato.Precio),
+                objConexion.crearParametro("@descripcion", plato.Descripcon),
                 objConexion.crearParametro("@fechaDeCreacion", plato.FechaDeCreacion),
                 objConexion.crearParametro("@categoria", plato.Categoria)
             };
