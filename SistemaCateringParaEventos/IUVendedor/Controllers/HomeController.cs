@@ -130,7 +130,11 @@ namespace IUVendedor.Controllers
         // me va a servir para la cotizacion
         //Fecha = e.Fecha.ToString("dd/MM/yyyy"), // Formato personalizado
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////
+        public ActionResult Insumos()
+        {
+            return View();
+        }
 
         [HttpGet]
         public JsonResult ListarInsumos()
@@ -199,19 +203,12 @@ namespace IUVendedor.Controllers
             return Json(new { resultado = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-
-        public ActionResult Insumos()
+        public ActionResult Platos()
         {
             return View();
         }
 
-        public ActionResult SinPermiso()
-        {
-            ViewBag.Message = "No tenes permisos.";
-
-            return View();
-        }
-
+        //////////////////////////////////////////////////////////////////
         [PermisosRol(Models.Rol.Gerente)]
         public ActionResult Temporadas()
         {
@@ -236,6 +233,12 @@ namespace IUVendedor.Controllers
             return View();
         }
 
+        //////////////////////////////////////////////////////////////////
+        public ActionResult SinPermiso()
+        {
+            ViewBag.Message = "No tenes permisos.";
 
+            return View();
+        }
     }
 }
