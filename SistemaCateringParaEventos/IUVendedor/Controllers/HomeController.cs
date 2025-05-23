@@ -153,6 +153,25 @@ namespace IUVendedor.Controllers
             return Json(new { data = InsumosFormateados }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult EliminarInsumo(int Id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            try
+            {
+                respuesta = new BLL.Insumo().EliminarInsumo(Id);
+                mensaje = respuesta ? "Insumo eliminado correctamente." : "No se pudo eliminar el insumo.";
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error al eliminar el insumo: " + ex.Message;
+            }
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult GuardarInsumo(BE.Insumo oInsumo)
         {
             string mensaje = string.Empty;

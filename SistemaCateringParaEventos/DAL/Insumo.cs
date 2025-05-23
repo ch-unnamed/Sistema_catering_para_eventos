@@ -64,14 +64,14 @@ namespace DAL
             conexion.EscribirPorStoreProcedure("sp_EditarInsumo", parametros);
         }
 
-        public void Eliminar(BE.Insumo objInsumo)
+        public void Eliminar(int id)
         {
             var parametros = new SqlParameter[]
             {
-                conexion.crearParametro("@Id", objInsumo.Id)
+                conexion.crearParametro("@Id", id)
             };
 
-            conexion.EscribirPorStoreProcedure("sp_EliminarInsumo", parametros);
+            conexion.EscribirPorStoreProcedure("sp_Insumo_Eliminar", parametros);
         }
 
         public BE.Insumo Buscar(string nombreInsumo)

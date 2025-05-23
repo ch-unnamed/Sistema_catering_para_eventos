@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,9 +51,18 @@ namespace BLL
             return InsumoEncontrado;
         }
 
-        public void EliminarPlato(BE.Insumo objInsumo)
+        public bool EliminarInsumo(int id)
         {
-            objInsumoDAL.Eliminar(objInsumo);
+            try
+            {
+                objInsumoDAL.Eliminar(id);
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error SQL: " + ex.Message);
+                return false;
+            }
         }
 
     }

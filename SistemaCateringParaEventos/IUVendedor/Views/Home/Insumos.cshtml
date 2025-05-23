@@ -129,7 +129,7 @@
 
                     <div class="col-sm-6">
                         <label for="fechaIngreso" class="form-label">Fecha de ingreso</label>
-                        <input type="date" class="form-control" id="fechaIngresoLote" autocomplete="off" required
+                        <input type="date" class="form-control" id="fechaIngresoLote" autocomplete="off" /> required
                         <div id="FechaIngresoError" class="alert alert-danger" role="alert">Error en la fecha ingresada</div>
                     </div>
 
@@ -170,7 +170,7 @@
     ajax: {
         url: '@Url.Action("ListarInsumos", "Home")',
         type: "GET",
-        datatype: "json"
+        datatype: "json",
     },
     columns: [
         { data: "Id" },
@@ -198,29 +198,29 @@
     function abrirModal(json) {
 
     // Limpiar campos para que no queden datos de otras filas
-    $("#id").val(0);
-    $("#nombre").val("");
-    $("#stockMinimo").val("");
-    $("#tipo").val("");
-    $("#costo").val("");
-    $("#fechaDeCreacion").val("");
+        $("#id").val(0);
+        $("#nombre").val("");
+        $("#stockMinimo").val("");
+        $("#tipo").val("");
+        $("#costo").val("");
+        $("#fechaDeCreacion").val("");
 
-    $("#msjError").hide();
+        $("#msjError").hide();
 
 
-    if (json != null) { // entra aca si le da a editar, ya que habrian datos en la fila
+        if (json != null) { // entra aca si le da a editar, ya que habrian datos en la fila
 
     // le damos el valor al campo especifico del json q obtuvimos con ajax anteriormente
 
-    $("#id").val(json.Id);
-    $("#nombre").val(json.Nombre);
-    $("#stockMinimo").val(json.StockMinimo);
-    $("#tipo").val(json.Tipo);
-    $("#costo").val(json.Costo);
-    $("#fechaDeCreacion").val(json.FechaDeCreacion);
-    }
+            $("#id").val(json.Id);
+            $("#nombre").val(json.Nombre);
+            $("#stockMinimo").val(json.StockMinimo);
+            $("#tipo").val(json.Tipo);
+            $("#costo").val(json.Costo);
+            $("#fechaDeCreacion").val(json.FechaDeCreacion);
+            }
 
-    $("#FormModal").modal("show");
+            $("#FormModal").modal("show");
     }
 
     function abrirModalNuevoLote() {
@@ -253,7 +253,7 @@
 
 
     // Funcionalidad de que al hacer click en editar se muestren los valores de la fila seleccionada
-    $("#tabla tbody").on("click", '.btn-editar', function () {
+    $('#tablaInsumos tbody').on('click', '.btn-editar', function () {
 
     filaSeleccionada = $(this).closest("tr");
 
@@ -264,7 +264,7 @@
     abrirModal(data);
     });
 
-    $("#tabla tbody").on("click", '.btn-eliminar', function () {
+    $('#tablaInsumos tbody').on('click', '.btn-eliminar', function () {
 
     var insumoSeleccionado = $(this).closest("tr");
 
@@ -273,47 +273,40 @@
     console.log(data);
 
     swal({
-    title: "¿Esta Seguro?",
-    text: "¿Queres Eliminar el Insumo?",
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonClass: "btn-primary",
-    confirmButtonText: "Si",
-    cancelButtonText: "No",
-    closeOnConfirm: true
-    },
-    function () {
+        title: "¿Esta Seguro?",
+        text: "¿Queres Eliminar el Insumo?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn-primary",
+        confirmButtonText: "Si",
+        cancelButtonText: "No",
+        closeOnConfirm: true
+        },
+        function () {
+            console.log(data.Id);
     // Accion que realiza si se presiona que se quiere eliminar
-    $.ajax({
-    url: '@Url.Action("EliminarInsumo", "Home")',
-    type: "POST",
-    data: JSON.stringify({ id: data.Id }),
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
+        $.ajax({
+        url: '@Url.Action("EliminarInsumo", "Home")',
+        type: "POST", 
+        data: { Id: data.Id }, 
+        success: function (data) {
+            if (data.resultado) {
+                tabledata.row(insumoSeleccionado).remove().draw(false);
+            } else {
+                swal("No se pudo eliminar", data.mensaje, "error");
+            }
+        },
+        error: function (error) {
+            $("#msjError").text("Error Ajax");
+            console.log(error);
+            }
+        });
+   });
 
-    success: function (data) { // este data es el json que retorna EliminarInsumo
-
-    //debugger;
-
-    if (data.resultado) {
-    tabledata.row(insumoSeleccionado).remove().draw(false);
-    } else {
-    swal("No se pudo eliminar", data.mensaje, "error");
-    return;
-    }
-    },
-    error: function (error) {
-    $("#msjError").text("Error Ajax");
-    console.log(error)
-    }
-    });
-    });
-
-    });
+   });
 
     function guardar() {
 
-    // trabajamos de la misma forma que tabledata, se puede ver en la consola web
     var Insumo = {
     //Id: $("#id").val(),
     Nombre: $("#nombre").val(),

@@ -179,50 +179,50 @@
 
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
-    var eventoSeleccionado = $(this).closest("tr");
+        var eventoSeleccionado = $(this).closest("tr");
 
-    var data = tabledata.row(eventoSeleccionado).data(); // los datos de la fila seleccionada
+        var data = tabledata.row(eventoSeleccionado).data(); // los datos de la fila seleccionada
 
-    console.log(data);
+        console.log(data);
 
-    swal({
-        title: "¿Esta Seguro?",
-        text: "¿Queres Eliminar el Evento?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn-primary",
-        confirmButtonText: "Si",
-        cancelButtonText: "No",
-        closeOnConfirm: true
-    },
-        function () {
-            // Accion que realiza si se presiona que se quiere eliminar
-            $.ajax({
-                url: '@Url.Action("EliminarEvento", "Home")',
-                type: "POST",
-                data: JSON.stringify({ id: data.IdEvento }),
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
+        swal({
+            title: "¿Esta Seguro?",
+            text: "¿Queres Eliminar el Evento?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-primary",
+            confirmButtonText: "Si",
+            cancelButtonText: "No",
+            closeOnConfirm: true
+        },
+            function () {
+                // Accion que realiza si se presiona que se quiere eliminar
+                $.ajax({
+                    url: '@Url.Action("EliminarEvento", "Home")',
+                    type: "POST",
+                    data: { id: data.Id },
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
 
-                success: function (data) { // este data es el json que retorna EliminarCliente
+                    success: function (data) { // este data es el json que retorna EliminarCliente
 
                     //debugger;
 
-                    if (data.resultado) {
-                        tabledata.row(eventoSeleccionado).remove().draw(false);
-                    } else {
-                        swal("No se pudo eliminar", data.mensaje, "error");
-                        return;
+                        if (data.resultado) {
+                            tabledata.row(eventoSeleccionado).remove().draw(false);
+                        } else {
+                            swal("No se pudo eliminar", data.mensaje, "error");
+                            return;
+                        }
+                    },
+                    error: function (error) {
+                        $("#msjError").text("Error Ajax");
+                        console.log(error)
                     }
-                },
-                error: function (error) {
-                    $("#msjError").text("Error Ajax");
-                    console.log(error)
-                }
+                });
             });
-        });
 
-});
+    });
 
         // Funcionalidad de crear evento o editarlo
         function guardar() {
