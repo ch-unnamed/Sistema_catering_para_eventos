@@ -23,7 +23,16 @@ namespace BE
 			get { return _email; }
 			set { _email = value; }
 		}
-        
+
+		private string _passwordHash;
+
+		public string PasswordHash
+        {
+			get { return _passwordHash; }
+			set { _passwordHash = value; }
+		}
+
+
 		private DateTime _fechaCreacion;
         public DateTime FechaCreacion
         {
