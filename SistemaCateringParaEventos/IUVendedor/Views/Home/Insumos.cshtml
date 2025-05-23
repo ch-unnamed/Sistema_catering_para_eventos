@@ -62,8 +62,8 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="cantidad" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidad" autocomplete="off" required>
+                        <label for="cantidad" class="form-label">Unidades</label>
+                        <input type="number" class="form-control" id="Unidades" autocomplete="off" required>
                         <div id="CantidadError" class="alert alert-danger" role="alert">Error en la cantidad ingresada</div>
                     </div>
 
@@ -116,8 +116,8 @@
                 <div class="row g-2">
 
                     <div class="col-sm-6">
-                        <label for="nombre" class="form-label">Cantidad</label>
-                        <input type="text" class="form-control" id="Cantidad" autocomplete="off" required>
+                        <label for="nombre" class="form-label">Unidades</label>
+                        <input type="text" class="form-control" id="Unidades" autocomplete="off" required>
                         <div id="CantidadLoteError" class="alert alert-danger" role="alert">Error en la cantidad ingresada</div>
                     </div>
 
@@ -203,6 +203,7 @@
         $("#stockMinimo").val("");
         $("#tipo").val("");
         $("#costo").val("");
+        $("#Unidades").val("");
         $("#fechaDeCreacion").val("");
 
         $("#msjError").hide();
@@ -217,6 +218,7 @@
             $("#stockMinimo").val(json.StockMinimo);
             $("#tipo").val(json.Tipo);
             $("#costo").val(json.Costo);
+            $("#Unidades").val(json.Unidades);
             $("#fechaDeCreacion").val(json.FechaDeCreacion);
             }
 

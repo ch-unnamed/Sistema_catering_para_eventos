@@ -24,26 +24,39 @@
     <hr />
 
     <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET INDEXX</h1>
+        <h1 id="title">ASP.NET</h1>
         <p class="lead">ASP.NET es un framework gratuito para crear excelentes sitios web y aplicaciones web usando HTML, CSS y JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Aprende más &raquo;</a></p>
     </section>
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Primeros pasos</h2>
-            <p>ASP.NET MVC te da una forma poderosa y basada en patrones para construir sitios dinámicos con una separación clara de responsabilidades.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Aprende más &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Obtén más librerías</h2>
-            <p>NuGet es una extensión gratuita de Visual Studio que facilita agregar, quitar y actualizar librerías y herramientas.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Aprende más &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Hospedaje web</h2>
-            <p>Puedes encontrar fácilmente una empresa de hosting que ofrezca la combinación adecuada de características y precio.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Aprende más &raquo;</a></p>
-        </section>
+    <div class="">
+        @if (usuario.Rol_id == Rol.Chef)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-box"></i> BUZÓN DE SUGERENCIAS
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                    </div>
+
+                    <hr />
+
+                    <table id="tablaSugerencias" class="display cell-border" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>HORA</th>
+                                <th>NOMBRE DEL CHEF</th>
+                                <th>SUGERENCIA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @* AJAX *@
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        }
     </div>
 </main>
