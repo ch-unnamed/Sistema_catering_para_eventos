@@ -202,7 +202,7 @@
                 $.ajax({
                     url: '@Url.Action("EliminarEvento", "Home")',
                     type: "POST",
-                    data: { id: data.Id },
+                    data: JSON.stringify({ id: data.IdEvento }),
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
 
