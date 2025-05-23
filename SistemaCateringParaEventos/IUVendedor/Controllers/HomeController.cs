@@ -147,7 +147,7 @@ namespace IUVendedor.Controllers
             {
                 e.Id,
                 e.Nombre,
-                e.Unidades,
+                e.Unidad,
                 e.Tipo,
                 e.Costo,
                 e.StockMinimo,

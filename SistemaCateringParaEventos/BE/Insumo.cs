@@ -32,15 +32,14 @@ namespace BE
             set { _tipo = value; }
         }
 
-        private int _unidades; //TODO se podrian sumar las unidades de LOTES (ver dps)
+        private int _unidad; 
 
-        public int Unidades
+        public int Unidad
         {
-            get { return _unidades; }
-            set { _unidades = value; }
+            get { return _unidad; }
+            set { _unidad = value; }
         }
 
-        // este lo quitaria, no me acuerdo como funcionaba pero creo que esta de más
         private int _stockMinimo;
 
         public int StockMinimo
@@ -49,7 +48,6 @@ namespace BE
             set { _stockMinimo = value; }
         }
 
-        // dentro de LOTES tmb
         private double _costo;
 
         public double Costo
