@@ -56,7 +56,7 @@
     <Compile Include="Plato.cs" />
     <Compile Include="PlatoInsumo.cs" />
     <Compile Include="Rol.cs" />
-    <Compile Include="Tipo_CLiente.cs" />
+    <Compile Include="Tipo_Cliente.cs" />
     <Compile Include="Tipo_Evento.cs" />
     <Compile Include="Ubicacion.cs" />
     <Compile Include="Usuario.cs" />

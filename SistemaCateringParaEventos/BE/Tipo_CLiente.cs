@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    public class Tipo_CLiente
+    public class Tipo_Cliente
     {
 		private int _id_tipo_cliente;
 

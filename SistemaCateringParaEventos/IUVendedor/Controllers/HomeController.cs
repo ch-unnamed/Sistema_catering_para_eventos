@@ -10,6 +10,8 @@ using IUVendedor.Permisos;
 using BE;
 using BLL;
 using System.Web.Helpers;
+using DAL;
+using Newtonsoft.Json;
 
 namespace IUVendedor.Controllers
 {
@@ -43,7 +45,22 @@ namespace IUVendedor.Controllers
 
             oLista = new BLL.Cliente().Listar(); // Almacena los clientes de negocio
 
-            return Json(new {data = oLista}, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
+            var clientesFormateados = oLista.Select(e => new
+            {
+                e.IdCliente,
+                e.Dni,
+                e.Email,
+                e.Region,
+                e.Telefono,
+                e.Nombre,
+                e.Apellido,
+                Tipo_Cliente = new
+                {
+                    e.Tipo_Cliente.Nombre
+                }
+            });
+
+            return Json(new {data = clientesFormateados }, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
         }
 
         [HttpPost]
@@ -95,7 +112,7 @@ namespace IUVendedor.Controllers
                     e.Ubicacion.Pais
                 }
             });
-
+            
             return Json(new { data = eventosFormateados }, JsonRequestBehavior.AllowGet);
         }
 

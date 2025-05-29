@@ -22,16 +22,19 @@ namespace DAL
             {
                 BE.Cliente unCliente = new BE.Cliente();
 
-                unCliente.IdCliente = Convert.ToInt32(fila["id"]);
+                unCliente.IdCliente = Convert.ToInt32(fila["cliente_id"]);
                 unCliente.Dni = Convert.ToInt64(fila["dni"]);
                 unCliente.Email = fila["email"].ToString();
-                unCliente.FechaCreacion = Convert.ToDateTime(fila["fechaCreacion"]);
-                unCliente.Nombre = fila["nombre"].ToString();
-                unCliente.Apellido = fila["apellido"].ToString();
                 unCliente.Region = fila["region"].ToString();
                 unCliente.Telefono = Convert.ToInt64(fila["telefono"]);
-                unCliente.Tipo = fila["tipo"].ToString();
+                unCliente.Nombre = fila["nombre"].ToString();
+                unCliente.Apellido = fila["apellido"].ToString();
 
+                // Crear instancia de tipocliente para obtener el ID
+                BE.Tipo_Cliente tipo_cliente = new BE.Tipo_Cliente();
+                tipo_cliente.Id_Tipo_Cliente = Convert.ToInt32(fila["tipo_cliente_id"]);
+                tipo_cliente.Nombre = $"{fila["tipo_cliente_nombre"]}";
+                unCliente.Tipo_Cliente = tipo_cliente;
                 clientes.Add(unCliente);
             }
 
@@ -51,7 +54,6 @@ namespace DAL
                 new SqlParameter("@email", cliente.Email),
                 new SqlParameter("@region", cliente.Region),
                 new SqlParameter("@telefono", cliente.Telefono),
-                new SqlParameter("@tipo", cliente.Tipo),
                 new SqlParameter("@nombre", cliente.Nombre),
                 new SqlParameter("@apellido", cliente.Apellido),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
@@ -82,7 +84,6 @@ namespace DAL
                 new SqlParameter("@Email", cliente.Email),
                 new SqlParameter("@Region", cliente.Region),
                 new SqlParameter("@Telefono", cliente.Telefono),
-                new SqlParameter("@Tipo", cliente.Tipo),
                 new SqlParameter("@Nombre", cliente.Nombre),
                 new SqlParameter("@Apellido", cliente.Apellido),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },

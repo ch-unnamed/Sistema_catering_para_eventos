@@ -136,7 +136,13 @@
                 { "data": "Email" },
                 { "data": "Region" },
                 { "data": "Telefono" },
-                { "data": "Tipo" },
+                {   // modifco visualmente para que el vendedor pueda ver todo el detalle de Evento + Ubicacion
+                    "data": "Tipo_Cliente",
+                    "title": "Tipo",
+                    "render": function (data, type, row) {
+                        return row.Tipo_Cliente.Nombre;
+                    }
+                },
                 {
                     "data": null,
                     "defaultContent": '<button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +

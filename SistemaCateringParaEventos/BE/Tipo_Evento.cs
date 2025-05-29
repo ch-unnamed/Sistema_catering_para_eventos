@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    public class TipoEvento
+    public class Tipo_Evento
     {
 		private int _idTipoEvento;
 

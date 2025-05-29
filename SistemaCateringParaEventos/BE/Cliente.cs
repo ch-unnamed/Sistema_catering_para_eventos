@@ -63,20 +63,13 @@ namespace BE
             get { return _telefono; }
             set { _telefono = value; }
         }
-        // Si es un cliente personal, empresarial, etc.
-        private string _tipo;
-        public string Tipo
-        {
-            get { return _tipo; }
-            set { _tipo = value; }
-        }
 
-        private TipoCLiente _id_tipo_cliente;
+        private Tipo_Cliente _tipo_cliente;
 
-        public TipoCLiente Id_Tipo_Cliente
+        public Tipo_Cliente Tipo_Cliente
         {
-            get { return _id_tipo_cliente; }
-            set { _id_tipo_cliente = value; }
+            get { return _tipo_cliente; }
+            set { _tipo_cliente = value; }
         }
 
     }

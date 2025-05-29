@@ -38,10 +38,6 @@ namespace BLL
                 {
                 mensaje = "El teléfono debe contener entre 6 y 15 dígitos numéricos.";
             }
-            else if (string.IsNullOrEmpty(cliente.Tipo) || string.IsNullOrWhiteSpace(cliente.Tipo))
-            {
-                mensaje = "Debe seleccionar un tipo de Cliente.";
-            }
             else if (string.IsNullOrEmpty(cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Nombre))
             {
                 mensaje = "El nombre no puede estar vacío.";
@@ -84,10 +80,6 @@ namespace BLL
             else if (cliente.Telefono <= 0 || cliente.Telefono.ToString().Length < 6 || cliente.Telefono.ToString().Length > 15)
             {
                 mensaje = "El teléfono debe contener entre 6 y 15 dígitos numéricos.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Tipo) || string.IsNullOrWhiteSpace(cliente.Tipo))
-            {
-                mensaje = "Debe seleccionar un tipo de Cliente.";
             }
             else if (string.IsNullOrEmpty(cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Nombre))
             {
