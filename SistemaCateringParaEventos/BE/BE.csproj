@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Categoria_Temporada.cs" />
+    <Compile Include="Descuento.cs" />
+    <Compile Include="Descuento_Cotizacion.cs" />
+    <Compile Include="Geolocalizacion.cs" />
     <Compile Include="Temporada.cs" />
     <Compile Include="Cliente.cs" />
     <Compile Include="Cotizacion.cs" />
@@ -52,6 +56,8 @@
     <Compile Include="Plato.cs" />
     <Compile Include="PlatoInsumo.cs" />
     <Compile Include="Rol.cs" />
+    <Compile Include="Tipo_CLiente.cs" />
+    <Compile Include="Tipo_Evento.cs" />
     <Compile Include="Ubicacion.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
