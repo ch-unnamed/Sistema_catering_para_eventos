@@ -70,5 +70,14 @@ namespace BE
             get { return _tipo; }
             set { _tipo = value; }
         }
+
+        private TipoCLiente _id_tipo_cliente;
+
+        public TipoCLiente Id_Tipo_Cliente
+        {
+            get { return _id_tipo_cliente; }
+            set { _id_tipo_cliente = value; }
+        }
+
     }
 }

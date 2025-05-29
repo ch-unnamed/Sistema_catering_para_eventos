@@ -53,5 +53,28 @@ namespace BE
             get { return _ubicacion; }
             set { _ubicacion = value; }
         }
+
+        private Tipo_Evento _id_tipo_evento;
+
+        public Tipo_Evento IdTipo_Evento
+        {
+            get { return _id_tipo_evento; }
+            set { _id_tipo_evento = value; }
+        }
+
+        private Temporada _idTemporada;
+
+        public Temporada IdTemporada
+        {
+            get { return _idTemporada; }
+            set { _idTemporada = value; }
+        }
+
+        private DateTime _fecha;
+        public DateTime Fecha
+        {
+            get { return _fecha; }
+            set { _fecha = value; }
+        }
     }
 }
