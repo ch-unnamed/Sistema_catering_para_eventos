@@ -15,6 +15,14 @@ namespace BE
             set { _idUbicacion = value; }
         }
 
+        private Geolocalizacion _idGeolocalizacion;
+
+        public Geolocalizacion IdGeolocalizacion
+        {
+            get { return _idGeolocalizacion; }
+            set { _idGeolocalizacion = value; }
+        }
+
         private string _direccion;
         public string Direccion
         {

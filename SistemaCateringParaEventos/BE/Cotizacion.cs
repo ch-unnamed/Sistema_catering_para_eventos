@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    class Cotizacion
+    public class Cotizacion
     {
         private int _idCotizacion;
         public int IdCotizacion
@@ -44,6 +44,15 @@ namespace BE
             get { return _estado; }
             set { _estado = value; }
         }
+
+        private Menu _id_menu;
+
+        public Menu IdMenu
+        {
+            get { return _id_menu; }
+            set { _id_menu = value; }
+        }
+
 
         private DateTime _fechaPedido;
         public DateTime FechaPedido
