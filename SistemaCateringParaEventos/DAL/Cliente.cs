@@ -56,6 +56,7 @@ namespace DAL
                 new SqlParameter("@telefono", cliente.Telefono),
                 new SqlParameter("@nombre", cliente.Nombre),
                 new SqlParameter("@apellido", cliente.Apellido),
+                new SqlParameter("@tipo_cliente", cliente.Tipo_Cliente.Nombre),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
                 new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
@@ -79,13 +80,14 @@ namespace DAL
 
             SqlParameter[] parametrosSql = new SqlParameter[]
             {
-                new SqlParameter("@Id", cliente.IdCliente),
-                new SqlParameter("@DNI", cliente.Dni),
-                new SqlParameter("@Email", cliente.Email),
-                new SqlParameter("@Region", cliente.Region),
-                new SqlParameter("@Telefono", cliente.Telefono),
-                new SqlParameter("@Nombre", cliente.Nombre),
-                new SqlParameter("@Apellido", cliente.Apellido),
+                new SqlParameter("@id", cliente.IdCliente),
+                new SqlParameter("@dni", cliente.Dni),
+                new SqlParameter("@email", cliente.Email),
+                new SqlParameter("@region", cliente.Region),
+                new SqlParameter("@telefono", cliente.Telefono),
+                new SqlParameter("@nombre", cliente.Nombre),
+                new SqlParameter("@apellido", cliente.Apellido),
+                new SqlParameter("@tipo_cliente", cliente.Tipo_Cliente.Nombre),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
                 new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
             };

@@ -19,7 +19,7 @@ namespace BLL
         public int CrearCliente(BE.Cliente cliente, out string mensaje)
         {
             DAL.Cliente clienteDAL = new DAL.Cliente();
-            
+
             mensaje = string.Empty;
 
             if (cliente.Dni <= 0 || cliente.Dni.ToString().Length != 8)
@@ -35,7 +35,7 @@ namespace BLL
                 mensaje = "La región no puede estar vacía.";
             }
             else if (cliente.Telefono <= 0 || cliente.Telefono.ToString().Length < 6 || cliente.Telefono.ToString().Length > 15)
-                {
+            {
                 mensaje = "El teléfono debe contener entre 6 y 15 dígitos numéricos.";
             }
             else if (string.IsNullOrEmpty(cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Nombre))
@@ -46,17 +46,22 @@ namespace BLL
             {
                 mensaje = "El apellido no puede estar vacío.";
             }
-
-            if(string.IsNullOrEmpty(mensaje))
+            else if (string.IsNullOrEmpty(cliente.Tipo_Cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Tipo_Cliente.Nombre))
             {
-               // logica de mandar email
+                mensaje = "El tipo no puede estar vacio";
+            }
+
+            if (string.IsNullOrEmpty(mensaje))
+            {
+                // logica de mandar email
                 return clienteDAL.CrearCliente(cliente, out mensaje);
 
-            } else
+            }
+            else
             {
                 return 0;
             }
-                        
+
         }
 
         public bool EditarCliente(BE.Cliente cliente, out string mensaje)
@@ -89,7 +94,12 @@ namespace BLL
             {
                 mensaje = "El apellido no puede estar vacío.";
             }
-            
+
+            else if (string.IsNullOrEmpty(cliente.Tipo_Cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Tipo_Cliente.Nombre))
+            {
+                mensaje = "El tipo no puede estar vacio";
+            }
+
             if (string.IsNullOrEmpty(mensaje))
             {
                 return clienteDAL.EditarCliente(cliente, out mensaje);
@@ -98,7 +108,7 @@ namespace BLL
             {
                 return false;
             }
-            
+
         }
 
         public bool EliminarCliente(int idCliente, out string mensaje)

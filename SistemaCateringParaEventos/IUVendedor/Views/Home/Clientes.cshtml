@@ -88,9 +88,9 @@
 
                     <div class="col-sm-6">
                         <label for="tipo" class="form-label">Tipo</label>
-                        <select id="tipo" class="form-select">
+                        <select id="tipo_cliente" class="form-select">
                             <option selected>Elija una opcion</option>
-                            <option value="1">Particular</option>
+                            <option value="1">Personal</option>
                             <option value="2">Empresarial</option>
                         </select>
                     </div>
@@ -167,7 +167,7 @@
             $("#email").val("");
             $("#region").val("");
             $("#telefono").val("");
-            $("#tipo").val(""); // asignar segun el value
+            $("#tipo_cliente").val(""); // asignar segun el value
 
 
             $("#msjError").hide();
@@ -184,7 +184,7 @@
                 $("#email").val(json.Email);
                 $("#region").val(json.Region);
                 $("#telefono").val(json.Telefono);
-                $("#tipo").val(json.Tipo == 'Particular' ? 1 : 2); // asignar segun el value
+                $("#tipo_cliente").val(json.Tipo == 'Personal' ? 1 : 2); // asignar segun el value
             }
 
             $("#FormModal").modal("show");
@@ -261,9 +261,11 @@
                 Email: $("#email").val(),
                 Region: $("#region").val(),
                 Telefono: $("#telefono").val(),
-                Tipo: $("#tipo option:selected").text()
+                Tipo_Cliente: {
+                    Nombre: $("#tipo_cliente option:selected").text()
+                }
 
-            }
+            };
             console.log("Cliente antes de enviar:", Cliente);
             // usamos el metodo del controlador
             $.ajax({
