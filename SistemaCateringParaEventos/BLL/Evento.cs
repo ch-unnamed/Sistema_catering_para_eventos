@@ -12,7 +12,7 @@ namespace BLL
         {
             DAL.Evento eventoDAL = new DAL.Evento();
             return eventoDAL.Listar();
-        } // luego ir a controller para verificar que ande
+        } 
     
         public int CrearEvento(BE.Evento evento, out string mensaje)
         {
@@ -23,24 +23,30 @@ namespace BLL
             if (string.IsNullOrEmpty(evento.Nombre) || string.IsNullOrWhiteSpace(evento.Nombre))
             {
                 mensaje = "El evento debe tener un Nombre";
-            } else if (evento.Capacidad <= 0)
+            }
+            else if (evento.Capacidad <= 0)
             {
                 mensaje = "No puede existir un evento sin capacidad de personas";
-            } else if (string.IsNullOrEmpty(evento.Tipo) || string.IsNullOrWhiteSpace(evento.Tipo))
+            } 
+            else if (string.IsNullOrEmpty(evento.Tipo_Evento.Nombre) || string.IsNullOrWhiteSpace(evento.Tipo_Evento.Nombre))
             {
                 mensaje = "El evento debe tener un Tipo";
             }
-            else if (string.IsNullOrEmpty(evento.Ubicacion.Direccion) || string.IsNullOrWhiteSpace(evento.Ubicacion.Direccion))
+            else if (string.IsNullOrEmpty(evento.Ubicacion.Calle) || string.IsNullOrWhiteSpace(evento.Ubicacion.Calle))
             {
-                mensaje = "Debe agregar una Direccion";
+                mensaje = "Debe agregar una Calle";
+            }
+            else if (evento.Ubicacion.Altura <= 0)
+            {
+                mensaje = "Debe agregar una Altura";
             }
             else if (string.IsNullOrEmpty(evento.Ubicacion.Ciudad) || string.IsNullOrWhiteSpace(evento.Ubicacion.Ciudad))
             {
                 mensaje = "Debe agregar una Ciudad";
             }
-            else if (string.IsNullOrEmpty(evento.Ubicacion.Pais) || string.IsNullOrWhiteSpace(evento.Ubicacion.Pais))
+            else if (string.IsNullOrEmpty(evento.Ubicacion.Provincia) || string.IsNullOrWhiteSpace(evento.Ubicacion.Provincia))
             {
-                mensaje = "Debe agregar un Pais";
+                mensaje = "Debe agregar una Provincia";
             }
 
             if (string.IsNullOrEmpty(mensaje))
@@ -69,21 +75,25 @@ namespace BLL
             {
                 mensaje = "No puede existir un evento sin capacidad de personas";
             }
-            else if (string.IsNullOrEmpty(evento.Tipo) || string.IsNullOrWhiteSpace(evento.Tipo))
+            else if (string.IsNullOrEmpty(evento.Tipo_Evento.Nombre) || string.IsNullOrWhiteSpace(evento.Tipo_Evento.Nombre))
             {
                 mensaje = "El evento debe tener un Tipo";
             }
-            else if (string.IsNullOrEmpty(evento.Ubicacion.Direccion) || string.IsNullOrWhiteSpace(evento.Ubicacion.Direccion))
+            else if (string.IsNullOrEmpty(evento.Ubicacion.Calle) || string.IsNullOrWhiteSpace(evento.Ubicacion.Calle))
             {
-                mensaje = "Debe agregar una Direccion";
+                mensaje = "Debe agregar una Calle";
+            }
+            else if (evento.Ubicacion.Altura <= 0)
+            {
+                mensaje = "Debe agregar una Altura";
             }
             else if (string.IsNullOrEmpty(evento.Ubicacion.Ciudad) || string.IsNullOrWhiteSpace(evento.Ubicacion.Ciudad))
             {
                 mensaje = "Debe agregar una Ciudad";
             }
-            else if (string.IsNullOrEmpty(evento.Ubicacion.Pais) || string.IsNullOrWhiteSpace(evento.Ubicacion.Pais))
+            else if (string.IsNullOrEmpty(evento.Ubicacion.Provincia) || string.IsNullOrWhiteSpace(evento.Ubicacion.Provincia))
             {
-                mensaje = "Debe agregar un Pais";
+                mensaje = "Debe agregar una Provincia";
             }
 
             if (string.IsNullOrEmpty(mensaje))

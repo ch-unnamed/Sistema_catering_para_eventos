@@ -25,7 +25,6 @@
                 <tr>
                     <th>DNI</th>
                     <th>Nombre</th>
-                    <th>Apellido</th>
                     <th>Email</th>
                     <th>Region</th>
                     <th>Telefono</th>
@@ -57,37 +56,37 @@
                     <input type="text" id="id" value="0" />
 
                     <div class="col-sm-6">
-                        <label for="nombre" class="form-label">Nombre</label>
+                        <label for="nombre" class="form-label fw-bold">Nombre</label>
                         <input type="text" class="form-control" id="nombre" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="apellido" class="form-label">Apellido</label>
+                        <label for="apellido" class="form-label fw-bold">Apellido</label>
                         <input type="text" class="form-control" id="apellido" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="dni" class="form-label">DNI</label>
+                        <label for="dni" class="form-label fw-bold">DNI</label>
                         <input type="text" class="form-control" id="dni" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label fw-bold">Email</label>
                         <input type="email" class="form-control" id="email" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="telefono" class="form-label">Telefono</label>
+                        <label for="telefono" class="form-label fw-bold">Telefono</label>
                         <input type="tel" class="form-control" id="telefono" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="region" class="form-label">Region</label>
+                        <label for="region" class="form-label fw-bold">Region</label>
                         <input type="text" class="form-control" id="region" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="tipo" class="form-label">Tipo</label>
+                        <label for="tipo" class="form-label fw-bold">Tipo</label>
                         <select id="tipo_cliente" class="form-select">
                             <option selected>Elija una opcion</option>
                             <option value="1">Personal</option>
@@ -127,12 +126,19 @@
             "ajax": {
                 "url": '@Url.Action("ListarClientes", "Home")',
                 "type": "GET",
-                "datatype": "json"
+                "datatype": "json",
+                "complete": function () {
+                    $('#tabla').DataTable().columns.adjust().draw(); // Ajustar columnas y redibujar
+                }
             },
             "columns": [
                 { "data": "Dni" },
-                { "data": "Nombre" },
-                { "data": "Apellido" },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return row.Nombre + " " + row.Apellido;
+                    }
+                },
                 { "data": "Email" },
                 { "data": "Region" },
                 { "data": "Telefono" },
@@ -145,11 +151,14 @@
                 },
                 {
                     "data": null,
-                    "defaultContent": '<button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
-                        '<button class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
+                    "defaultContent": '<div class="btn-group">' +
+                        '<button class="btn btn-primary btn-sm rounded-2 btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button class="btn btn-danger btn-sm rounded-2 ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>' +
+                        '</div>',
                     "orderable": false,
                     "searchable": false
                 }
+
             ],
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json',

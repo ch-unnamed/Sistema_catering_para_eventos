@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "Cotizaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Cotizaciones</h2>
+
+<ol class="breadcrumb mb-4 mt-2">
+    <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
+    <li class="breadcrumb-item active">Cotizaciones</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-1"></i> Lista de Cotizaciones
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Evento</th>
+                    <th>Vendedor</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @* AJAX *@
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    @* Ocultar id para que solo se maneje con ajax *@
+                    <input type="text" id="id" value="0" />
+
+                    <div class="col-sm-6">
+                        <label for="idEvento" class="form-label">Evento (id)</label>
+                        <input type="number" class="form-control" id="idEvento" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="dni" class="form-label">DNI (Cliente)</label>
+                        <input type="text" class="form-control" id="dni" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="menu" class="form-label">Menu</label>
+                        <select id="menu" class="form-select">
+                            <option selected>Elija una opcion</option>
+                            <option value="1">Veggie</option>
+                            <option value="2">Dulce</option>
+                            <option value="3">Agridulce</option>
+                        </select>
+                    </div>
+                    @* Si son mas  de 30 en la parte de cantidad se habilita 1 menu mas *@
+
+                    @* Luego se pondran los platos correspondientes a el menu *@
+
+                    <div class="col-sm-6">
+                        <label for="fechaRealizacion" class="form-label">Fecha Realizacion</label>
+                        <input type="date" class="form-control" id="fechaRealizacion" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="total" class="form-label">Total</label>
+                        <input type="tel" class="form-control" id="total" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="estadi" class="form-label">Estado</label>
+                        <select id="estado" class="form-select">
+                            <option selected>Elija una opcion</option>
+                            <option value="1">En curso</option>
+                            <option value="2">Aceptado</option>
+                            <option value="3">Finalizado</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                @*<div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>*@
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* t0d0s los scripts son renderizados a layour, en la parte de RenderSection *@
+@section Scripts {
+    <script>
+        var tabledata;
+
+        tabledata = $('#tabla').DataTable();
+
+        function abrirModal(json) {
+            $("#FormModal").modal("show");
+        }
+    </script>
+}

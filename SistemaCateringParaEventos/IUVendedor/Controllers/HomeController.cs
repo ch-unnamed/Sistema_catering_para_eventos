@@ -38,6 +38,12 @@ namespace IUVendedor.Controllers
             return View();
         }
 
+        [PermisosRol(Models.Rol.Vendedor)]
+        public ActionResult Cotizaciones()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult ListarClientes()
         {
@@ -104,12 +110,17 @@ namespace IUVendedor.Controllers
                 e.IdEvento,
                 e.Nombre,
                 e.Capacidad,
-                e.Tipo,
+                Fecha = e.Fecha.ToString("yyyy-MM-dd"),
+                Tipo_Evento = new { 
+                    e.Tipo_Evento.Nombre
+                },
                 Ubicacion = new
                 {
-                    e.Ubicacion.Direccion,
+                    e.Ubicacion.IdUbicacion,
+                    e.Ubicacion.Calle,
+                    e.Ubicacion.Altura,
                     e.Ubicacion.Ciudad,
-                    e.Ubicacion.Pais
+                    e.Ubicacion.Provincia
                 }
             });
             

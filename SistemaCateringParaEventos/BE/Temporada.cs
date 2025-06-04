@@ -16,22 +16,6 @@ namespace BE
             set { _idTemporada = value; }
         }
 
-
-        private string _nombreTemporada;
-        public string Nombre
-        {
-            get { return _nombreTemporada; }
-            set { _nombreTemporada = value; }
-        }
-
-
-        private DateTime _fechaInicio;
-        public DateTime FechaInicio
-        {
-            get { return _fechaInicio; }
-            set { _fechaInicio = value; }
-        }
-
 		private Categoria_Temporada id_Categoria_Temporada;
 
         public Categoria_Temporada Id_CategoriaTemporada
@@ -40,18 +24,11 @@ namespace BE
             set { id_Categoria_Temporada = value; }
         }
 
-        private DateTime _fechaComienzo;
-        public DateTime FechaComienzo
+        private DateTime _fechaComienzo_temp;
+        public DateTime FechaComienzoTemp
         {
-            get { return _fechaComienzo; }
-            set { _fechaComienzo = value; }
-        }
-
-        private DateTime _fechaFin;
-        public DateTime FechaFin
-        {
-            get { return _fechaFin; }
-            set { _fechaFin = value; }
+            get { return _fechaComienzo_temp; }
+            set { _fechaComienzo_temp = value; }
         }
 
         private int _cantidad_evento;
@@ -60,6 +37,13 @@ namespace BE
         {
             get { return _cantidad_evento; }
             set { _cantidad_evento = value; }
+        }
+
+        private DateTime _fechaFin;
+        public DateTime FechaFin
+        {
+            get { return _fechaFin; }
+            set { _fechaFin = value; }
         }
 
     }

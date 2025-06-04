@@ -27,7 +27,11 @@
                     <th>Nombre</th>
                     <th>Capacidad</th>
                     <th>Tipo</th>
-                    <th>Ubicacion</th>
+                    <th>Calle</th>
+                    <th>Altura</th>
+                    <th>Ciudad</th>
+                    <th>Provincia</th>
+                    <th>Fecha</th>
                     <th></th>
                 </tr>
             </thead>
@@ -45,7 +49,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Evento</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -55,32 +59,44 @@
                     <input type="text" id="id" value="0" />
 
                     <div class="col-sm-6">
-                        <label for="nombre" class="form-label">Nombre</label>
+                        <label for="nombre" class="form-label fw-bold">Nombre</label>
                         <input type="text" class="form-control" id="nombre" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="capacidad" class="form-label">Capacidad</label>
+                        <label for="capacidad" class="form-label fw-bold">Capacidad</label>
                         <input type="text" class="form-control" id="capacidad" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="tipo" class="form-label">Tìpo</label>
+                        <label for="tipo" class="form-label fw-bold">Tìpo</label>
                         <input type="text" class="form-control" id="tipo" autocomplete="off">
                     </div>
+
                     <div class="col-sm-6">
-                        <label for="direccion" class="form-label">Direccion</label>
-                        <input type="text" class="form-control" id="direccion" autocomplete="off">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="ciudad" class="form-label">Ciudad</label>
-                        <input type="text" class="form-control" id="ciudad" autocomplete="off">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="pais" class="form-label">Pais</label>
-                        <input type="text" class="form-control" id="pais" autocomplete="off">
+                        <label for="calle" class="form-label fw-bold">Calle</label>
+                        <input type="text" class="form-control" id="calle" autocomplete="off">
                     </div>
 
+                    <div class="col-sm-6">
+                        <label for="altura" class="form-label fw-bold">Altura</label>
+                        <input type="text" class="form-control" id="altura" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="ciudad" class="form-label fw-bold">Ciudad</label>
+                        <input type="text" class="form-control" id="ciudad" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="provincia" class="form-label fw-bold">Provincia</label>
+                        <input type="text" class="form-control" id="provincia" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="fecha" class="form-label fw-bold">Fecha</label>
+                        <input type="date" class="form-control" id="fecha" autocomplete="off">
+                    </div>
 
                 </div>
 
@@ -117,20 +133,45 @@
             },
             "columns": [
                 {"data": "Nombre"},
-                { "data": "Capacidad"},
-                { "data": "Tipo"},
-                {   // modifco visualmente para que el vendedor pueda ver todo el detalle de Evento + Ubicacion
-                    "data": "Ubicacion",
-                    "title": "Ubicación Completa",
+                { "data": "Capacidad" },
+                {
+                    "data": "Tipo_Evento",
                     "render": function (data, type, row) {
-                        return row.Ubicacion.Direccion + ', ' + row.Ubicacion.Ciudad + ', ' + row.Ubicacion.Pais;
+                        return row.Tipo_Evento.Nombre;
                     }
                 },
                 {
+                    "data": "Calle",
+                    "render": function (data, type, row) {
+                        return row.Ubicacion.Calle;
+                    }
+                },
+                {
+                    "data": "Altura",
+                    "render": function (data, type, row) {
+                        return row.Ubicacion.Altura;
+                    }
+                },
+                {
+                    "data": "Ciudad",
+                    "render": function (data, type, row) {
+                        return row.Ubicacion.Ciudad;
+                    }
+                },
+                {
+                    "data": "Provincia",
+                    "render": function (data, type, row) {
+                        return row.Ubicacion.Provincia;
+                    }
+                },
+                { "data": "Fecha" },
+                {
                     "data": null,
-                    "defaultContent": '<button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
-                        '<button class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
-                    "ordenable": false,
+                    "defaultContent": '<div class="btn-group">' +
+                        '<button class="btn btn-primary btn-sm rounded-2 btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button class="btn btn-danger btn-sm rounded-2 ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>' +
+                        '</div>',
+                    "orderable": false,
                     "searchable": false
                 }
             ],
@@ -139,7 +180,6 @@
             }
         });
 
-
         //Abrir el modal para crear Evento
         function abrirModal(json) {
 
@@ -147,9 +187,11 @@
             $("#nombre").val("");
             $("#capacidad").val("");
             $("#tipo").val("");
-            $("#direccion").val("");
+            $("#calle").val("");
+            $("#altura").val("");
             $("#ciudad").val("");
-            $("#pais").val("");
+            $("#provincia").val("");
+            $("#fecha").val("");
 
             // por primera vez no mostrar error, ya que no estan los campos pero se van a completar
             $("#msjError").hide();
@@ -159,10 +201,15 @@
                 $("#id").val(json.IdEvento);
                 $("#nombre").val(json.Nombre);
                 $("#capacidad").val(json.Capacidad);
-                $("#tipo").val(json.Tipo);
-                $("#direccion").val(json.Ubicacion.Direccion);
-                $("#ciudad").val(json.Ubicacion.Ciudad);
-                $("#pais").val(json.Ubicacion.Pais);
+                $("#tipo").val(json.Tipo_Evento.Nombre);
+                // Verifica si Ubicacion está definida
+                if (json.Ubicacion) {
+                    $("#calle").val(json.Ubicacion.Calle);
+                    $("#altura").val(json.Ubicacion.Altura);
+                    $("#ciudad").val(json.Ubicacion.Ciudad);
+                    $("#provincia").val(json.Ubicacion.Provincia);
+                }
+                $("#fecha").val(json.Fecha);
             }
 
             $("#FormModal").modal("show");
@@ -179,65 +226,72 @@
             abrirModal(data);
         });
 
+        // eliminar
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
-        var eventoSeleccionado = $(this).closest("tr");
+            var eventoSeleccionado = $(this).closest("tr");
 
-        var data = tabledata.row(eventoSeleccionado).data(); // los datos de la fila seleccionada
+            var data = tabledata.row(eventoSeleccionado).data(); // los datos de la fila seleccionada
 
-        console.log(data);
+            console.log(data);
 
-        swal({
-            title: "¿Esta Seguro?",
-            text: "¿Queres Eliminar el Evento?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonClass: "btn-primary",
-            confirmButtonText: "Si",
-            cancelButtonText: "No",
-            closeOnConfirm: true
-        },
-            function () {
-                // Accion que realiza si se presiona que se quiere eliminar
-                $.ajax({
-                    url: '@Url.Action("EliminarEvento", "Home")',
-                    type: "POST",
-                    data: JSON.stringify({ id: data.IdEvento }),
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Queres Eliminar el Evento?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+                },
 
-                    success: function (data) { // este data es el json que retorna EliminarCliente
+                function () {
+                    // Accion que realiza si se presiona que se quiere eliminar
+                    $.ajax({
+                        url: '@Url.Action("EliminarEvento", "Home")',
+                        type: "POST",
+                        data: JSON.stringify({ id: data.IdEvento }),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+    
+                        success: function (data) { // este data es el json que retorna EliminarCliente
 
-                    //debugger;
+                            //debugger;
 
-                        if (data.resultado) {
-                            tabledata.row(eventoSeleccionado).remove().draw(false);
-                        } else {
-                            swal("No se pudo eliminar", data.mensaje, "error");
-                            return;
+                            if (data.resultado) {
+                                tabledata.row(eventoSeleccionado).remove().draw(false);
+                            } else {
+                                swal("No se pudo eliminar", data.mensaje, "error");
+                                return;
+                            }   
+                        },
+                        error: function (error) {
+                            $("#msjError").text("Error Ajax");
+                            console.log(error)
                         }
-                    },
-                    error: function (error) {
-                        $("#msjError").text("Error Ajax");
-                        console.log(error)
-                    }
-                });
+                    });
             });
 
-    });
+        });
 
         // Funcionalidad de crear evento o editarlo
         function guardar() {
+
             var Evento = {
                 IdEvento: $("#id").val(),
                 Nombre: $("#nombre").val(),
                 Capacidad: $("#capacidad").val(),
-                Tipo: $("#tipo").val(),
+                Tipo_Evento: {
+                    Nombre: $("#tipo").val(),
+                },
                 Ubicacion: {
-                    Direccion: $("#direccion").val(),
+                    Calle: $("#calle").val(),
+                    Altura: $("#altura").val(),
                     Ciudad: $("#ciudad").val(),
-                    Pais: $("#pais").val()
-                }
+                    Provincia: $("#provincia").val(),
+                },
+                Fecha: $("#fecha").val(),
             };
             console.log("Evento antes de enviar:", Evento);
 

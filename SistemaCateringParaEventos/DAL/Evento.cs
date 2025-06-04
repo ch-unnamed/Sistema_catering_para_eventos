@@ -24,19 +24,23 @@ namespace DAL
                 BE.Evento unEvento = new BE.Evento();
 
                 // tomar cada fila como se usa en el procedimiento almacenado
-
                 unEvento.IdEvento = Convert.ToInt32(fila["evento_id"]);
                 unEvento.Nombre = fila["evento_nombre"].ToString();
                 unEvento.Capacidad = Convert.ToInt32(fila["capacidad"]);
-                unEvento.Tipo = fila["tipo"].ToString();
+                unEvento.Fecha = Convert.ToDateTime(fila["fecha"].ToString());
+
+                BE.Ubicacion ubicacion_id= new BE.Ubicacion();
+                ubicacion_id.IdUbicacion = Convert.ToInt32(fila["ubicacion_id"]);
+                ubicacion_id.Calle = $"{fila["ubicacion_calle"]}";
+                ubicacion_id.Altura = Convert.ToInt32(fila["ubicacion_altura"]);
+                ubicacion_id.Ciudad = $"{fila["ubicacion_ciudad"]}";
+                ubicacion_id.Provincia = $"{fila["ubicacion_provincia"]}";
+                unEvento.Ubicacion = ubicacion_id;
 
                 // Crear instancia de cada clase individual para obtener el ID
-                BE.Ubicacion ubicacion_id = new BE.Ubicacion();
-                ubicacion_id.IdUbicacion = Convert.ToInt32(fila["ubicacion_id"]);
-                ubicacion_id.Direccion = $"{fila["ubicacion_direccion"]}";
-                ubicacion_id.Ciudad = $"{fila["ubicacion_ciudad"]}";
-                ubicacion_id.Pais = $"{fila["ubicacion_pais"]}";
-                unEvento.Ubicacion = ubicacion_id;
+                BE.Tipo_Evento tipo_evento_nombre = new BE.Tipo_Evento();
+                tipo_evento_nombre.Nombre = $"{fila["tipo_evento_nombre"]}";
+                unEvento.Tipo_Evento = tipo_evento_nombre;
 
                 eventos.Add(unEvento);
             }
@@ -55,10 +59,12 @@ namespace DAL
             {
                 new SqlParameter("@nombre", evento.Nombre),
                 new SqlParameter("@capacidad", evento.Capacidad),
-                new SqlParameter("@tipo", evento.Tipo),
-                new SqlParameter("@direccion", evento.Ubicacion.Direccion),
+                new SqlParameter("@tipo", evento.Tipo_Evento.Nombre),
+                new SqlParameter("@calle", evento.Ubicacion.Calle),
+                new SqlParameter("@altura", evento.Ubicacion.Altura),
                 new SqlParameter("@ciudad", evento.Ubicacion.Ciudad),
-                new SqlParameter("@pais", evento.Ubicacion.Pais),
+                new SqlParameter("@provincia", evento.Ubicacion.Provincia),
+                new SqlParameter("@fecha", evento.Fecha),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
                 new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
@@ -66,8 +72,8 @@ namespace DAL
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_crear_evento", parametros);
 
             // Capturar los valores de salida
-            mensaje = parametros[6].Value.ToString();
-            resultado = Convert.ToInt32(parametros[7].Value);
+            mensaje = parametros[8].Value.ToString();
+            resultado = Convert.ToInt32(parametros[9].Value);
 
             return resultado;
         }
@@ -84,10 +90,12 @@ namespace DAL
                 new SqlParameter("@Id", evento.IdEvento),
                 new SqlParameter("@Nombre", evento.Nombre),
                 new SqlParameter("@Capacidad", evento.Capacidad),
-                new SqlParameter("@Tipo", evento.Tipo),
-                new SqlParameter("@Direccion", evento.Ubicacion.Direccion),
+                new SqlParameter("@Tipo", evento.Tipo_Evento.Nombre),
+                new SqlParameter("@Calle", evento.Ubicacion.Calle),
+                new SqlParameter("@Altura", evento.Ubicacion.Altura),
                 new SqlParameter("@Ciudad", evento.Ubicacion.Ciudad),
-                new SqlParameter("@Pais", evento.Ubicacion.Pais),
+                new SqlParameter("@Provincia", evento.Ubicacion.Provincia),
+                new SqlParameter("@Fecha", evento.Fecha),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
                 new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
@@ -95,8 +103,8 @@ namespace DAL
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_editar_evento", parametros);
 
             // Capturar los valores de salida
-            mensaje = parametros[7].Value.ToString();
-            resultado = Convert.ToBoolean(parametros[8].Value);
+            mensaje = parametros[9].Value.ToString();
+            resultado = Convert.ToBoolean(parametros[10].Value);
 
             return resultado;
         }

@@ -23,11 +23,18 @@ namespace BE
             set { _idGeolocalizacion = value; }
         }
 
-        private string _direccion;
-        public string Direccion
+        private string _calle;
+        public string Calle
         {
-            get { return _direccion; }
-            set { _direccion = value; }
+            get { return _calle; }
+            set { _calle = value; }
+        }
+
+        private int _altura;
+        public int Altura
+        {
+            get { return _altura; }
+            set { _altura = value; }
         }
 
         private string _ciudad;
@@ -37,11 +44,11 @@ namespace BE
             set { _ciudad = value; }
         }
 
-        private string _pais;
-        public string Pais
+        private string _provincia;
+        public string Provincia
         {
-            get { return _pais; }
-            set { _pais = value; }
+            get { return _provincia; }
+            set { _provincia = value; }
         }
     }
 }

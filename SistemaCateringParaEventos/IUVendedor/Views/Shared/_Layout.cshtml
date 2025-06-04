@@ -58,6 +58,14 @@
                                     Clientes
                                 </a>
                             }
+                            
+                            if (usuario.Rol_id == Rol.Vendedor)
+                            {
+                                <a class="nav-link" href="@Url.Action("Cotizaciones", "Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                    Cotizaciones
+                                </a>
+                            }
 
                             // Solo el Chef puede ver Insumos
                             if (usuario.Rol_id == Rol.Chef)

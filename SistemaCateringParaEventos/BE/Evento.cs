@@ -40,12 +40,6 @@ namespace BE
             }
         }
 
-        private string _tipo;
-        public string Tipo
-        {
-            get { return _tipo; }
-            set { _tipo = value; }
-        }
 
         private Ubicacion _ubicacion;
         public Ubicacion Ubicacion
@@ -54,20 +48,20 @@ namespace BE
             set { _ubicacion = value; }
         }
 
-        private Tipo_Evento _id_tipo_evento;
+        private Tipo_Evento _tipo_evento;
 
-        public Tipo_Evento IdTipo_Evento
+        public Tipo_Evento Tipo_Evento
         {
-            get { return _id_tipo_evento; }
-            set { _id_tipo_evento = value; }
+            get { return _tipo_evento; }
+            set { _tipo_evento = value; }
         }
 
-        private Temporada _idTemporada;
+        private Temporada _temporada;
 
-        public Temporada IdTemporada
+        public Temporada Temporada
         {
-            get { return _idTemporada; }
-            set { _idTemporada = value; }
+            get { return _temporada; }
+            set { _temporada = value; }
         }
 
         private DateTime _fecha;

@@ -445,6 +445,7 @@
     <Content Include="Views\Home\Usuarios.cshtml" />
     <Content Include="Views\Home\ConfigurarSistema.cshtml" />
     <Content Include="Views\Home\Platos.cshtml" />
+    <Content Include="Views\Home\Cotizaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
