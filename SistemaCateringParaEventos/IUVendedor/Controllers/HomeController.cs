@@ -176,10 +176,10 @@ namespace IUVendedor.Controllers
                 e.Id,
                 e.Nombre,
                 e.Unidad,
-                e.Tipo,
+                e.TipoId,
+                TipoNombre = e.TipoNombre,
                 e.Costo,
                 e.StockMinimo,
-                e.LoteId
             });
 
             return Json(new { data = InsumosFormateados }, JsonRequestBehavior.AllowGet);
@@ -235,6 +235,38 @@ namespace IUVendedor.Controllers
         {
             return View();
         }
+        ///LOTES
+
+        [HttpPost]
+        public JsonResult GuardarLote(BE.Lote oLote)
+        {
+            string mensaje = string.Empty;
+            bool exito = true;
+
+            try
+            {
+                if (oLote.Id == 0)
+                {
+                    // Crear nuevo lote
+                    new BLL.Lote().CrearLote(oLote, out mensaje);
+                    mensaje = "Lote creado correctamente.";
+                }
+                else
+                {
+                    // Editar lote existente
+                    new BLL.Lote().EditarLote(oLote, out mensaje);
+                    mensaje = "Lote editado correctamente.";
+                }
+            }
+            catch (Exception ex)
+            {
+                exito = false;
+                mensaje = "Error al guardar lote: " + ex.Message;
+            }
+
+            return Json(new { resultado = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
 
         //////////////////////////////////////////////////////////////////
         [PermisosRol(Models.Rol.Gerente)]

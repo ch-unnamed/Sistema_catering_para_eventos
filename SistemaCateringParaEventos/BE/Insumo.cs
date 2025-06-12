@@ -24,13 +24,22 @@ namespace BE
             set { _nombre = value; }
         }
 
-        private string _tipo;
+        private int _tipoId;
 
-        public string Tipo
+        public int TipoId
         {
-            get { return _tipo; }
-            set { _tipo = value; }
+            get { return _tipoId; }
+            set { _tipoId = value; }
         }
+
+        private string _tipoNombre;
+
+        public string TipoNombre
+        {
+            get { return _tipoNombre; }
+            set { _tipoNombre = value; }
+        }
+
 
         private int _unidad; 
 
@@ -54,14 +63,6 @@ namespace BE
         {
             get { return _costo; }
             set { _costo = value; }
-        }
-
-        private int _LoteId;
-
-        public int LoteId
-        {
-            get { return _LoteId; }
-            set { _LoteId = value; }
         }
 
     }

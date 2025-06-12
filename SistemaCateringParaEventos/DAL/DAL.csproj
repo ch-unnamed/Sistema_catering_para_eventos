@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Lote.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="Cliente.cs" />

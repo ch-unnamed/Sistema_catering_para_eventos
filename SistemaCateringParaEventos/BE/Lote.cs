@@ -11,10 +11,18 @@ namespace BE
 
         private int _id;
 
-        public int id
+        public int Id
         {
             get { return _id; }
             set { _id = value; }
+        }
+
+        private int _insumoId;
+
+        public int InsumoId
+        {
+            get { return _insumoId; }
+            set { _insumoId = value; }
         }
 
         private int _cantidad;
@@ -24,6 +32,15 @@ namespace BE
             get { return _cantidad; }
             set { _cantidad = value; }
         }
+
+        private double _costoUnidatario;
+
+        public double CostoUnitario
+        {
+            get { return _costoUnidatario; }
+            set { _costoUnidatario = value; }
+        }
+
 
         private DateTime _fechaDeIngreso;
 

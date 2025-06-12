@@ -21,12 +21,13 @@ namespace DAL
             {
                 BE.Insumo unInsumo = new BE.Insumo();
 
-                // tomar cada fila como se usa en el procedimiento almacenado
+                // tomar cada fila como se usa en el sp
 
                 unInsumo.Id = Convert.ToInt32(fila["id"]);
                 unInsumo.Nombre = fila["nombre"].ToString();
                 unInsumo.Unidad = Convert.ToInt32(fila["unidad"]);
-                unInsumo.Tipo = fila["tipo"].ToString();
+                unInsumo.TipoId = Convert.ToInt32(fila["tipo_insumo_id"]);
+                unInsumo.TipoNombre = fila["tipo_nombre"].ToString();
                 unInsumo.Costo = Convert.ToInt32(fila["costo"]);
                 unInsumo.StockMinimo = Convert.ToInt32(fila["stock_minimo"]);
 
@@ -41,7 +42,7 @@ namespace DAL
             var parametros = new SqlParameter[]
             {
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
-                conexion.crearParametro("@Tipo", objInsumo.Tipo),
+                conexion.crearParametro("@Tipo", objInsumo.TipoId),
                 conexion.crearParametro("@Unidades",objInsumo.Unidad),
                 conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
                 conexion.crearParametro("@Costo", objInsumo.Costo)
@@ -55,7 +56,7 @@ namespace DAL
             var parametros = new SqlParameter[]
             {
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
-                conexion.crearParametro("@Tipo", objInsumo.Tipo),
+                conexion.crearParametro("@Tipo", objInsumo.TipoId),
                 conexion.crearParametro("@Unidades",objInsumo.Unidad),
                 conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
                 conexion.crearParametro("@Costo", objInsumo.Costo)
@@ -91,7 +92,7 @@ namespace DAL
             {
                 Id = Convert.ToInt32(row["Id"]),
                 Nombre = row["Nombre"].ToString(),
-                Tipo = row["Tipo"].ToString(),
+                TipoId = Convert.ToInt32(row["tipo_insumo_id"]),
                 StockMinimo = Convert.ToInt32(row["StockMinimo"]),
                 //FechaDeCreacion = Convert.ToDateTime(row["FechaDeCreacion"])
             };

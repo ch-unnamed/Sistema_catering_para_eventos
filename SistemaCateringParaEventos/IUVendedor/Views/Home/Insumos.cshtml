@@ -112,44 +112,46 @@
                 <h5 class="modal-title" id="exampleModalLabel">Lote</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
                 <div class="row g-2">
+                    <div class="col-sm-12">
+                        <label for="selectInsumoLote" class="form-label">Seleccionar Insumo</label>
+                        <select id="selectInsumoLote" class="form-select" required>
+                            <option value="">Seleccione el Insumo</option>
+                            @* Las opciones se cargan por JS *@
+                        </select>
+                        <div id="InsumoLoteError" class="alert alert-danger d-none" role="alert">Debe seleccionar un insumo</div>
+                    </div>
 
                     <div class="col-sm-6">
-                        <label for="nombre" class="form-label">Unidades</label>
-                        <input type="text" class="form-control" id="Unidades" autocomplete="off" required>
-                        <div id="CantidadLoteError" class="alert alert-danger" role="alert">Error en la cantidad ingresada</div>
+                        <label for="cantidadLote" class="form-label">Unidades</label>
+                        <input type="number" class="form-control" id="cantidadLote" autocomplete="off" required>
+                        <div id="CantidadLoteError" class="alert alert-danger d-none" role="alert">Error en la cantidad ingresada</div>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="codigoLote" class="form-label">Costo unitario</label>
                         <input type="number" class="form-control" id="codigoLote" autocomplete="off" required>
-                        <div id="CostoError" class="alert alert-danger" role="alert">Error en el costo </div>
+                        <div id="CostoError" class="alert alert-danger d-none" role="alert">Error en el costo </div>
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="fechaIngreso" class="form-label">Fecha de ingreso</label>
-                        <input type="date" class="form-control" id="fechaIngresoLote" autocomplete="off" /> required
-                        <div id="FechaIngresoError" class="alert alert-danger" role="alert">Error en la fecha ingresada</div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <label for="fechaVencimiento" class="form-label">Fecha de vencimiento</label>
+                        <label for="fechaVencimientoLote" class="form-label">Fecha de vencimiento</label>
                         <input type="date" class="form-control" id="fechaVencimientoLote" autocomplete="off" required>
-                        <div id="FechaVencimientoError" class="alert alert-danger" role="alert">Error en la fecha</div>
+                        <div id="FechaIngresoError" class="alert alert-danger d-none" role="alert">Error en la fecha ingresada</div>
                     </div>
 
-                </div>
 
-                <div class="row mt-2">
-                    <div class="col-12">
-                        <div id="msjErrorLote" class="alert alert-danger" role="alert">
-                            Error en los datos ingresados
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div id="msjErrorLote" class="alert alert-danger" role="alert">
+                                Error en los datos ingresados
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" onclick="guardarLote()">Guardar</button>
@@ -175,7 +177,7 @@
     columns: [
         { data: "Id" },
         { data: "Nombre" },
-        { data: "Tipo" },
+        { data: "TipoNombre" },
         { data: "Costo" },
         { data: "Unidad" },
         { data: "StockMinimo" },
@@ -191,6 +193,98 @@
             url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
         }
     });
+
+        $('#tablaInsumos').on('xhr.dt', function (e, settings, json, xhr) {
+            console.log(json.data);
+        });
+        // Ocultar mensajes de error al abrir el modal
+        function limpiarErrores() {
+            $('#InsumoLoteError').addClass('d-none');
+            $('#CantidadLoteError').addClass('d-none');
+            $('#CostoError').addClass('d-none');
+            $('#FechaIngresoError').addClass('d-none');
+            $('#msjErrorLote').hide();
+        }
+
+        // Carga insumos en el select desde el backend
+        function cargarInsumosEnSelect() {
+            $.ajax({
+                url: '/Home/ListarInsumos',
+                method: 'GET',
+                success: function (response) {
+                    const select = $('#selectInsumoLote');
+                    select.empty();
+                    select.append('<option value="">Seleccione el Insumo</option>');
+                    response.data.forEach(insumo => {
+                        select.append(`<option value="${insumo.Id}">${insumo.Nombre}</option>`);
+                    });
+                },
+                error: function () {
+                    alert("No se pudieron cargar los insumos.");
+                }
+            });
+        }
+
+        // Ejecutar al abrir el modal (usando evento Bootstrap 5)
+        $('#FormModalLote').on('show.bs.modal', function () {
+            cargarInsumosEnSelect();
+            limpiarErrores();
+        });
+
+        // Función para validar y enviar el lote (completá con tu lógica de guardado)
+        function guardarLote() {
+            limpiarErrores();
+
+            let valido = true;
+            const insumoId = $('#selectInsumoLote').val();
+            const cantidad = $('#cantidadLote').val();
+            const costo = $('#codigoLote').val();
+            const fechaVencimiento = $('#fechaVencimientoLote').val();
+
+            if (!insumoId) {
+                $('#InsumoLoteError').removeClass('d-none');
+                valido = false;
+            }
+            if (!cantidad || cantidad <= 0) {
+                $('#CantidadLoteError').removeClass('d-none');
+                valido = false;
+            }
+            if (!costo || costo <= 0) {
+                $('#CostoError').removeClass('d-none');
+                valido = false;
+            }
+            if (!fechaVencimiento) {
+                $('#FechaIngresoError').removeClass('d-none');
+                valido = false;
+            }
+
+            if (!valido) {
+                $('#msjErrorLote').show();
+                return;
+            }
+
+            $('#msjErrorLote').hide();
+
+            // Carga por ajax el lote de insumo
+            
+            $.ajax({
+                url: '/Home/GuardarLote',  //Ruta 
+                method: 'POST',
+                data: {
+                    insumoId: insumoId,
+                    cantidad: cantidad,
+                    costo: costo,
+                    fechaVencimiento: fechaVencimiento
+                },
+                success: function(resp) {
+                    $('#FormModalLote').modal('hide');
+                    alert('Lote guardado correctamente');
+                },
+                error: function() {
+                    alert('Error al guardar el lote');
+                }
+            });
+        }
 
 
 
@@ -229,83 +323,93 @@
     // Limpiar campos
     $("#codigoLote").val("");
     $("#cantidadLote").val("");
+    $("#fechaIngresoLote").val("");
     $("#fechaVencimientoLote").val("");
-
+    $("#selectInsumoLote").empty().append('<option value="">-- Seleccione un Insumo --</option>');
     $("#msjErrorLote").addClass("d-none");
 
-    $("#FormModalLote").modal("show");
-    }
-
-    function guardarLote() {
-    const lote = {
-    CodigoLote: $("#codigoLote").val(),
-    Cantidad: $("#cantidadLote").val(),
-    FechaVencimiento: $("#fechaVencimientoLote").val()
-    };
-
-    if (!lote.Codigo || !lote.Cantidad || !lote.FechaVencimiento) {
-    $("#msjErrorLote").text("Todos los campos son obligatorios").removeClass("d-none");
-    return;
-    }
-
-    console.log("Lote cargado:", lote);
-
-    $("#ModalLote").modal("hide");
-    }
-
-
-    // Funcionalidad de que al hacer click en editar se muestren los valores de la fila seleccionada
-    $('#tablaInsumos tbody').on('click', '.btn-editar', function () {
-
-    filaSeleccionada = $(this).closest("tr");
-
-    var data = tabledata.row(filaSeleccionada).data(); // los datos de la fila seleccionada
-
-    console.log(tabledata.row(filaSeleccionada).data());
-
-    abrirModal(data);
+    // Obtener insumos vía AJAX
+    $.ajax({
+        url: '@Url.Action("ListarInsumos", "Home")',
+        type: 'GET',
+        success: function (data) {
+            data.data.forEach(function (insumo) {
+                $('#selectInsumoLote').append(`<option value="${insumo.Id}">${insumo.Nombre}</option>`);
+            });
+        }
     });
 
-    $('#tablaInsumos tbody').on('click', '.btn-eliminar', function () {
+    $("#FormModalLote").modal("show");
+}
+        function guardarLote() {
+            const lote = {
+                IdInsumo: $("#selectInsumoLote").val(),
+                CodigoLote: $("#codigoLote").val(),
+                Cantidad: $("#cantidadLote").val(),
+                FechaIngreso: $("#fechaIngresoLote").val(),
+                FechaVencimiento: $("#fechaVencimientoLote").val()
+            };
 
+            if (!lote.IdInsumo || !lote.CodigoLote || !lote.Cantidad || !lote.FechaIngreso || !lote.FechaVencimiento) {
+                $("#msjErrorLote").text("Todos los campos son obligatorios").removeClass("d-none");
+                return;
+            }
+
+            // Ocultar error, envia datos por AJAX
+            console.log("Lote cargado:", lote);
+
+            $("#FormModalLote").modal("hide");
+        }
+
+
+
+
+  // Evento para editar: se muestra el modal con los datos del insumo seleccionado
+$('#tablaInsumos tbody').on('click', '.btn-editar', function () {
+    filaSeleccionada = $(this).closest("tr");
+    var data = tabledata.row(filaSeleccionada).data(); // Obtener datos de la fila
+    console.log(data);
+    abrirModal(data); // Función que abre el modal y carga los datos
+});
+
+// Evento para eliminar: se muestra confirmación y se realiza la eliminación por AJAX
+$('#tablaInsumos tbody').on('click', '.btn-eliminar', function () {
     var insumoSeleccionado = $(this).closest("tr");
-
-    var data = tabledata.row(insumoSeleccionado).data(); // los datos de la fila seleccionada
-
+    var data = tabledata.row(insumoSeleccionado).data(); // Obtener datos de la fila
     console.log(data);
 
     swal({
-        title: "¿Esta Seguro?",
-        text: "¿Queres Eliminar el Insumo?",
+        title: "¿Está seguro?",
+        text: "¿Desea eliminar el insumo?",
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-primary",
-        confirmButtonText: "Si",
+        confirmButtonText: "Sí",
         cancelButtonText: "No",
         closeOnConfirm: true
-        },
-        function () {
-            console.log(data.Id);
-    // Accion que realiza si se presiona que se quiere eliminar
+    }, function () {
+        console.log(data.Id);
+
+        // Llamada AJAX para eliminar
         $.ajax({
-        url: '@Url.Action("EliminarInsumo", "Home")',
-        type: "POST", 
-        data: { Id: data.Id }, 
-        success: function (data) {
-            if (data.resultado) {
-                tabledata.row(insumoSeleccionado).remove().draw(false);
-            } else {
-                swal("No se pudo eliminar", data.mensaje, "error");
-            }
-        },
-        error: function (error) {
-            $("#msjError").text("Error Ajax");
-            console.log(error);
+            url: '@Url.Action("EliminarInsumo", "Home")',
+            type: "POST",
+            data: { Id: data.Id },
+            success: function (response) {
+                if (response.resultado) {
+                    tabledata.row(insumoSeleccionado).remove().draw(false); // Eliminar visualmente la fila
+                } else {
+                    swal("No se pudo eliminar", response.mensaje, "error");
+                }
+            },
+            error: function (error) {
+                $("#msjError").text("Error Ajax");
+                console.error(error);
             }
         });
-   });
+    });
+});
 
-   });
 
     function guardar() {
 
