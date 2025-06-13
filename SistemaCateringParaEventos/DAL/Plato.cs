@@ -173,5 +173,34 @@ namespace DAL
 
             return filasAfectadas;
         }
+
+        public void InsertarPlatosCotizacion(int cotizacionId, int menuId, List<BE.Plato> platos)
+        {
+            Conexion conexion = new Conexion();
+
+            // 1. Crear DataTable para simular PlatoIdList
+            DataTable dtPlatos = new DataTable();
+            dtPlatos.Columns.Add("plato_id", typeof(int));
+
+            foreach (var plato in platos)
+            {
+                dtPlatos.Rows.Add(plato.Id);
+            }
+
+            // 2. Crear parámetros del SP
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@cotizacion_id", cotizacionId),
+                new SqlParameter("@menu_base_id", menuId),
+                new SqlParameter("@platos", SqlDbType.Structured)
+                {
+                    TypeName = "PlatoIdList",
+                    Value = dtPlatos
+                }
+            };
+
+            conexion.EscribirPorStoreProcedure("CrearCotizacionMenuPersonalizado", parametros);
+        }
+
     }
 }

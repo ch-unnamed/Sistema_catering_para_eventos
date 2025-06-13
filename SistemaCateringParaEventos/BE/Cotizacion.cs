@@ -45,12 +45,12 @@ namespace BE
             set { _estado = value; }
         }
 
-        private Menu _id_menu;
+        private Menu _menu;
 
-        public Menu IdMenu
+        public Menu Menu
         {
-            get { return _id_menu; }
-            set { _id_menu = value; }
+            get { return _menu; }
+            set { _menu = value; }
         }
 
 
@@ -61,12 +61,7 @@ namespace BE
             set { _fechaPedido = value; }
         }
 
-        private DateTime _fechaRealizacion;
-        public DateTime FechaRealizacion
-        {
-            get { return _fechaRealizacion; }
-            set { _fechaRealizacion = value; }
-        }
+        //El total se deberia calcular en base a la cantidad de platos o el menu
 
         private decimal _total;
         public decimal Total
@@ -83,6 +78,13 @@ namespace BE
                     throw new ArgumentException("El total no puede ser negativo.");
                 }
             }
+        }
+
+        private DateTime _fechaRealizacion;
+        public DateTime FechaRealizacion
+        {
+            get { return _fechaRealizacion; }
+            set { _fechaRealizacion = value; }
         }
     }
 }

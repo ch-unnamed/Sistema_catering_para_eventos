@@ -420,7 +420,13 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\JS-COTIZACION\cargarOptions.js" />
+    <Content Include="Scripts\JS-COTIZACION\datatable.js" />
+    <Content Include="Scripts\JS-COTIZACION\guardar.js" />
+    <Content Include="Scripts\JS-COTIZACION\modal.js" />
+    <Content Include="Scripts\JS-COTIZACION\mostrarMenus.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\JS-COTIZACION\base.js" />
     <Content Include="Scripts\scripts.js" />
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Web.config" />
