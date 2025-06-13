@@ -8,11 +8,11 @@ namespace BE
 {   // Esta es una clase de una tabla intermedia
     public class Estado
     {
-        private int _idEstadoEvento;
-        public int IdEstadoEvento
+        private int _idEstado;
+        public int IdEstado
         {
-            get { return _idEstadoEvento; }
-            set { _idEstadoEvento = value; }
+            get { return _idEstado; }
+            set { _idEstado = value; }
         }
 
         private string _nombre;
@@ -22,13 +22,13 @@ namespace BE
             set
             {
                 if (value == "Pendiente" || value == "Confirmado" ||
-                    value == "Cancelado" || value == "Completado")
+                    value == "Rechazado" || value == "Completado")
                 {
                     _nombre = value;
                 }
                 else
                 {
-                    throw new ArgumentException("El estado debe ser 'Pendiente', 'Confirmado', 'Cancelado' o 'Completado'.");
+                    throw new ArgumentException("El estado debe ser 'Pendiente', 'Confirmado', 'Rechazado' o 'Completado'.");
                 }
             }
         }

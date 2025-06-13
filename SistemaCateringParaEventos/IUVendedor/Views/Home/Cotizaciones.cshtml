@@ -23,13 +23,15 @@
 
         <hr />
 
-        <table id="tabla" class="display cell-border" style="width:100%">
+        <table id="tablaCotizacion" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
-                    <th>DNI</th>
                     <th>Evento</th>
+                    <th>Dni</th>
                     <th>Vendedor</th>
-                    <th>Fecha</th>
+                    <th>Menu</th>
+                    <th>Fecha Pedido</th>
+                    <th>Fecha Realizacion</th>
                     <th>Total</th>
                     <th>Estado</th>
                     <th></th>
@@ -49,7 +51,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Cotizaciones</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -68,18 +70,31 @@
                         <input type="text" class="form-control" id="dni" autocomplete="off">
                     </div>
 
-                    <div class="col-sm-6">
-                        <label for="menu" class="form-label">Menu</label>
-                        <select id="menu" class="form-select">
-                            <option selected>Elija una opcion</option>
-                            <option value="1">Veggie</option>
-                            <option value="2">Dulce</option>
-                            <option value="3">Agridulce</option>
-                        </select>
-                    </div>
-                    @* Si son mas  de 30 en la parte de cantidad se habilita 1 menu mas *@
+                    @* Si son mas  de 20 en la parte de cantidad se habilita 1 menu mas *@
 
+                    <div class="col-sm-6 d-none" id="contenedor-menus">
+                        <!-- aca van los menus en base a la cantidad de gente del evento-->
+                    </div>
+
+                    @* Platos que se mostraran en base al menu seleccionado *@
+
+                    <!--<div class="col-sm-12 mt-3 d-none" id="contenedor-platos">-->
+                    <!-- aca se agregan los checkboxes por cada plato -->
+                    <!--</div>-->
                     @* Luego se pondran los platos correspondientes a el menu *@
+                    <div id="contenedor-pregunta" class="mt-3 d-none">
+                        <p class="fw-bold">¿Desea agregar otros platos?</p>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="opcion-si">
+                            <label class="form-check-label ms-1" for="opcion-si">Sí</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="opcion-no">
+                            <label class="form-check-label ms-1" for="opcion-no">No</label>
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
                         <label for="fechaRealizacion" class="form-label">Fecha Realizacion</label>
@@ -92,29 +107,25 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="estadi" class="form-label">Estado</label>
+                        <label for="estado" class="form-label">Estado</label>
                         <select id="estado" class="form-select">
-                            <option selected>Elija una opcion</option>
-                            <option value="1">En curso</option>
-                            <option value="2">Aceptado</option>
-                            <option value="3">Finalizado</option>
                         </select>
                     </div>
 
                 </div>
 
                 @*<div class="row mt-2">
-                    <div class="col-12">
-                        <div id="msjError" class="alert alert-danger" role="alert">
-                            A simple danger alert—check it out!
+                        <div class="col-12">
+                            <div id="msjError" class="alert alert-danger" role="alert">
+                                A simple danger alert—check it out!
+                            </div>
                         </div>
-                    </div>
-                </div>*@
+                    </div>*@
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+                <button id="btnGuardarSeleccion" type="button" class="btn btn-primary">Guardar</button>
             </div>
         </div>
     </div>
@@ -123,12 +134,9 @@
 @* t0d0s los scripts son renderizados a layour, en la parte de RenderSection *@
 @section Scripts {
     <script>
-        var tabledata;
-
-        tabledata = $('#tabla').DataTable();
-
-        function abrirModal(json) {
-            $("#FormModal").modal("show");
-        }
+    // Urls (solo para .ajax, luego lo cambio a fetch)
+        const urlListarCotizaciones = '@Url.Action("ListarCotizaciones", "Home")';
     </script>
+
+    <script src="~/Scripts/JS-COTIZACION/base.js"></script>
 }

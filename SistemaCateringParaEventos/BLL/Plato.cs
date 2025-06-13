@@ -46,5 +46,11 @@ namespace BLL
             objPlatoDAL.Eliminar(objPlato);
         }
 
+        public void InsertarPlatosCotizacion(BE.Cotizacion cotizacion, BE.Menu menu, List<BE.Plato> platos)
+        {
+            DAL.Plato platoDAL = new DAL.Plato();
+
+            platoDAL.InsertarPlatosCotizacion(cotizacion.IdCotizacion, menu.Id, platos);
+        }
     }
 }
