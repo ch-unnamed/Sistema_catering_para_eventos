@@ -9,55 +9,52 @@ namespace DAL
 {
     public class Cotizacion
     {
-        // ESTO VA A SERVIR MUCHO PARA LA COTIZACION por tener tantos campos de otras clases
-        //public List<BE.Evento> Listar()
-        //{
-        //    Conexion conexion = new Conexion();
+        public List<BE.Cotizacion> Listar()
+        {
+            Conexion conexion = new Conexion();
 
-        //    List<BE.Evento> eventos = new List<BE.Evento>();
+            List<BE.Cotizacion> cotizaciones = new List<BE.Cotizacion>();
 
-        //    DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_eventos");
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_cotizacion");
 
-        //    foreach (DataRow fila in dt.Rows)
-        //    {
-        //        BE.Evento unEvento = new BE.Evento();
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Cotizacion unaCotizacion = new BE.Cotizacion();
 
-        //        // tomar cada fila como se usa en el procedimiento almacenado
+                // tomar cada fila como se usa en el procedimiento almacenado
 
-        //        unEvento.IdEvento = Convert.ToInt32(fila["evento_id"]);
-        //        unEvento.Nombre = fila["evento_nombre"].ToString();
-        //        unEvento.Fecha = Convert.ToDateTime(fila["fecha"]);
-        //        unEvento.Capacidad = Convert.ToInt32(fila["capacidad"]);
-        //        unEvento.Tipo = fila["tipo"].ToString();
-        //        unEvento.Cotizacion = Convert.ToDecimal(fila["cotizacion"]);
+                unaCotizacion.IdCotizacion = Convert.ToInt32(fila["cotizacion_id"]);
+                unaCotizacion.FechaPedido = Convert.ToDateTime(fila["fecha_pedido"]);
+                unaCotizacion.Total = Convert.ToInt32(fila["total"]);
+                unaCotizacion.FechaRealizacion = Convert.ToDateTime(fila["fecha_realizacion"]);
 
-        //        // Crear instancia de cada clase individual para obtener el ID
-        //        BE.Usuario vendedor_id = new BE.Usuario();
-        //        vendedor_id.IdUsuario = Convert.ToInt32(fila["vendedor_id"]);
-        //        vendedor_id.Nombre = $"{fila["vendedor_nombre"]} {fila["vendedor_apellido"]}";
-        //        unEvento.Vendedor = vendedor_id;
+                // Crear instancia de cada clase individual para obtener el campo requerido
 
-        //        BE.Cliente cliente_id = new BE.Cliente();
-        //        cliente_id.IdCliente = Convert.ToInt32(fila["cliente_id"]);
-        //        cliente_id.Dni = Convert.ToInt32(fila["cliente_dni"]);
-        //        unEvento.Cliente = cliente_id;
+                BE.Evento evento_nombre = new BE.Evento();
+                evento_nombre.Nombre = fila["evento_nombre"].ToString();
+                unaCotizacion.Evento = evento_nombre;
 
-        //        BE.Estado estado_id = new BE.Estado();
-        //        estado_id.IdEstadoEvento = Convert.ToInt32(fila["estado_id"]);
-        //        estado_id.Nombre = fila["estado_nombre"].ToString();
-        //        unEvento.Estado = estado_id;
+                BE.Cliente cliente_dni = new BE.Cliente();
+                cliente_dni.Dni = Convert.ToInt32(fila["cliente_dni"]);
+                unaCotizacion.Cliente = cliente_dni;
 
-        //        BE.Ubicacion ubicacion_id = new BE.Ubicacion();
-        //        ubicacion_id.IdUbicacion = Convert.ToInt32(fila["ubicacion_id"]);
-        //        ubicacion_id.Direccion = $"{fila["ubicacion_direccion"]}";
-        //        // si hace falta, agregar:, {fila["ciudad"]}, {fila["pais"]}
-        //        unEvento.Ubicacion = ubicacion_id;
+                BE.Usuario usuario_id = new BE.Usuario();
+                usuario_id.IdUsuario = Convert.ToInt32(fila["usuario_id"]);
+                unaCotizacion.Vendedor = usuario_id;
 
-        //        eventos.Add(unEvento);
-        //    }
+                BE.Estado estado_nombre = new BE.Estado();
+                estado_nombre.Nombre = fila["estado_nombre"].ToString();
+                unaCotizacion.Estado = estado_nombre;
 
-        //    return eventos;
-        //}
+                BE.Menu menu_nombre= new BE.Menu();
+                menu_nombre.Nombre = fila["menu_nombre"].ToString();
+                unaCotizacion.Menu = menu_nombre;
+
+                cotizaciones.Add(unaCotizacion);
+            }
+
+            return cotizaciones;
+        }
 
         public void GenerarDescuento()
         {

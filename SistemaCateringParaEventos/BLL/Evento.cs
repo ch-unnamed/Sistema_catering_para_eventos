@@ -113,5 +113,12 @@ namespace BLL
             DAL.Evento eventoDAL = new DAL.Evento();
             return eventoDAL.EliminarEvento(idEvento, out mensaje);
         }
+
+        public BE.Evento ObtenerCapacidadPorIdEvento(int eventoId)
+        {
+            DAL.Evento eventoDAL = new DAL.Evento();
+            return eventoDAL.ObtenerCapacidadPorIdEvento(eventoId);
+        }
+
     }
 }

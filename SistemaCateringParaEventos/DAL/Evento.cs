@@ -132,5 +132,60 @@ namespace DAL
 
             return resultado;
         }
+
+        public BE.Evento ObtenerCapacidadPorIdEvento(int eventoId)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+        new SqlParameter("@evento_id", eventoId)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("ObtenerCapacidadEvento", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow fila = dt.Rows[0];
+                return new BE.Evento
+                {
+                    IdEvento = Convert.ToInt32(fila["id"]),
+                    Capacidad = Convert.ToInt32(fila["capacidad"])
+                };
+            }
+
+            return null; // Si no hay datos, devuelve null
+        }
+
+
+        public void InsertarPlatosCotizacion(int cotizacionId, int menuId, List<BE.Plato> platos)
+        {
+            Conexion conexion = new Conexion();
+
+            // 1. Crear DataTable con los IDs de platos
+            DataTable dtPlatos = new DataTable();
+            dtPlatos.Columns.Add("plato_id", typeof(int));
+
+            foreach (var plato in platos)
+            {
+                dtPlatos.Rows.Add(plato.Id);
+            }
+
+            // 2. Crear parámetros
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@cotizacion_id", cotizacionId),
+                new SqlParameter("@menu_base_id", menuId),
+                new SqlParameter("@platos", SqlDbType.Structured)
+                {
+                    TypeName = "PlatoIdList",
+                    Value = dtPlatos
+                }
+            };
+
+            // 3. Ejecutar SP
+            conexion.EscribirPorStoreProcedure("CrearCotizacionMenuPersonalizado", parametros);
+        }
+
     }
 }
