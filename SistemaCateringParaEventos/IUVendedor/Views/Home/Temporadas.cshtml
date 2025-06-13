@@ -1,11 +1,8 @@
 ﻿@{
-    ViewBag.Title = "Eventos";
+    ViewBag.Title = "Temporadas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Scripts {
-    <script src="~/Scripts/Temporada.js"></script>
-}
 
 <ol class="breadcrumb mb-4 mt-2">
     <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
@@ -22,17 +19,18 @@
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTemporada">Comparar Temporadas</button>
             </div>
         </div>
-        <table id="tablaTemporada" class="display cell-border" style="width:100%">
+        <table id="tablaTemporadas" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
-                    <th>Nombre</th>
+                    <th>ID</th>
+                    <th>Cantidad Eventos</th>
+                    <th>Categoria Temporada</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha de Fin</th>
-                    <th>Ventas</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
+                
             </tbody>
         </table>
     </div>
@@ -48,24 +46,21 @@
             </div>
             <div class="modal-body">
                 <label>Temporadas</label>
-                <div class="row g-2">
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="temporada1" placeholder="ID Temporada 1">
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="temporada2" placeholder="ID Temporada 2">
-                    </div>
-                </div>
+
                 <div class="row pt-2">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12 justify-content-center">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="temporada1" placeholder="ID Temporada 1">
+                        </div>
                         <div class="table-responsive">
-                            <table id="tablaDosTemporadas1" class="display table table-striped table-bordered" style="width:100%">
+                            <table id="tablaCompararTemporadas1" class="display table table-striped table-bordered" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Nombre</th>
+                                        <th>ID</th>
+                                        <th>Cantidad Eventos</th>
+                                        <th>Categoria Temporada</th>
                                         <th>Fecha de Inicio</th>
                                         <th>Fecha de Fin</th>
-                                        <th>Ventas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -73,15 +68,19 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-12 justify-content-center">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="temporada2" placeholder="ID Temporada 2">
+                        </div>
                         <div class="table-responsive">
-                            <table id="tablaDosTemporadas2" class="display table table-striped table-bordered" style="width:100%">
+                            <table id="tablaCompararTemporadas2" class="display table table-striped table-bordered" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Nombre</th>
+                                        <th>ID</th>
+                                        <th>Ventas/Eventos</th>
+                                        <th>Categoria</th>
                                         <th>Fecha de Inicio</th>
                                         <th>Fecha de Fin</th>
-                                        <th>Ventas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,9 +93,123 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="compararVentas()">Comparar Ventas</button>
-                <button type="button" class="btn btn-primary" onclick="compararDuracion()">Comparar Duración</button>
             </div>
 
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        var tablaTemporadas;
+
+        tablaTemporadas = $('#tablaTemporadas').DataTable({
+            responsive: true,
+            ordering: false,
+            ajax: {
+                url: '@Url.Action("ListarTemporadas", "Home")',
+                type: "GET",
+                datatype: "json"
+            },
+            columns: [
+                { data: "IdTemporada" },
+                { data: "CantidadEvento" },
+                {
+                    "data": "Categoria_Temporada",
+                    "render": function (data, type, row) {
+                        return data.Nombre;
+                    }
+                },
+                { data: "FechaComienzo" },
+                { data: "FechaFin" },
+
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+            }
+        });
+
+        var tablaCompararTemporadas1;
+        var tablaCompararTemporadas2;
+
+        function cargarTablaPorTemporada(idTemporada, idTabla) {
+    const tabla = $('#' + idTabla).DataTable({
+        destroy: true,
+        responsive: true,
+        ordering: false,
+        ajax: {
+            url: '@Url.Action("ObtenerTemporada", "Home")',
+            type: "GET",
+            data: { id: idTemporada },
+            dataSrc: function (json) {
+                return json ? [json] : [];
+            }
+        },
+        columns: [
+            { data: "IdTemporada" },
+            { data: "CantidadEvento" },
+            {
+                data: "Categoria_Temporada",
+                render: function (data, type, row) {
+                    return data.Nombre;
+                }
+            },
+            { data: "FechaComienzo" },
+            { data: "FechaFin" }
+        ],
+        language: {
+            url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+        }
+    });
+
+    return tabla;
+}
+
+   
+        $('#temporada1').on('input', function () {
+            const id = $(this).val();
+            if (id) {
+                cargarTablaPorTemporada(id, 'tablaCompararTemporadas1');
+            }
+        });
+
+        $('#temporada2').on('input', function () {
+            const id = $(this).val();
+            if (id) {
+                cargarTablaPorTemporada(id, 'tablaCompararTemporadas2');
+            }
+        });
+
+
+
+        function compararVentas() {
+    const id1 = $('#temporada1').val();
+    const id2 = $('#temporada2').val();
+
+    if (!id1 || !id2) {
+        $('#resultadoComparacion').text('Ingrese los IDs');
+        return;
+            }
+
+            if (isNaN(id1) || isNaN(id2) || parseInt(id1) <= 0 || parseInt(id2) <= 0) {
+                $('#resultadoComparacion').text('IDs no validos');
+                return;
+            }
+
+    $.ajax({
+        url: '@Url.Action("CompararCantidadEventos", "Home")',
+        data: { id1: id1, id2: id2 },
+        type: 'GET',
+        success: function(response) {
+            $('#resultadoComparacion').text(response.mensaje);
+        },
+        error: function() {
+            $('#resultadoComparacion').text('Error al comparar');
+        }
+    });
+}
+
+
+
+    </script>
+}

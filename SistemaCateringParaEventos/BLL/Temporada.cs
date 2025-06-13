@@ -1,28 +1,44 @@
 ﻿using BE;
 using System;
+using System.Collections.Generic;
 
 namespace BLL
 {
     public class Temporada
     {
-        /*
-        public static string CompararDuracion(BE.Temporada t1, BE.Temporada t2)
-        {  
-            if (t1.DuracionEnDias() > t2.DuracionEnDias())
-                return string.Format("{0} duró más días que {1}", t1.NombreTemporada, t2.NombreTemporada);
-            else if (t1.DuracionEnDias() < t2.DuracionEnDias())
-                return string.Format("{0} duró más días que {1}", t2.NombreTemporada, t1.NombreTemporada);
-            else
-                return "Ambas temporadas tienen la misma duración";
-        }
-        public static string CompararVentas(BE.Temporada t1, BE.Temporada t2)
+        public List<BE.Temporada> ListarTemporada()
         {
-            if (t1.Ventas > t2.Ventas)
-                return string.Format("{0}({1}) tuvo más ventas que {2} ({3})", t1.NombreTemporada, t1.Ventas, t2.NombreTemporada, t2.Ventas);
-            else if (t1.Ventas < t2.Ventas)
-                return string.Format("{0}({1}) tuvo más ventas que {2} ({3})", t2.NombreTemporada, t2.Ventas, t1.NombreTemporada, t1.Ventas);
-            else
-                return string.Format("Ambas temporadas tuvieron la misma cantidad de ventas ({0})", t1.Ventas);
-        } */
+            DAL.Temporada tempDAL = new DAL.Temporada();
+            return tempDAL.ListarTemporada();
+        }
+
+        public BE.Temporada ObtenerTemporada(int id)
+        {
+            DAL.Temporada tempDAL = new DAL.Temporada();
+            return tempDAL.ObtenerTemporadaPorId(id);
+        }
+
+        public string CompararCantidadEventos(int idTemporada1, int idTemporada2)
+        {
+            var temp1 = new DAL.Temporada().ObtenerTemporadaPorId(idTemporada1);
+            var temp2 = new DAL.Temporada().ObtenerTemporadaPorId(idTemporada2);
+
+            if (temp1 == null || temp2 == null)
+                return "Una o ambas temporadas no existen.";
+
+            int ventasTemp1 = temp1.CantidadEvento; 
+            int ventasTemp2 = temp2.CantidadEvento;
+
+            if (ventasTemp1 > ventasTemp2)
+                return $"La Temporada ID= {temp1.IdTemporada} tiene más ventas ({ventasTemp1}) que la Temporada ID= {temp2.IdTemporada} ({ventasTemp2})";
+
+            if (ventasTemp2 > ventasTemp1)
+                return $"La Temporada ID= {temp2.IdTemporada} tiene más ventas ({ventasTemp2}) que la Temporada ID= {temp1.IdTemporada} ({ventasTemp1})";
+
+            return $"Ambas temporadas tuvieron la misma cantidad de ventas ({ventasTemp1})";
+        }
+
+
+
     }
 }

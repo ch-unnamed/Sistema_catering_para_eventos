@@ -10,11 +10,12 @@ namespace BLL
 {
     public class Usuario
     {
-        /*
-        public List<BE.Usuarios> ListarUsuarios()
+        public List<BE.Usuario> ListarUsuario()
         {
-  
+            DAL.Usuario usuarioDAL = new DAL.Usuario();
+            return usuarioDAL.ListarUsuario();
         }
+        /*
 
         public bool CrearUsuario(string nombreUsuario, string apellidoUsuario, string emailUsuario, string passwordHash, Rol rolUsuario)
         {

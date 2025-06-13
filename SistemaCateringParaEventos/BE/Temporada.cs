@@ -16,12 +16,12 @@ namespace BE
             set { _idTemporada = value; }
         }
 
-		private Categoria_Temporada id_Categoria_Temporada;
+		private Categoria_Temporada _categoria_Temporada;
 
         public Categoria_Temporada Id_CategoriaTemporada
         {
-            get { return id_Categoria_Temporada; }
-            set { id_Categoria_Temporada = value; }
+            get { return _categoria_Temporada; }
+            set { _categoria_Temporada = value; }
         }
 
         private DateTime _fechaComienzo_temp;

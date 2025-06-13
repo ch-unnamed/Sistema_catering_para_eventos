@@ -344,6 +344,84 @@ namespace IUVendedor.Controllers
             }
         }
 
+
+        [HttpGet]
+        public JsonResult ListarTemporadas()
+        {
+            List<BE.Temporada> oLista = new List<BE.Temporada>();
+
+            oLista = new BLL.Temporada().ListarTemporada();
+
+            var TemporadasFormateadas = oLista.Select(t => new
+            {
+                t.IdTemporada,
+                t.CantidadEvento,
+                FechaComienzo = t.FechaComienzoTemp.ToString("yyyy-MM-dd"),
+                FechaFin = t.FechaFin.ToString("yyyy-MM-dd"),
+                Categoria_Temporada = new
+                {
+                    t.Id_CategoriaTemporada.IdCategoriaTemporada,
+                    t.Id_CategoriaTemporada.Nombre
+                },
+            });
+
+
+            return Json(new { data = TemporadasFormateadas }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerTemporada(int id)
+        {
+            var temporada = new BLL.Temporada().ObtenerTemporada(id);
+
+            if (temporada == null)
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            var temporadaJson = new
+            {
+                temporada.IdTemporada,
+                temporada.CantidadEvento,
+                FechaComienzo = temporada.FechaComienzoTemp.ToString("yyyy-MM-dd"),
+                FechaFin = temporada.FechaFin.ToString("yyyy-MM-dd"),
+                Categoria_Temporada = new
+                {
+                    temporada.Id_CategoriaTemporada.IdCategoriaTemporada,
+                    temporada.Id_CategoriaTemporada.Nombre
+                }
+            };
+
+            return Json(temporadaJson, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CompararCantidadEventos(int id1, int id2)
+        {
+            string resultado = new BLL.Temporada().CompararCantidadEventos(id1, id2);
+            return Json(new { mensaje = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public JsonResult ListarUsuario()
+        {
+            List<BE.Usuario> oLista = new List<BE.Usuario>();
+
+            oLista = new BLL.Usuario().ListarUsuario();
+
+            var UsuariosFormateados = oLista.Select(u => new
+            {
+                u.IdUsuario,
+                u.Email,
+                u.FechaCreacion,
+                u.Nombre,
+                u.Apellido
+            });
+
+            return Json(new { data = UsuariosFormateados }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
         //////////////////////////////////////////////////////////////////
         [PermisosRol(Models.Rol.Gerente)]
         public ActionResult Temporadas()
