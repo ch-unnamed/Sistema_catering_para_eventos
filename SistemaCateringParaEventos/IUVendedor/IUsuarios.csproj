@@ -422,6 +422,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\JS-COTIZACION\cargarOptions.js" />
     <Content Include="Scripts\JS-COTIZACION\datatable.js" />
+    <Content Include="Scripts\JS-COTIZACION\guardar.js" />
     <Content Include="Scripts\JS-COTIZACION\modal.js" />
     <Content Include="Scripts\JS-COTIZACION\mostrarMenus.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
