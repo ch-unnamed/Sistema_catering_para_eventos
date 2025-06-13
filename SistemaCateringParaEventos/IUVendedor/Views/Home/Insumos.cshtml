@@ -69,7 +69,10 @@
 
                     <div class="col-sm-6">
                         <label for="tipo" class="form-label">Tipo</label>
-                        <input type="text" class="form-control" id="tipo" autocomplete="off" required>
+                        <select class="form-select" id="tipo" required>
+                            <option value="" disabled selected>Seleccione un tipo</option>
+                        </select>
+
                         <div id="TipoError" class="alert alert-danger" role="alert">Error en el tipo ingresado</div>
                     </div>
 
@@ -131,12 +134,6 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="codigoLote" class="form-label">Costo unitario</label>
-                        <input type="number" class="form-control" id="codigoLote" autocomplete="off" required>
-                        <div id="CostoError" class="alert alert-danger d-none" role="alert">Error en el costo </div>
-                    </div>
-
-                    <div class="col-sm-6">
                         <label for="fechaVencimientoLote" class="form-label">Fecha de vencimiento</label>
                         <input type="date" class="form-control" id="fechaVencimientoLote" autocomplete="off" required>
                         <div id="FechaIngresoError" class="alert alert-danger d-none" role="alert">Error en la fecha ingresada</div>
@@ -152,13 +149,42 @@
                     </div>
 
                 </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="guardarLote()">Guardar</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarLote()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal Historial de Lotes -->
+<div class="modal fade" id="FormModalHistorial" tabindex="-1" aria-labelledby="historialModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="historialModalLabel">Historial de Lotes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <table id="tablaHistorialLotes" class="table table-bordered table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID Lote</th>
+                            <th>Cantidad</th>
+                            <th>Fecha de Ingreso</th>
+                            <th>Fecha de Vencimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* AJAX  *@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @* t0d0s los scripts son renderizados a layout, en la parte de RenderSection *@
 @section Scripts {
@@ -183,8 +209,11 @@
         { data: "StockMinimo" },
         {
             data: null,
-            defaultContent: '<button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
-                '<button class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
+            defaultContent: `
+        <button class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>
+        <button class="btn btn-info btn-sm me-1 btn-ver-historial">Ver historial</button>
+    `,
             orderable: false,
             searchable: false
         }
@@ -205,6 +234,37 @@
             $('#FechaIngresoError').addClass('d-none');
             $('#msjErrorLote').hide();
         }
+        // Carga los tipos de insumos en el select desde la BD
+
+        function cargarTiposInsumo() {
+            fetch('/Home/ObtenerTiposInsumo')
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('tipo');
+                    select.innerHTML = '<option value="" disabled selected>Seleccione un tipo</option>';
+                    data.data.forEach(insumo => {
+                        const option = document.createElement('option');
+                        option.value = insumo.Id;
+                        option.text = insumo.Nombre;
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error al obtener tipos de insumo:', error));
+        }
+        function limpiarErroresInsumo() {
+            $('#NombreError, #CantidadError, #TipoError, #StockMinimoError, #CostoError, #msjError').hide();
+        }
+        $('#FormModal').on('show.bs.modal', function () {
+            limpiarErroresInsumo();
+            cargarTiposInsumo();
+        });
+
+        $('#tablaInsumos tbody').on('click', '.btn-ver-historial', function () {
+            var data = tabledata.row($(this).parents('tr')).data();
+            abrirModalHistorial(data.Id);
+        });
+
+
 
         // Carga insumos en el select desde el backend
         function cargarInsumosEnSelect() {
@@ -225,20 +285,19 @@
             });
         }
 
-        // Ejecutar al abrir el modal (usando evento Bootstrap 5)
+        // Ejecutar al abrir el modal
         $('#FormModalLote').on('show.bs.modal', function () {
             cargarInsumosEnSelect();
             limpiarErrores();
         });
 
-        // Función para validar y enviar el lote (completá con tu lógica de guardado)
+        // Función para validar y enviar el lote
         function guardarLote() {
             limpiarErrores();
 
             let valido = true;
             const insumoId = $('#selectInsumoLote').val();
             const cantidad = $('#cantidadLote').val();
-            const costo = $('#codigoLote').val();
             const fechaVencimiento = $('#fechaVencimientoLote').val();
 
             if (!insumoId) {
@@ -247,10 +306,6 @@
             }
             if (!cantidad || cantidad <= 0) {
                 $('#CantidadLoteError').removeClass('d-none');
-                valido = false;
-            }
-            if (!costo || costo <= 0) {
-                $('#CostoError').removeClass('d-none');
                 valido = false;
             }
             if (!fechaVencimiento) {
@@ -263,28 +318,37 @@
                 return;
             }
 
-            $('#msjErrorLote').hide();
+            const hoy = new Date().toISOString().split('T')[0];
+            if (fechaVencimiento < hoy) {
+                $('#FechaIngresoError').removeClass('d-none').text('Fecha inválida o pasada.');
+                return;
+            }
 
-            // Carga por ajax el lote de insumo
-            
+            $('#msjErrorLote').hide();
+            console.log({
+                InsumoId: insumoId,
+                Cantidad: cantidad,
+                FechaDeVencimiento: fechaVencimiento
+            });
             $.ajax({
-                url: '/Home/GuardarLote',  //Ruta 
+                url: '@Url.Action("GuardarLote", "Home")',
                 method: 'POST',
                 data: {
-                    insumoId: insumoId,
-                    cantidad: cantidad,
-                    costo: costo,
-                    fechaVencimiento: fechaVencimiento
+                    InsumoId: insumoId,
+                    Cantidad: cantidad,
+                    FechaDeVencimiento: fechaVencimiento
                 },
-                success: function(resp) {
+
+                success: function (resp) {
                     $('#FormModalLote').modal('hide');
                     alert('Lote guardado correctamente');
                 },
-                error: function() {
+                error: function () {
                     alert('Error al guardar el lote');
                 }
             });
         }
+
 
 
 
@@ -341,28 +405,6 @@
 
     $("#FormModalLote").modal("show");
 }
-        function guardarLote() {
-            const lote = {
-                IdInsumo: $("#selectInsumoLote").val(),
-                CodigoLote: $("#codigoLote").val(),
-                Cantidad: $("#cantidadLote").val(),
-                FechaIngreso: $("#fechaIngresoLote").val(),
-                FechaVencimiento: $("#fechaVencimientoLote").val()
-            };
-
-            if (!lote.IdInsumo || !lote.CodigoLote || !lote.Cantidad || !lote.FechaIngreso || !lote.FechaVencimiento) {
-                $("#msjErrorLote").text("Todos los campos son obligatorios").removeClass("d-none");
-                return;
-            }
-
-            // Ocultar error, envia datos por AJAX
-            console.log("Lote cargado:", lote);
-
-            $("#FormModalLote").modal("hide");
-        }
-
-
-
 
   // Evento para editar: se muestra el modal con los datos del insumo seleccionado
 $('#tablaInsumos tbody').on('click', '.btn-editar', function () {
@@ -414,11 +456,11 @@ $('#tablaInsumos tbody').on('click', '.btn-eliminar', function () {
     function guardar() {
 
     var Insumo = {
-    //Id: $("#id").val(),
+    Id: $("#id").val(),
     Nombre: $("#nombre").val(),
     StockMinimo: $("#stockMinimo").val(),
-    Cantidad : $("#Unidad"),
-    Tipo: $("#tipo").val(),
+    Cantidad: $("#Unidad").val(),
+    TipoId: $("#tipo").val(),
     Costo: $("#costo").val(),
     FechaDeCreacion: $("#fechaDeCreacion").val()
     }
@@ -476,6 +518,37 @@ $('#tablaInsumos tbody').on('click', '.btn-eliminar', function () {
     // se puede mostrar un loader o algo, ya que es lo que se ejecuta antes de la llamada ajax
     }
     });
+        }
+        function abrirModalHistorial(idInsumo) {
+    $('#FormModalHistorial').modal('show');
+
+    if ($.fn.DataTable.isDataTable('#tablaHistorialLotes')) {
+        $('#tablaHistorialLotes').DataTable().destroy();
     }
+
+    $('#tablaHistorialLotes').DataTable({
+    ajax: {
+        url: '@Url.Action("ListarLoteInsumo", "Home")',
+        type: 'GET',
+        data: { idInsumo: idInsumo },
+        dataSrc: function(json) {
+            console.log('Respuesta AJAX:', json);
+            // Ajustar según lo que devuelva el backend
+            return json.data || [];
+        }
+    },
+    columns: [
+        { data: 'Id', title: 'ID Lote' },
+        { data: 'Cantidad', title: 'Cantidad' },
+        { data: 'fecha_vencimiento', title: 'Fecha Vencimiento' }
+    ],
+    language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+    }
+});
+
+}
+
+
     </script>
 }

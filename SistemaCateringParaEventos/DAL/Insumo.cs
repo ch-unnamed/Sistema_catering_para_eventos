@@ -21,8 +21,6 @@ namespace DAL
             {
                 BE.Insumo unInsumo = new BE.Insumo();
 
-                // tomar cada fila como se usa en el sp
-
                 unInsumo.Id = Convert.ToInt32(fila["id"]);
                 unInsumo.Nombre = fila["nombre"].ToString();
                 unInsumo.Unidad = Convert.ToInt32(fila["unidad"]);
@@ -37,26 +35,33 @@ namespace DAL
             return Insumos;
         }
 
-        public void Insertar(BE.Insumo objInsumo)
+        public int Insertar(BE.Insumo objInsumo)
         {
             var parametros = new SqlParameter[]
             {
-                conexion.crearParametro("@Nombre", objInsumo.Nombre),
-                conexion.crearParametro("@Tipo", objInsumo.TipoId),
-                conexion.crearParametro("@Unidades",objInsumo.Unidad),
-                conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
-                conexion.crearParametro("@Costo", objInsumo.Costo)
+        conexion.crearParametro("@Nombre", objInsumo.Nombre),
+        conexion.crearParametro("@TipoInsumoId", objInsumo.TipoId),
+        conexion.crearParametro("@Unidades", objInsumo.Unidad),
+        conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
+        conexion.crearParametro("@Costo", objInsumo.Costo)
             };
 
-            conexion.EscribirPorStoreProcedure("sp_InsertarInsumo", parametros);
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_InsertarInsumo", parametros);
+
+            if (dt.Rows.Count == 0)
+                throw new Exception("No se pudo obtener el Id del insumo insertado.");
+
+            return Convert.ToInt32(dt.Rows[0][0]);
         }
+
+
 
         public void Editar(BE.Insumo objInsumo)
         {
             var parametros = new SqlParameter[]
             {
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
-                conexion.crearParametro("@Tipo", objInsumo.TipoId),
+                conexion.crearParametro("@TipoInsumoId", objInsumo.TipoId),
                 conexion.crearParametro("@Unidades",objInsumo.Unidad),
                 conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
                 conexion.crearParametro("@Costo", objInsumo.Costo)

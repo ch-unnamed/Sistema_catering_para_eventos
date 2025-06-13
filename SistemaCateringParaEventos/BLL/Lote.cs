@@ -17,6 +17,7 @@ namespace BLL
 
             try
             {
+
                 if (oLote.Cantidad <= 0)
                 {
                     mensaje = "La cantidad debe ser mayor a cero.";
@@ -85,5 +86,11 @@ namespace BLL
                 return false;
             }
         }
+
+        public List<BE.Lote> ListarLotesPorInsumo(int idInsumo)
+        {
+            return _dalLote.ListarLotes(idInsumo);
+        }
+
     }
 }

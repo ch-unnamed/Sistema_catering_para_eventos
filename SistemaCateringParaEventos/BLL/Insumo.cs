@@ -22,34 +22,33 @@ namespace BLL
             DAL.Insumo InsumoDAL = new DAL.Insumo();
             return InsumoDAL.ListarInsumos();
         }
-        public void CrearInsumo(BE.Insumo objInsumo)
+        public int CrearInsumo(BE.Insumo objInsumo)
         {
-            //validaciones
+            // Validaciones
             if (string.IsNullOrEmpty(objInsumo.Nombre))
-            {
                 throw new Exception("Debe indicar un nombre.");
-            }
 
             if (objInsumo.StockMinimo <= 0)
-            {
                 throw new Exception("El valor ingresado debe ser mayor a 0");
+
+            return objInsumoDAL.Insertar(objInsumo);
+        }
+
+
+
+        public bool EditarInsumo(BE.Insumo oInsumo)
+        {
+            try
+            {
+                objInsumoDAL.Editar(oInsumo);
+                return true;
             }
-
-
-            objInsumoDAL.Insertar(objInsumo);
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        public void EditarInsumo(BE.Insumo objInsumo)
-        {
-            objInsumoDAL.Editar(objInsumo);
-
-        }
-
-        public BE.Insumo Buscar(string NombreInsumo)
-        {
-            BE.Insumo InsumoEncontrado = objInsumoDAL.Buscar(NombreInsumo);
-            return InsumoEncontrado;
-        }
 
         public bool EliminarInsumo(int id)
         {

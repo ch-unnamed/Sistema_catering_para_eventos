@@ -226,7 +226,7 @@ namespace DAL
             SqlParameter objParametro = new SqlParameter();
 
             objParametro.ParameterName = pNombre;
-            objParametro.Value = pValor;
+            objParametro.Value = pValor ?? (object)DBNull.Value;
             objParametro.DbType = DbType.String;
 
             return objParametro;
