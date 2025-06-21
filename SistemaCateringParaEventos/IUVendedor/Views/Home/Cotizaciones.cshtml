@@ -4,8 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Cotizaciones</h2>
-
 <ol class="breadcrumb mb-4 mt-2">
     <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
     <li class="breadcrumb-item active">Cotizaciones</li>
@@ -17,7 +15,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+                <button id="crearNuevo" type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
             </div>
         </div>
 
@@ -29,7 +27,6 @@
                     <th>Evento</th>
                     <th>Dni</th>
                     <th>Vendedor</th>
-                    <th>Menu</th>
                     <th>Fecha Pedido</th>
                     <th>Fecha Realizacion</th>
                     <th>Total</th>
@@ -61,13 +58,13 @@
                     <input type="text" id="id" value="0" />
 
                     <div class="col-sm-6">
-                        <label for="idEvento" class="form-label">Evento (id)</label>
+                        <label for="idEvento" class="form-label">Evento (ID)</label>
                         <input type="number" class="form-control" id="idEvento" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="dni" class="form-label">DNI (Cliente)</label>
-                        <input type="text" class="form-control" id="dni" autocomplete="off">
+                        <label for="idCliente" class="form-label">Cliente (ID)</label>
+                        <input type="text" class="form-control" id="idCliente" autocomplete="off">
                     </div>
 
                     @* Si son mas  de 20 en la parte de cantidad se habilita 1 menu mas *@
@@ -103,7 +100,8 @@
 
                     <div class="col-sm-6">
                         <label for="total" class="form-label">Total</label>
-                        <input type="tel" class="form-control" id="total" autocomplete="off">
+                        <input type="tel" class="form-control" id="total" autocomplete="off" 
+                               readonly disabled data-bs-toggle="tooltip" data-bs-placement="top">
                     </div>
 
                     <div class="col-sm-6">
@@ -126,6 +124,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button id="btnGuardarSeleccion" type="button" class="btn btn-primary">Guardar</button>
+                <button id="btnEditarSeleccion" type="button" class="btn btn-primary d-none">Guardar</button>
             </div>
         </div>
     </div>
@@ -134,8 +133,11 @@
 @* t0d0s los scripts son renderizados a layour, en la parte de RenderSection *@
 @section Scripts {
     <script>
-    // Urls (solo para .ajax, luego lo cambio a fetch)
+        // Urls (solo para .ajax, luego lo cambio a fetch)
+        let totalPrecioBase = 0;
+        const idRol = document.getElementById("idUsuario").value;
         const urlListarCotizaciones = '@Url.Action("ListarCotizaciones", "Home")';
+        var tabledata;
     </script>
 
     <script src="~/Scripts/JS-COTIZACION/base.js"></script>

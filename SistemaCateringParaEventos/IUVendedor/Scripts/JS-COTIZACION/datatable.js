@@ -1,5 +1,4 @@
-﻿    var tabledata;
-
+﻿
     tabledata = $('#tablaCotizacion').DataTable({
         responsive: true,
         orening: false,
@@ -27,19 +26,44 @@
                     return row.Vendedor.IdUsuario;
                 }
             },
-            {
-                "data": "Menu",
-                "render": function (data, type, row) {
-                    return row.Menu.Nombre;
-                }
-            },
             { "data": "FechaPedido" },
             { "data": "FechaRealizacion" },
-            { "data": "Total" },
+            {
+                "data": "Total",
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        // formato pesos argentinos
+                        return data != null
+                            ? data.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
+                            : "";
+                    }
+                    return data;
+                }
+            },
             {
                 "data": "Estado",
                 "render": function (data, type, row) {
-                    return row.Estado.Nombre;
+                    const estado = row.Estado.Nombre;
+
+                    let clase = '';
+                    switch (estado) {
+                        case "Completado":
+                            clase = 'background-color: #28a745; color: white;'; // verde
+                            break;
+                        case "Confirmado":
+                            clase = 'background-color: #0056b3; color: white;'; // azul oscuro
+                            break;
+                        case "Pendiente":
+                            clase = 'background-color: #ffc107; color: white;'; // amarillo
+                            break;
+                        case "Rechazado":
+                            clase = 'background-color: #dc3545; color: white;'; // rojo/naranja
+                            break;
+                        default:
+                            clase = 'background-color: #6c757d; color: white;'; // gris por defecto
+                    }
+
+                    return `<span class="badge" style="padding: 5px 12px; font-size: 1rem; font-weight: 600; border-radius: 8px; ${clase}">${estado}</span>`;
                 }
             },
             {
