@@ -34,6 +34,7 @@ namespace DAL
                 unMenuPlato.Plato.Id = Convert.ToInt32(fila["id"]);
                 unMenuPlato.Plato.Nombre = fila["Nombre"].ToString(); 
                 unMenuPlato.Plato.Descripcon = fila["descripcion"].ToString(); 
+                unMenuPlato.Plato.Precio = Convert.ToDecimal(fila["precio"]);
 
                 platosPorMenuId.Add(unMenuPlato);
 

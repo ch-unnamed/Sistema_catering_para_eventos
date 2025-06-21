@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BE;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,19 +48,74 @@ namespace DAL
                 estado_nombre.Nombre = fila["estado_nombre"].ToString();
                 unaCotizacion.Estado = estado_nombre;
 
-                BE.Menu menu_nombre= new BE.Menu();
-                menu_nombre.Nombre = fila["menu_nombre"].ToString();
-                unaCotizacion.Menu = menu_nombre;
-
                 cotizaciones.Add(unaCotizacion);
             }
 
             return cotizaciones;
         }
 
-        public void GenerarDescuento()
+        public bool EditarCotizacion(BE.Cotizacion cotizacion, out string mensaje)
         {
-            // Logica de generar descuento
+            Conexion conexion = new Conexion();
+
+            bool resultado = false;
+            mensaje = string.Empty;
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@cotizacion_id", cotizacion.IdCotizacion),
+                new SqlParameter("@estado_id", cotizacion.Estado.IdEstado),
+                new SqlParameter("@fecha_realizacion", cotizacion.FechaRealizacion),
+                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+            };
+
+            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_editar_cotizacion", parametros);
+
+            mensaje = parametros[3].Value.ToString();
+            resultado = Convert.ToBoolean(parametros[4].Value);
+
+            return resultado;
+        }
+
+        public bool EliminarCotizacion(int cotizacion_id, out string mensaje)
+        {
+            Conexion conexion = new Conexion();
+
+            bool resultado = false;
+            mensaje = string.Empty;
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@IdCotizacion", cotizacion_id),
+                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+            };
+
+            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_cotizacion", parametros);
+
+            mensaje = parametros[1].Value.ToString();
+            resultado = Convert.ToBoolean(parametros[2].Value);
+
+            return resultado;
+        }
+
+        public string ObtenerMailCliente(int cliente_id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@clienteID", cliente_id)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_mail_cliente", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToString(dt.Rows[0]["email"]);
+            }
+            return "";
         }
     }
 }

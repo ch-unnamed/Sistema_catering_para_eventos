@@ -10,7 +10,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
-    @*<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />*@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
@@ -18,7 +18,9 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="@Url.Action("Index", "Home")">@usuario.Nombre</a>
+        <a class="navbar-brand ps-3" href="@Url.Action("Index", "Home")"> @usuario.Nombre </a>
+        <input id="idUsuario" type="hidden" value="@usuario.Rol_id.GetHashCode()" />
+
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
 

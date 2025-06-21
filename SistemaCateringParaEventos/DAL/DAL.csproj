@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Configuracion_Empresa.cs" />
     <Compile Include="Lote.cs" />
     <Compile Include="Tipo_Insumo.cs" />
     <Compile Include="Estado.cs" />
