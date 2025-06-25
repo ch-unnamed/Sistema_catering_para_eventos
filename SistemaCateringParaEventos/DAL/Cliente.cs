@@ -105,20 +105,82 @@ namespace DAL
         public bool EliminarCliente(int idCliente, out string mensaje)
         {
             Conexion conexion = new Conexion();
+            
             bool resultado = false;
             mensaje = string.Empty;
-            SqlParameter[] parametrosSql = new SqlParameter[]
+
+            try
             {
-                new SqlParameter("@Id", idCliente),
-                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
-                new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+                SqlParameter[] parametrosSql = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", idCliente),
+                    new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                    new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+                };
+                
+                int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_cliente", parametrosSql);
+                
+                mensaje = parametrosSql[1].Value.ToString();
+                resultado = Convert.ToBoolean(parametrosSql[2].Value);
+                
+                return resultado;
+            }
+            catch(SqlException ex)
+            {
+                if(ex.Number == 547) // Restriccion de FK
+                {
+                    mensaje = "¡El Cliente tiene vinculos activos con Cotizacion!";
+                } else
+                {
+                    mensaje = "Error en la base de datos: " + ex.Message;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error inesperado" + ex.Message;
+                return false;
+            }
+        }
+
+        public int cantidadCliente(int cliente_id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@cliente_id", cliente_id)
             };
-            // Ejecutamos el procedimiento almacenado
-            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_cliente", parametrosSql);
-            // Capturamos los valores de salida
-            mensaje = parametrosSql[1].Value.ToString();
-            resultado = Convert.ToBoolean(parametrosSql[2].Value);
-            return resultado;
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_cantidad_cliente", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["cantidad"]);
+            }
+            return 0;
+        }
+        public BE.Cliente dniCliente(int cliente_id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@cliente_id", cliente_id)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_dni_cliente", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow fila = dt.Rows[0];
+
+                return new BE.Cliente
+                {
+                    Dni = Convert.ToInt64(fila["dni"])
+                };
+            }
+            return null;
         }
     }
 }

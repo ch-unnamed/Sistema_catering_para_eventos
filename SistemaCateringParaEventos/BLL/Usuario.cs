@@ -31,5 +31,13 @@ namespace BLL
 
         }
         */
+
+        public BE.Usuario idVendedor(int rol_id)
+        {
+            DAL.Usuario usuario = new DAL.Usuario();
+
+            return usuario.idVendedor(rol_id);
+        }
+
     }
 }

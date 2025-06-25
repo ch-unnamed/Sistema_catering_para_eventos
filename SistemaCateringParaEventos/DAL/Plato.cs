@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -197,33 +197,47 @@ namespace DAL
             return platos;
         }
 
-        public void InsertarPlatosCotizacion(int cotizacionId, int menuId, List<BE.Plato> platos)
+        public int InsertarPlatosCotizacion(int eventoId, int clienteId, List<BE.Menu_Plato> menu_platos, DateTime fechaRealizacion, decimal total, int estado_id, int vendedor_id)
+
         {
             Conexion conexion = new Conexion();
 
-            // 1. Crear DataTable para simular PlatoIdList
-            DataTable dtPlatos = new DataTable();
-            dtPlatos.Columns.Add("plato_id", typeof(int));
+            DataTable dtMenuPlatos = new DataTable();
+            dtMenuPlatos.Columns.Add("menu_id", typeof(int));
+            dtMenuPlatos.Columns.Add("plato_id", typeof(int));
 
-            foreach (var plato in platos)
+            foreach (var item in menu_platos)
             {
-                dtPlatos.Rows.Add(plato.Id);
+                dtMenuPlatos.Rows.Add(item.Menu.Id, item.Plato.Id);
             }
 
-            // 2. Crear parámetros del SP
             SqlParameter[] parametros = new SqlParameter[]
             {
-                new SqlParameter("@cotizacion_id", cotizacionId),
-                new SqlParameter("@menu_base_id", menuId),
-                new SqlParameter("@platos", SqlDbType.Structured)
+                new SqlParameter("@evento_id", eventoId),
+                new SqlParameter("@cliente_id", clienteId),
+                new SqlParameter("@menu_platos", SqlDbType.Structured)
                 {
-                    TypeName = "PlatoIdList",
-                    Value = dtPlatos
-                }
+                    TypeName = "MenuConPlatos",
+                    Value = dtMenuPlatos
+                },
+                new SqlParameter("@fechaRealizacion", fechaRealizacion),
+                new SqlParameter("@total", total),
+                new SqlParameter("@estado_id", estado_id),
+                new SqlParameter("@vendedor_id", vendedor_id)
             };
 
-            conexion.EscribirPorStoreProcedure("CrearCotizacionMenuPersonalizado", parametros);
+            DataTable dt = conexion.LeerPorStoreProcedure("CrearCotizacionMenuPersonalizado", parametros);
+
+            int idCotizacion = 0;
+
+            if (dt.Rows.Count > 0)
+            {
+                idCotizacion = Convert.ToInt32(dt.Rows[0]["CotizacionGenerada"]);
+            }
+
+            return idCotizacion;
         }
+
 
     }
 }

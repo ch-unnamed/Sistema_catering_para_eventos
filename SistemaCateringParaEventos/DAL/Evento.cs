@@ -116,22 +116,43 @@ namespace DAL
             bool resultado = false;
             mensaje = string.Empty;
 
-            SqlParameter[] parametros = new SqlParameter[]
+            try
             {
-                new SqlParameter("@IdEvento", idEvento),
-                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
-                new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
-            };
+                SqlParameter[] parametros = new SqlParameter[]
+                {
+                    new SqlParameter("@IdEvento", idEvento),
+                    new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                    new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+                };
 
-            // Ejecupar el proc.almc
-            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_evento", parametros);
+                // Ejecutar el stored procedure
+                int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_evento", parametros);
 
-            // Capturar los valores de salida
-            mensaje = parametros[1].Value.ToString();
-            resultado = Convert.ToBoolean(parametros[2].Value);
+                // Capturar valores de salida
+                mensaje = parametros[1].Value.ToString();
+                resultado = Convert.ToBoolean(parametros[2].Value);
 
-            return resultado;
+                return resultado;
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547) // Restriccion de FK
+                {
+                    mensaje = "¡El evento tiene vinculos activos con Cotizacion!";
+                }
+                else
+                {
+                    mensaje = "Error en la base de datos: " + ex.Message;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error inesperado: " + ex.Message;
+                return false;
+            }
         }
+
 
         public BE.Evento ObtenerCapacidadPorIdEvento(int eventoId)
         {
@@ -139,7 +160,7 @@ namespace DAL
 
             SqlParameter[] parametros = new SqlParameter[]
             {
-        new SqlParameter("@evento_id", eventoId)
+                new SqlParameter("@evento_id", eventoId)
             };
 
             DataTable dt = conexion.LeerPorStoreProcedure("ObtenerCapacidadEvento", parametros);
@@ -187,5 +208,40 @@ namespace DAL
             conexion.EscribirPorStoreProcedure("CrearCotizacionMenuPersonalizado", parametros);
         }
 
+        public int cantidadEvento(int evento_id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@evento_id", evento_id)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_cantidad_evento", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["cantidad"]);
+            }
+            return 0;
+        }
+
+        public string nombreEvento(int evento_id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@evento_id", evento_id)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_nombre_evento", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToString(dt.Rows[0]["nombre"]);
+            }
+            return "";
+        }
     }
 }

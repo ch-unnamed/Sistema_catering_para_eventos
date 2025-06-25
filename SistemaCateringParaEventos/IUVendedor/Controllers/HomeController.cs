@@ -1,4 +1,4 @@
-﻿using BE;
+using BE;
 using BE;
 using BLL;
 using BLL;
@@ -78,19 +78,19 @@ namespace IUVendedor.Controllers
         [HttpPost]
         public JsonResult GuardarCliente(BE.Cliente oCliente)
         {
+            Dictionary<string, string> errores;
             object resultado;
-            string mensaje = string.Empty;
 
             if (oCliente.IdCliente == 0)
             {
-                resultado = new BLL.Cliente().CrearCliente(oCliente, out mensaje);
+                resultado = new BLL.Cliente().CrearCliente(oCliente, out errores);
             }
             else
             {
-                resultado = new BLL.Cliente().EditarCliente(oCliente, out mensaje);
+                resultado = new BLL.Cliente().EditarCliente(oCliente, out errores);
             }
 
-            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -137,19 +137,19 @@ namespace IUVendedor.Controllers
         [HttpPost]
         public JsonResult GuardarEvento(BE.Evento oEvento)
         {
+            Dictionary<string, string> errores;
             object resultado;
-            string mensaje = string.Empty;
 
             if (oEvento.IdEvento == 0)
             {
-                resultado = new BLL.Evento().CrearEvento(oEvento, out mensaje);
+                resultado = new BLL.Evento().CrearEvento(oEvento, out errores);
             }
             else
             {
-                resultado = new BLL.Evento().EditarEvento(oEvento, out mensaje);
+                resultado = new BLL.Evento().EditarEvento(oEvento, out errores);
             }
 
-            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -190,10 +190,6 @@ namespace IUVendedor.Controllers
                 Estado = new
                 {
                     e.Estado.Nombre
-                },
-                Menu = new
-                {
-                    e.Menu.Nombre
                 },
                 FechaPedido = e.FechaPedido.ToString("yyyy-MM-dd"),
                 e.Total,
@@ -250,7 +246,8 @@ namespace IUVendedor.Controllers
             {
                 IdPlato = mp.Plato.Id,
                 Nombre = mp.Plato.Nombre,
-                Descripcion = mp.Plato.Descripcon
+                Descripcion = mp.Plato.Descripcon,
+                Precio = mp.Plato.Precio
             }).ToList(); // es lista para que dentro del id de menu se ponga todos los platos correspondientes
 
             // estructura final
@@ -283,29 +280,211 @@ namespace IUVendedor.Controllers
             return Json(new { error = "Evento no encontrado" }, JsonRequestBehavior.AllowGet);
         }
 
-        // plato para cotizacion
+        //plato para cotizacion
         [HttpPost]
-        public JsonResult InsertarPlatosCotizacionPersonalizada(int cotizacionId, int menuId, List<int> platosSeleccionados)
+        public JsonResult InsertarPlatosCotizacionPersonalizada(int eventoId, int clienteId, List<MenuConPlatosDTO> menus, DateTime fechaRealizacion, decimal total,
+            int estado_id, int vendedor_id)
         {
             try
             {
                 // Crear objetos BE
-                BE.Cotizacion cotizacion = new BE.Cotizacion { IdCotizacion = cotizacionId };
-                BE.Menu menu = new BE.Menu { Id = menuId };
-                List<BE.Plato> platos = platosSeleccionados.Select(id => new BE.Plato { Id = id }).ToList();
+                BE.Cotizacion cotizacion = new BE.Cotizacion
+                {
+                    FechaRealizacion = fechaRealizacion,
+                    Total = total
+                };
+                BE.Evento evento = new BE.Evento { IdEvento = eventoId };
+                BE.Cliente cliente = new BE.Cliente { IdCliente = clienteId };
 
-                // Ejecutar lógica BLL
+                var menu_platos = new List<BE.Menu_Plato>();
+
+                foreach (var menu in menus)
+                {
+                    foreach (var platoId in menu.Platos)
+                    {
+                        menu_platos.Add(new BE.Menu_Plato
+                        {
+                            Menu = new BE.Menu { Id = menu.MenuId },
+                            Plato = new BE.Plato { Id = platoId }
+                        });
+                    }
+                }
+
+                BE.Estado estado = new BE.Estado { IdEstado = estado_id };
+                BE.Usuario vendedor = new BE.Usuario { IdUsuario = vendedor_id };
+
+                // Ejecutar lógica BLL y obtener ID de cotización generada
                 BLL.Plato gestor = new BLL.Plato();
-                gestor.InsertarPlatosCotizacion(cotizacion, menu, platos);
+                int idGenerado = gestor.InsertarPlatosCotizacion(cotizacion, evento, cliente, menu_platos, estado, vendedor);
 
-                return Json(new { success = true, message = "Platos insertados correctamente." });
+                // Devolver respuesta con ID generado
+                return Json(new
+                {
+                    success = true,
+                    message = "Platos insertados correctamente.",
+                    idCotizacion = idGenerado
+                });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error al insertar los platos: " + ex.Message });
             }
         }
-                    
+
+        [HttpGet]
+        public JsonResult ObtenerPorcentajeGananciaGeneral(string nombre)
+        {
+            nombre = "Ganancia General";
+
+            BE.Configuracion_Empresa configuracion = new BLL.Configuracion_Empresa().ObtenerPorcentajeGanancia(nombre);
+
+
+            var resultado = new
+            {
+                PorcentajeGanancia = configuracion.PorcentajeGanancia
+            };
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpGet]
+        public JsonResult ObtenerPorcentajeDescuentoPrimeraVez(string nombre)
+        {
+            nombre = "Primera vez ";
+
+            BE.Configuracion_Empresa configuracion = new BLL.Configuracion_Empresa().ObtenerPorcentajeGanancia(nombre);
+
+
+            var resultado = new
+            {
+                PorcentajeGanancia = configuracion.PorcentajeGanancia
+            };
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpGet]
+        public JsonResult ObtenerPorcentajeDescuentoMasDe3Menus(string nombre)
+        {
+            nombre = "Mas de 3 menus";
+
+            BE.Configuracion_Empresa configuracion = new BLL.Configuracion_Empresa().ObtenerPorcentajeGanancia(nombre);
+
+
+            var resultado = new
+            {
+                PorcentajeGanancia = configuracion.PorcentajeGanancia
+            };
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult consultarCliente (int cliente_id)
+        {
+            int configuracion = new BLL.Configuracion_Empresa().consultarCliente(cliente_id);
+
+            return Json(new { data = configuracion }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public JsonResult cantidadCliente (int cliente_id)
+        {
+            int cliente = new BLL.Cliente().cantidadCliente(cliente_id);
+
+            return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public JsonResult cantidadEvento(int evento_id)
+        {
+            int evento = new BLL.Evento().cantidadEvento(evento_id);
+
+            return Json(new { data = evento }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public JsonResult nombreEvento(int evento_id)
+        {
+            string evento = new BLL.Evento().nombreEvento(evento_id);
+
+            return Json(new { data = evento }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public JsonResult dniCliente(int cliente_id)
+        {
+            BE.Cliente cliente = new BLL.Cliente().dniCliente(cliente_id);
+
+            var resultado = new
+            {
+                dni = cliente.Dni
+            };
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult idVendedor(int rol_id)
+        {
+            BE.Usuario usuario = new BLL.Usuario().idVendedor(rol_id);
+
+            var resultado = new
+            {
+                idUsuario = usuario.IdUsuario
+            };
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EliminarCotizacion(int cotizacion_id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new BLL.Cotizacion().EliminarCotizacion(cotizacion_id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EditarCotizacion(BE.Cotizacion cotizacion)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            resultado = new BLL.Cotizacion().EditarCotizacion(cotizacion, out mensaje);
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerMailCliente(int cliente_id)
+        {
+            string cotizacion = new BLL.Cotizacion().ObtenerMailCliente(cliente_id);
+
+            var resultado = new
+            {
+                email = cotizacion
+            };
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EnviarMailCotizacion(string email, string html)
+        {
+            bool enviado = new BLL.Cotizacion().EnviarMailCotizacion(email, html);
+            return Json(new { success = enviado }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
         //////////////////////////////////////////////////////////////////
         
         public ActionResult Insumos()
@@ -556,7 +735,7 @@ namespace IUVendedor.Controllers
 
                 return Json(new { data = tiposInsumosFormateados }, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Control de error
                 return Json(new { success = false, message = "Error al obtener los tipos de insumo." }, JsonRequestBehavior.AllowGet);

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DAL;
+using System.Net.Mail;
 
 namespace BLL
 {
@@ -16,105 +19,88 @@ namespace BLL
             return clienteDAL.Listar();
         }
 
-        public int CrearCliente(BE.Cliente cliente, out string mensaje)
+        // validar email con MailAddres
+        bool EmailValido(string email)
         {
-            DAL.Cliente clienteDAL = new DAL.Cliente();
-
-            mensaje = string.Empty;
-
-            if (cliente.Dni <= 0 || cliente.Dni.ToString().Length != 8)
+            try
             {
-                mensaje = "El DNI debe contener exactamente 8 dígitos numéricos.";
+                var mail = new MailAddress(email);
+                return true;
             }
-            else if (string.IsNullOrEmpty(cliente.Email) || string.IsNullOrWhiteSpace(cliente.Email))
-            {
-                mensaje = "El email no puede estar vacío.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Region) || string.IsNullOrWhiteSpace(cliente.Region))
-            {
-                mensaje = "La región no puede estar vacía.";
-            }
-            else if (cliente.Telefono <= 0 || cliente.Telefono.ToString().Length < 6 || cliente.Telefono.ToString().Length > 15)
-            {
-                mensaje = "El teléfono debe contener entre 6 y 15 dígitos numéricos.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Nombre))
-            {
-                mensaje = "El nombre no puede estar vacío.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Apellido) || string.IsNullOrWhiteSpace(cliente.Apellido))
-            {
-                mensaje = "El apellido no puede estar vacío.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Tipo_Cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Tipo_Cliente.Nombre))
-            {
-                mensaje = "El tipo no puede estar vacio";
-            }
-
-            if (string.IsNullOrEmpty(mensaje))
-            {
-                // logica de mandar email
-                return clienteDAL.CrearCliente(cliente, out mensaje);
-
-            }
-            else
-            {
-                return 0;
-            }
-
-        }
-
-        public bool EditarCliente(BE.Cliente cliente, out string mensaje)
-        {
-            DAL.Cliente clienteDAL = new DAL.Cliente();
-
-            mensaje = string.Empty;
-
-            if (cliente.Dni <= 0 || cliente.Dni.ToString().Length != 8)
-            {
-                mensaje = "El DNI debe contener exactamente 8 dígitos numéricos.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Email) || string.IsNullOrWhiteSpace(cliente.Email))
-            {
-                mensaje = "El email no puede estar vacío.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Region) || string.IsNullOrWhiteSpace(cliente.Region))
-            {
-                mensaje = "La región no puede estar vacía.";
-            }
-            else if (cliente.Telefono <= 0 || cliente.Telefono.ToString().Length < 6 || cliente.Telefono.ToString().Length > 15)
-            {
-                mensaje = "El teléfono debe contener entre 6 y 15 dígitos numéricos.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Nombre))
-            {
-                mensaje = "El nombre no puede estar vacío.";
-            }
-            else if (string.IsNullOrEmpty(cliente.Apellido) || string.IsNullOrWhiteSpace(cliente.Apellido))
-            {
-                mensaje = "El apellido no puede estar vacío.";
-            }
-
-            else if (string.IsNullOrEmpty(cliente.Tipo_Cliente.Nombre) || string.IsNullOrWhiteSpace(cliente.Tipo_Cliente.Nombre))
-            {
-                mensaje = "El tipo no puede estar vacio";
-            }
-
-            if (string.IsNullOrEmpty(mensaje))
-            {
-                return clienteDAL.EditarCliente(cliente, out mensaje);
-            }
-            else
+            catch (FormatException)
             {
                 return false;
             }
+        }
 
+        public Dictionary<string, string> ValidarCliente(BE.Cliente cliente)
+        {
+            var errores = new Dictionary<string, string>();
+
+            if (string.IsNullOrWhiteSpace(cliente.Nombre))
+                errores["nombre"] = "El Cliente debe tener un Nombre";
+
+            if (string.IsNullOrWhiteSpace(cliente.Apellido))
+                errores["apellido"] = "El Cliente debe tener un Apellido";
+
+            if (!int.TryParse(cliente.Dni.ToString(), out int dni) || dni <= 0)
+                errores["dni"] = "El Cliente debe tener un DNI valido";
+
+            if (string.IsNullOrWhiteSpace(cliente.Email) || !EmailValido(cliente.Email))
+                errores["email"] = "El Cliente debe tener un Email valido";
+
+            if (string.IsNullOrWhiteSpace(cliente.Region))
+                errores["region"] = "El Cliente debe tener una Region";
+
+            if (cliente.Telefono <= 0 || cliente.Telefono.ToString().Length < 6 || cliente.Telefono.ToString().Length > 15)
+                errores["telefono"] = "El Cliente debe tener un Telefono valido";
+
+            if (string.IsNullOrWhiteSpace(cliente.Tipo_Cliente.Nombre))
+                errores["tipo"] = "El Cliente debe tener una Tipo";
+
+            return errores;
+        }
+
+        public int CrearCliente(BE.Cliente cliente, out Dictionary<string, string> errores)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+            errores = ValidarCliente(cliente);
+
+            if(errores.Count == 0)
+                return clienteDAL.CrearCliente(cliente, out _);
+            else
+                return 0;
+        }
+
+        public bool EditarCliente(BE.Cliente cliente, out Dictionary<string, string> errores)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+            errores = ValidarCliente(cliente);
+
+            if (errores.Count == 0)
+                return clienteDAL.EditarCliente(cliente, out _);
+            else
+                return false;
         }
 
         public bool EliminarCliente(int idCliente, out string mensaje)
         {
             DAL.Cliente clienteDAL = new DAL.Cliente();
             return clienteDAL.EliminarCliente(idCliente, out mensaje);
+        }
+
+        public int cantidadCliente(int cliente_id)
+        {
+            DAL.Cliente cliente = new DAL.Cliente();
+
+            return cliente.cantidadCliente(cliente_id);
+        }
+
+        public BE.Cliente dniCliente(int cliente_id)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+
+            return clienteDAL.dniCliente(cliente_id);
         }
     }
 }
