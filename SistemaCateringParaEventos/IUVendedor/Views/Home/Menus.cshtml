@@ -11,65 +11,102 @@
         <i class="fa fa-utensils me-1"></i> Lista de Menús
     </div>
     <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear nuevo Menú</button>
+            </div>
+        </div>
 
-        <table id="tabla" class="display cell-border" style="width:100%">
+        <hr />
+
+        <table id="tablaMenus" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
-                    <th>ID_Menu</th>
                     <th>Nombre</th>
-                    <th>Fecha de creación</th>
+                    <th>Descripción</th>
+                    <th>Fecha de Creación</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Menú 1</td>
-                    <td>01/01/2025</td>
-                    <td class="d-flex justify-content-end">
-                        <div class="col-sm-6">
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalPlatos">Platos</button>
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalSugerirCambios">Sugerir Cambios</button>
-                        </div>
-                    </td>
 
-                </tr>
+            <tbody>
+                @* AJAX *@
             </tbody>
         </table>
+
 
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalSugerirCambios" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<!-- MODAL PARA CREAR NUEVO MENU -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Sugerir Cambios</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Menú</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row g-2">
 
                     <div class="col-sm-6">
-                        <label for="nota" class="form-label">Nota</label>
-                        <textarea name="nota" rows="5" cols="50" placeholder="Escribe aquí..."></textarea>
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" class="form-control" id="descripcion" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-12 mt-3">
+                        <label class="form-label">Seleccionar Platos (mínimo 3, máximo 15)</label>
+                        <div class="table-responsive">
+                            <table id="tablaSeleccionPlatos" class="display table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Descripción</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 mt-2">
+                        <div id="mensajeMaximoPlatos" class="alert alert-warning d-none">
+                            Ya se seleccionaron 15 platos.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
                     </div>
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="enviarSugerencia()">Enviar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="modalPlatos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<!-- MODAL PARA VER PLATOS DEL MENU -->
+<div class="modal fade" id="modalVerPlatosMenu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Platos del Menú</h5>
+                <h5 class="modal-title" id="tituloModalPlatos">Platos del Menú: </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -80,13 +117,13 @@
                             <table id="tablaPlatos" class="display table table-striped table-bordered" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th>Nombre del Plato</th>
-                                        <th>Categoria</th>
-                                        <th>Cantidad en Menú</th>
+                                        <th>Precio</th>
+                                        <th>Descripción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                     
                                 </tbody>
                             </table>
                         </div>
@@ -101,4 +138,205 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        var tabledataMenus;
+        var filaSeleccionada;
 
+        tabledataMenus = $('#tablaMenus').DataTable({
+            responsive: true,
+            ordering: false,
+            ajax: {
+                url: '@Url.Action("ListarMenusChef", "Home")',
+                type: "GET",
+                datatype: "json",
+                complete: function () {
+                    $('#tablaMenus').DataTable().columns.adjust().draw();
+                }
+            },
+            columns: [
+                { data: "Nombre" },
+                { data: "Descripcion" },
+                { data: "FechaDeCreacion" },
+                {
+                    data: null,
+                    defaultContent: `
+                        <button class="btn btn-primary btn-sm btn-editar">Editar</button>
+                        <button class="btn btn-danger btn-sm btn-eliminar">Eliminar</button>
+                        <button class="btn btn-info btn-sm btn-ver-platosMenu">Ver platos</button> `,
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json',
+            }
+        });
+
+        // PARA EDITAR O CREAR MENU
+        function abrirModal(json) {
+            $("#id").val(0);
+            $("#nombre").val("");
+            $("#descripcion").val("");
+
+            $("#msjError").hide();
+
+            if (json != null) { // entra acá para editar
+                $("#id").val(json.Id);
+                $("#nombre").val(json.Nombre);
+                $("#descripcion").val(json.Descripcion);
+            }
+
+            cargarPlatos();
+
+            $("#FormModal").modal("show");
+        }
+
+        $('#tablaMenus tbody').on('click', '.btn-ver-platosMenu', function () {
+            var data = tabledataMenus.row($(this).parents('tr')).data();
+            verPlatosMenu(data.Id, data.Nombre);
+        });
+
+        function cargarPlatos() {
+            $.ajax({
+                url: '@Url.Action("ListarPlatos", "Home")',
+                method: 'GET',
+                success: function (data) {
+                    if ($.fn.DataTable.isDataTable('#tablaSeleccionPlatos')) {
+                        $('#tablaSeleccionPlatos').DataTable().clear().destroy();
+                    }
+        
+                    $('#tablaSeleccionPlatos tbody').empty();
+
+                    data.forEach(plato => {
+                        $('#tablaSeleccionPlatos tbody').append(`
+                            <tr>
+                                <td class="text-center">
+                                    <input class="form-check-input plato-checkbox" type="checkbox" value="${plato.Id}">
+                                </td>
+                                <td>${plato.Nombre}</td>
+                                <td>${plato.Precio ? `$${plato.Precio.toFixed(2)}` : '-'}</td>
+                                <td>${plato.Descripcon || ''}</td>
+                            </tr>
+                        `);
+                    }); 
+
+                    // Marcar o desmarcar checkbox al hacer clic en la fila
+                    $('#tablaSeleccionPlatos tbody').on('click', 'tr', function (e) {
+                        if (e.target.type !== 'checkbox') {
+                            const checkbox = $(this).find('.plato-checkbox');
+
+                            // Solo actuar si no está deshabilitado
+                            if (!checkbox.prop('disabled')) {
+                                checkbox.prop('checked', !checkbox.prop('checked')).trigger('change');
+                            }
+                        }
+                    });
+
+                    $('#tablaSeleccionPlatos').DataTable({
+                        language: {
+                            url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+                        },
+                        ordering: false,
+                        paging: false, // paginación desactivada
+                        lengthChange: false, // ocultar el selector de cantidad
+                        scrollY: '300px', // altura fija con scroll vertical
+                        scrollCollapse: true
+                    });
+
+                    $(".plato-checkbox").on("change", function () {
+                        const seleccionados = $(".plato-checkbox:checked").length;
+                        const max = 15;
+
+                        if (seleccionados >= max) {
+                            $(".plato-checkbox:not(:checked)").prop("disabled", true);
+                            $("#mensajeMaximoPlatos").removeClass("d-none");
+                        } else {
+                            $(".plato-checkbox").prop("disabled", false);
+                            $("#mensajeMaximoPlatos").addClass("d-none");
+                        }
+                    });
+
+                },
+
+                error: function () {
+                    $("#msjError").removeClass("d-none").text("Error al cargar los platos.");
+                }
+            });
+        }
+
+        function verPlatosMenu(idMenu, nombreMenu) {
+            $('#modalVerPlatosMenu').modal('show');
+
+            $('#tituloModalPlatos').text(`Platos del Menú: ${nombreMenu}`);
+
+            if ($.fn.DataTable.isDataTable('#tablaPlatos')) {
+                $('#tablaPlatos').DataTable().clear().destroy();
+            }
+
+            $('#tablaPlatos').DataTable({
+                ajax: {
+                    url: '@Url.Action("ObtenerPlatosDelMenu", "Home")',
+                    type: 'GET',
+                    data: { menu_id: idMenu },
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: 'Nombre', title: 'Nombre del Plato' },
+                    { data: 'Precio', title: 'Precio' },
+                    { data: 'Descripcion', title: 'Descripción' }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                }
+            });
+        }
+
+        function guardar() {
+            var platosSeleccionados = [];
+
+            // para recorrer los platos seleccionados, aunque se hayan filtrado platos
+            var table = $('#tablaSeleccionPlatos').DataTable();
+            table.rows().every(function () {
+                var row = $(this.node());
+                var checkbox = row.find('.plato-checkbox');
+                if (checkbox.is(':checked')) {
+                    platosSeleccionados.push({ Id: parseInt(checkbox.val()) });
+                }
+            });
+
+            if (platosSeleccionados.length < 3) {
+                swal("Se deben seleccionar al menos 3 platos", "", "warning");
+                return;
+            }
+
+            var menu = {
+                Id: parseInt($("#id").val()),
+                Nombre: $("#nombre").val(),
+                Descripcion: $("#descripcion").val(),
+                Platos: platosSeleccionados
+            };
+
+            $.ajax({
+                url: '@Url.Action("GuardarMenu", "Home")',
+                type: "POST",
+                data: JSON.stringify(menu),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.resultado != 0) {
+                        $("#FormModal").modal("hide");
+                        swal("¡Menú guardado!", "", "success");
+                        $('#tablaMenus').DataTable().ajax.reload();
+                    } else {
+                        $("#msjError").text(data.mensaje).show();
+                    }
+                },
+                error: function (err) {
+                    console.error("Error en AJAX", err);
+                }
+            });
+        }
+
+    </script>
+}

@@ -13,5 +13,11 @@ namespace BLL
             DAL.Menu_Plato menuPlatoDAL = new DAL.Menu_Plato();
             return menuPlatoDAL.ObtenerNombresPlatosPorMenu(menuId);
         }
+
+        public List<BE.Menu_Plato> ObtenerPlatosDelMenu(BE.Menu_Plato menuId)
+        {
+            DAL.Menu_Plato menuPlatoDAL = new DAL.Menu_Plato();
+            return menuPlatoDAL.ObtenerPlatosDelMenu(menuId);
+        }
     }
 }

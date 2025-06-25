@@ -174,6 +174,29 @@ namespace DAL
             return filasAfectadas;
         }
 
+        public List<BE.Plato> Listar()
+        {
+            Conexion conexion = new Conexion();
+
+            List<BE.Plato> platos = new List<BE.Plato>();
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_platos");
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Plato unPlato = new BE.Plato();
+                unPlato.Id = Convert.ToInt32(fila["id"]);
+                unPlato.Nombre = fila["nombre"].ToString();
+                unPlato.Precio = Convert.ToInt32(fila["precio"]);
+                unPlato.Descripcon = fila["descripcion"].ToString();
+                unPlato.FechaDeCreacion = Convert.ToDateTime(fila["fechaDeCreacion"]);
+
+                platos.Add(unPlato);
+            }
+
+            return platos;
+        }
+
         public void InsertarPlatosCotizacion(int cotizacionId, int menuId, List<BE.Plato> platos)
         {
             Conexion conexion = new Conexion();

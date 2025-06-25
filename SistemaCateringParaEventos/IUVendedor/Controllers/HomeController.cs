@@ -1,23 +1,23 @@
 ﻿using BE;
+using BE;
 using BLL;
+using BLL;
+using DAL;
 using DAL;
 using IUVendedor.Permisos;
 using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security; // Para autenticación basada en Forms Authentication
-
-using BE;
-using BLL;
-using System.Web.Helpers;
-using DAL;
-using Newtonsoft.Json;
-using System.Collections;
+using System.Web.Services.Description;
 
 namespace IUVendedor.Controllers
 {
@@ -206,7 +206,7 @@ namespace IUVendedor.Controllers
         [HttpGet]
         public JsonResult ListarMenus()
         {
-            List<BE.Menu> oLista = new BLL.Menu().Listar();
+            List<BE.Menu> oLista = new BLL.Menu().ListarMenus();
 
             // proyecto solo el campo nombre
             var menusFiltrados = oLista.Select(
@@ -305,9 +305,9 @@ namespace IUVendedor.Controllers
                 return Json(new { success = false, message = "Error al insertar los platos: " + ex.Message });
             }
         }
-
-
+                    
         //////////////////////////////////////////////////////////////////
+        
         public ActionResult Insumos()
         {
             return View();
@@ -383,12 +383,20 @@ namespace IUVendedor.Controllers
         }
 
 
-
-
+        [PermisosRol(Models.Rol.Chef)]
         public ActionResult Platos()
         {
             return View();
         }
+
+        [HttpGet]
+        public JsonResult ListarPlatos()
+        {
+            var platos = new BLL.Plato().Listar();
+            return Json(platos, JsonRequestBehavior.AllowGet);
+        }
+
+
         ///LOTES
 
         [HttpPost]
@@ -466,8 +474,71 @@ namespace IUVendedor.Controllers
             }
         }
 
+        
+        
+        
+        [PermisosRol(Models.Rol.Chef)]
+        public ActionResult Menus()
+        {
+            return View();
+        }
 
+        [HttpGet]
+        public JsonResult ListarMenusChef()
+        {
+            List<BE.Menu> oLista = new BLL.Menu().ListarMenus();
 
+            var menusFiltrados = oLista.Select(
+                menu => new
+                {
+                    menu.Id,
+                    menu.Nombre,
+                    menu.Descripcion,
+                    FechaDeCreacion = menu.FechaDeCreacion.ToString("dd-MM-yyyy"),
+                });
+
+            return Json(new { data = menusFiltrados }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerPlatosDelMenu(int menu_id)
+        {
+            // creo un objeto Menu_Plato y le asigno un Menu con el id recibido
+            BE.Menu_Plato menuPlato = new BE.Menu_Plato();
+            menuPlato.Menu = new BE.Menu();
+            menuPlato.Menu.Id = menu_id;
+
+            // obtengo la lista de platos asociados al menú seleccionado
+            List<BE.Menu_Plato> listaPlatos = new BLL.Menu_Plato().ObtenerPlatosDelMenu(menuPlato);
+
+            // proyecto la lista para devolver los campos necesarios
+            var platos = listaPlatos.Select(mp => new
+            {
+                Nombre = mp.Plato.Nombre,
+                Precio = mp.Plato.Precio,
+                Descripcion = mp.Plato.Descripcon
+            }).ToList();
+
+            return Json(new { data = platos }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GuardarMenu(BE.Menu menu)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            if (menu.Id == 0)
+            {
+                resultado = new BLL.Menu().CrearMenu(menu, out mensaje);
+            }
+            else // TODO
+            {
+                resultado = new BLL.Menu().EditarMenu(menu, out mensaje);
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
 
         //Tipo_Insumo
         [HttpGet]
@@ -585,12 +656,6 @@ namespace IUVendedor.Controllers
 
         [PermisosRol(Models.Rol.Administrador)]
         public ActionResult ConfigurarSistema()
-        {
-            return View();
-        }
-
-        [PermisosRol(Models.Rol.Gerente, Models.Rol.Chef)]
-        public ActionResult Menus()
         {
             return View();
         }

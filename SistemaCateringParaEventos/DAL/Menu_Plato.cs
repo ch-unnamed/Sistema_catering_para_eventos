@@ -41,5 +41,37 @@ namespace DAL
 
             return platosPorMenuId;
         }
+
+        public List<BE.Menu_Plato> ObtenerPlatosDelMenu(BE.Menu_Plato menu_plato)
+        {
+            Conexion conexion = new Conexion();
+
+            // guardo en una lista los platos que hay en un menu
+            List<BE.Menu_Plato> platosPorMenuId = new List<BE.Menu_Plato>();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@menu_id", menu_plato.Menu.Id) // por parametro va el id de el menu
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_ObtenerPlatosDelMenu", parametros);
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Menu_Plato unMenuPlato = new BE.Menu_Plato();
+                unMenuPlato.Menu = new BE.Menu();
+                unMenuPlato.Plato = new BE.Plato();
+
+                unMenuPlato.Menu.Id = Convert.ToInt32(fila["menu_id"]);
+                unMenuPlato.Plato.Id = Convert.ToInt32(fila["id"]);
+                unMenuPlato.Plato.Nombre = fila["Nombre"].ToString();
+                unMenuPlato.Plato.Precio = Convert.ToDecimal(fila["precio"]);
+                unMenuPlato.Plato.Descripcon = fila["descripcion"].ToString();
+
+                platosPorMenuId.Add(unMenuPlato);
+            }
+
+            return platosPorMenuId;
+        }
     }
 }
