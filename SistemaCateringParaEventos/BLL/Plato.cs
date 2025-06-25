@@ -1,4 +1,4 @@
-﻿﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +44,11 @@ namespace BLL
         public void EliminarPlato(BE.Plato objPlato)
         {
             objPlatoDAL.Eliminar(objPlato);
+        }
+
+        public List<BE.Plato> Listar()
+        {
+            return new DAL.Plato().Listar();
         }
 
         public int InsertarPlatosCotizacion(

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -172,6 +172,29 @@ namespace DAL
             filasAfectadas = objConexion.EscribirPorStoreProcedure("sp_Plato_Eliminar", parametrosPlato);
 
             return filasAfectadas;
+        }
+
+        public List<BE.Plato> Listar()
+        {
+            Conexion conexion = new Conexion();
+
+            List<BE.Plato> platos = new List<BE.Plato>();
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_platos");
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Plato unPlato = new BE.Plato();
+                unPlato.Id = Convert.ToInt32(fila["id"]);
+                unPlato.Nombre = fila["nombre"].ToString();
+                unPlato.Precio = Convert.ToInt32(fila["precio"]);
+                unPlato.Descripcon = fila["descripcion"].ToString();
+                unPlato.FechaDeCreacion = Convert.ToDateTime(fila["fechaDeCreacion"]);
+
+                platos.Add(unPlato);
+            }
+
+            return platos;
         }
 
         public int InsertarPlatosCotizacion(int eventoId, int clienteId, List<BE.Menu_Plato> menu_platos, DateTime fechaRealizacion, decimal total, int estado_id, int vendedor_id)

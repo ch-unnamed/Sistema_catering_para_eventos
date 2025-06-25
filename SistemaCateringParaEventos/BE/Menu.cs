@@ -24,7 +24,15 @@ namespace BE
 			set { _nombre = value; }
 		}
 
-		private DateTime _fechaDeCreacion;
+        private string _descripcion;
+
+        public string Descripcion
+        {
+            get { return _descripcion; }
+            set { _descripcion = value; }
+        }
+
+        private DateTime _fechaDeCreacion;
 
 		public DateTime FechaDeCreacion
 		{
