@@ -1,19 +1,13 @@
 using BE;
-using BE;
 using BLL;
-using BLL;
-using DAL;
 using DAL;
 using IUVendedor.Permisos;
 using Newtonsoft.Json;
-using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security; // Para autenticación basada en Forms Authentication
@@ -200,9 +194,9 @@ namespace IUVendedor.Controllers
         }
 
         [HttpGet]
-        public JsonResult ListarMenus()
+        public JsonResult ListarMenusVendedor()
         {
-            List<BE.Menu> oLista = new BLL.Menu().ListarMenus();
+            List<BE.Menu> oLista = new BLL.Menu().ListarMenusVendedor();
 
             // proyecto solo el campo nombre
             var menusFiltrados = oLista.Select(
@@ -313,11 +307,10 @@ namespace IUVendedor.Controllers
                 BE.Estado estado = new BE.Estado { IdEstado = estado_id };
                 BE.Usuario vendedor = new BE.Usuario { IdUsuario = vendedor_id };
 
-                // Ejecutar lógica BLL y obtener ID de cotización generada
                 BLL.Plato gestor = new BLL.Plato();
                 int idGenerado = gestor.InsertarPlatosCotizacion(cotizacion, evento, cliente, menu_platos, estado, vendedor);
 
-                // Devolver respuesta con ID generado
+                // devuelvo una respuesta con ID generado
                 return Json(new
                 {
                     success = true,
@@ -731,6 +724,18 @@ namespace IUVendedor.Controllers
             }
 
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult EliminarMenu(int idMenu)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new BLL.Menu().EliminarMenu(idMenu, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
         //Tipo_Insumo

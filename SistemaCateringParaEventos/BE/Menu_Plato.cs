@@ -24,5 +24,13 @@ namespace BE
 			set { _plato = value; }
 		}
 
+		private List<int> _platos;
+
+		public List<int> Platos
+		{
+			get { return _platos; }
+			set { _platos = value; }
+		}
+
 	}
 }
