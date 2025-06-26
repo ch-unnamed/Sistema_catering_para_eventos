@@ -21,7 +21,7 @@
 
     async function cargarOpcionesMenu(menuId) {
         try {
-            const response = await fetch('/Home/ListarMenus');
+            const response = await fetch('/Home/ListarMenusVendedor');
             const data = await response.json();
 
             const selectMenu = document.getElementById(menuId);

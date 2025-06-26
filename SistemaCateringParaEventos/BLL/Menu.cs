@@ -8,9 +8,9 @@ namespace BLL
 {
     public class Menu
     {
-        public List<BE.Menu> Listar()
+        public List<BE.Menu> ListarMenusVendedor()
         {
-            return new DAL.Menu().Listar();
+            return new DAL.Menu().ListarMenusVendedor();
         }
         public List<BE.Menu> ListarMenus()
         {
@@ -62,6 +62,12 @@ namespace BLL
                 return 0;
 
             return new DAL.Menu().EditarMenu(menu, out mensaje);
+        }
+ 
+        public bool EliminarMenu(int idMenu, out string mensaje)
+        {
+            DAL.Menu menuDAL = new DAL.Menu();
+            return menuDAL.EliminarMenu(idMenu, out mensaje);
         }
     }
 

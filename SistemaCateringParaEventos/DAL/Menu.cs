@@ -13,7 +13,7 @@ namespace DAL
     public class Menu
     {
         // Esto es para el vendedor, si lo borran se rompe cotizacion, es para mostrarlo en un select y no hacerlo hardcodeado como bot
-        public List<BE.Menu> Listar()
+        public List<BE.Menu> ListarMenusVendedor()
         {
             Conexion conexion = new Conexion();
 
@@ -111,5 +111,46 @@ namespace DAL
             return resultado;
         }
 
+        public bool EliminarMenu(int idMenu, out string mensaje)
+        {
+            Conexion conexion = new Conexion();
+
+            bool resultado = false;
+            mensaje = string.Empty;
+
+            try
+            {
+                SqlParameter[] parametrosSql = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", idMenu),
+                    new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                    new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+                };
+
+                int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_menu", parametrosSql);
+
+                mensaje = parametrosSql[1].Value.ToString();
+                resultado = Convert.ToBoolean(parametrosSql[2].Value);
+
+                return resultado;
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547) // Restriccion de FK
+                {
+                    mensaje = "¡El Menu tiene vinculos activos con Cotizacion!";
+                }
+                else
+                {
+                    mensaje = "Error en la base de datos: " + ex.Message;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error inesperado" + ex.Message;
+                return false;
+            }
+        }
     }
 }

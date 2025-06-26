@@ -160,10 +160,11 @@
                 { data: "FechaDeCreacion" },
                 {
                     data: null,
-                    defaultContent: `
-                        <button class="btn btn-primary btn-sm btn-editar">Editar</button>
-                        <button class="btn btn-danger btn-sm btn-eliminar">Eliminar</button>
-                        <button class="btn btn-info btn-sm btn-ver-platosMenu">Ver platos</button> `,
+                    defaultContent: `<div class="btn-group gap-2">
+                        <button class="btn btn-primary btn-sm rounded-2 btn-editar">Editar</button>
+                        <button class="btn btn-danger btn-sm rounded-2 btn-eliminar">Eliminar</button>
+                        <button class="btn btn-info btn-sm rounded-2 btn-ver-platosMenu">Ver platos</button>
+                        </div>`,
                     orderable: false,
                     searchable: false
                 }
@@ -338,5 +339,59 @@
             });
         }
 
+        // ELIMINAR MENU
+        $("#tablaMenus tbody").on("click", '.btn-eliminar', function () {
+            
+            var menuSeleccionado = $(this).closest("tr");
+
+            var data = tabledataMenus.row(menuSeleccionado).data(); // los datos de la fila seleccionada
+
+            console.log(data);
+            
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Queres Eliminar el Menu?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+                async function () {
+                    try {
+                        const response = await fetch("/Home/EliminarMenu", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            },
+                            body: JSON.stringify({ idMenu: data.Id })
+
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Error al realizar la solicitud al servidor.")
+                        }
+
+                        const result = await response.json();
+
+                        if (result.resultado) {
+                            tabledataMenus.row(menuSeleccionado).remove().draw(false);
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "No se pudo eliminar",
+                                text: result.mensaje
+                            });
+                        }
+
+                    } catch (error) {
+                        $("#msjError").text("Error con fetch");
+                        console.error("Error en la solicitud fetch:", error);
+                        swal("Error", "Faltan completar campos", "error");
+                    }
+                });
+
+        });
     </script>
 }
