@@ -102,5 +102,27 @@ namespace DAL
                 //FechaDeCreacion = Convert.ToDateTime(row["FechaDeCreacion"])
             };
         }
+
+        public void DescontarStockEnLotes(int idInsumo, int cantidadAUsar)
+        {
+            var parametros = new SqlParameter[]
+            {
+                conexion.crearParametro("@IdInsumo", idInsumo),
+                conexion.crearParametro("@CantidadAUsar", cantidadAUsar)
+            };
+
+            try
+            {
+                conexion.EscribirPorStoreProcedure("sp_DescontarStockEnLotes", parametros);
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("No hay stock suficiente"))
+                    throw new Exception("Stock insuficiente para realizar la operación.");
+
+                throw;
+            }
+        }
+
     }
 }

@@ -561,6 +561,20 @@ namespace IUVendedor.Controllers
             return Json(new { nuevoId = nuevoId, exito = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult DescontarStock(int idInsumo, int cantidad)
+        {
+            try
+            {
+                new BLL.Insumo().DescontarStockEnLotes(idInsumo, cantidad);
+                return Json(new { success = true, message = "Stock descontado." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
 
         [PermisosRol(Models.Rol.Chef)]
         public ActionResult Platos()
