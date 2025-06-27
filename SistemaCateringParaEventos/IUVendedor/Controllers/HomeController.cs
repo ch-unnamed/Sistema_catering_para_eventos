@@ -525,7 +525,7 @@ namespace IUVendedor.Controllers
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-
+        [HttpPost]
         public JsonResult GuardarInsumo(BE.Insumo oInsumo)
         {
             string mensaje = string.Empty;
