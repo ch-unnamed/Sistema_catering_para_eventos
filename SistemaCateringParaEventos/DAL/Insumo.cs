@@ -60,9 +60,9 @@ namespace DAL
         {
             var parametros = new SqlParameter[]
             {
+                conexion.crearParametro("@Id", objInsumo.Id),
                 conexion.crearParametro("@Nombre", objInsumo.Nombre),
                 conexion.crearParametro("@TipoInsumoId", objInsumo.TipoId),
-                conexion.crearParametro("@Unidades",objInsumo.Unidad),
                 conexion.crearParametro("@StockMinimo", objInsumo.StockMinimo),
                 conexion.crearParametro("@Costo", objInsumo.Costo)
             };

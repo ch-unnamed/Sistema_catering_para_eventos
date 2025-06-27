@@ -43,10 +43,24 @@ namespace BLL
         {
             // Validaciones
             if (string.IsNullOrEmpty(objInsumo.Nombre))
+            {
                 throw new Exception("Debe indicar un nombre.");
+            }
 
             if (objInsumo.StockMinimo <= 0)
-                throw new Exception("El valor ingresado debe ser mayor a 0");
+            {
+                throw new Exception("El valor del stock mínimo debe ser mayor a 0");
+            }
+
+            if(objInsumo.TipoId <= 0)
+            {
+                throw new Exception("Debe seleccionar un tipo de insumo");
+            }
+
+            if(objInsumo.Costo <= 0)
+            {
+                throw new Exception("El valor del insumo debe ser mayor a 0");
+            }
 
             return objInsumoDAL.Insertar(objInsumo);
         }
