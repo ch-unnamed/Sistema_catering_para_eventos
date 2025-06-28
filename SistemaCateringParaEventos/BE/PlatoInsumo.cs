@@ -8,29 +8,14 @@ namespace BE
 {
     public class PlatoInsumo
     {
-		private int _id_plato;
+		private Plato _plato;
 
-		public int Id_Plato
+		public Plato Plato
 		{
-			get { return _id_plato; }
-			set { _id_plato = value; }
+			get { return _plato; }
+			set { _plato = value; }
 		}
 
-		private int _id_Insumo;
-
-		public int Id_Insumo
-		{
-			get { return _id_Insumo; }
-			set { _id_Insumo = value; }
-		}
-
-		private int _cantidad;
-
-		public int Cantidad
-		{
-			get { return _cantidad; }
-			set { _cantidad = value; }
-		}
 
 		private Insumo _insumo;
 
@@ -40,6 +25,12 @@ namespace BE
 			set { _insumo = value; }
 		}
 
+		private int _cantidad;
 
+		public int Cantidad
+		{
+			get { return _cantidad; }
+			set { _cantidad = value; }
+		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using BE;
+using System.Linq;
 
 namespace DAL
 {
@@ -15,163 +16,104 @@ namespace DAL
             objConexion = new Conexion();
         }
 
-        public int Insertar(BE.Plato plato)
+        public int CrearPlato(BE.Plato plato, out string mensaje)
         {
-            int filasAfectadas = 0;
+            Conexion conexion = new Conexion();
 
-            // Insertar el plato
-            SqlParameter[] parametrosPlato = new SqlParameter[]
-            {
-                objConexion.crearParametro("@nombre", plato.Nombre),
-                objConexion.crearParametro("@precio", (double)plato.Precio),
-                objConexion.crearParametro("@descripcion", plato.Descripcon),
-                objConexion.crearParametro("@fechaDeCreacion", plato.FechaDeCreacion),
-                objConexion.crearParametro("@categoria", plato.Categoria)
-            };
+            int resultado = 0;
+            mensaje = string.Empty;
 
-            DataTable dt = objConexion.LeerPorStoreProcedure("sp_Plato_Insertar", parametrosPlato);
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                plato.Id = Convert.ToInt32(dt.Rows[0][0]);
-                filasAfectadas++;
-            }
-            else
-            {
-                throw new Exception("No se pudo insertar el plato.");
-            }
+            // para leer en el store procedure la cadena de ids e insertar en la tabla PLATO_INSUMO
+            string idsInsumos = string.Join(",", plato.Insumos.Select(i => i.Id));
 
-            // Insertar relaciones PlatoInsumo
-            foreach (var pi in plato.PlatoInsumos)
-            {
-                SqlParameter[] parametrosRelacion = new SqlParameter[]
-                {
-                    objConexion.crearParametro("@plato_id", plato.Id),
-                    objConexion.crearParametro("@insumo_id", pi.Id_Insumo),
-                    objConexion.crearParametro("@cantidad", pi.Cantidad)
-                };
-
-                int filas = objConexion.EscribirPorStoreProcedure("sp_PlatoInsumo_Insertar", parametrosRelacion);
-                if (filas > 0) filasAfectadas++;
-            }
-
-            return filasAfectadas;
-        }
-
-        public int Editar(BE.Plato plato)
-        {
-            int filasAfectadas = 0;
-
-            SqlParameter[] parametrosPlato = new SqlParameter[]
-            {
-                objConexion.crearParametro("@id", plato.Id),
-                objConexion.crearParametro("@nombre", plato.Nombre),
-                objConexion.crearParametro("@precio", (double)plato.Precio),
-                objConexion.crearParametro("@descripcion", plato.Descripcon),
-                objConexion.crearParametro("@fechaDeCreacion", plato.FechaDeCreacion),
-                objConexion.crearParametro("@categoria", plato.Categoria)
-            };
-
-            filasAfectadas = objConexion.EscribirPorStoreProcedure("sp_Plato_Editar", parametrosPlato);
-
-            if (filasAfectadas > 0)
-            {
-                SqlParameter[] parametrosEliminar = new SqlParameter[]
-                {
-                    objConexion.crearParametro("@plato_id", plato.Id)
-                };
-
-                objConexion.EscribirPorStoreProcedure("sp_PlatoInsumo_EliminarPorPlato", parametrosEliminar);
-
-                foreach (var pi in plato.PlatoInsumos)
-                {
-                    SqlParameter[] parametrosRelacion = new SqlParameter[]
-                    {
-                        objConexion.crearParametro("@plato_id", plato.Id),
-                        objConexion.crearParametro("@insumo_id", pi.Id_Insumo),
-                        objConexion.crearParametro("@cantidad", pi.Cantidad)
-                    };
-
-                    int filas = objConexion.EscribirPorStoreProcedure("sp_PlatoInsumo_Insertar", parametrosRelacion);
-                    if (filas > 0) filasAfectadas++;
-                }
-            }
-
-            return filasAfectadas;
-        }
-
-        public BE.Plato Buscar(string nombrePlato)
-        {
             SqlParameter[] parametros = new SqlParameter[]
             {
-        objConexion.crearParametro("@nombre", nombrePlato)
+                new SqlParameter("@nombre", plato.Nombre),
+                new SqlParameter("@precio", plato.Precio),
+                new SqlParameter("@descripcion", plato.Descripcion),
+                new SqlParameter("@insumos_ids", idsInsumos),
+                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
 
-            DataTable dt = objConexion.LeerPorStoreProcedure("sp_Plato_BuscarPorNombre", parametros);
+            string nombreLimpio = plato.Nombre.Trim();
+            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_crear_plato", parametros);
 
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                DataRow dr = dt.Rows[0];
+            mensaje = parametros[4].Value.ToString();
+            resultado = Convert.ToInt32(parametros[5].Value);
 
-                BE.Plato plato = new BE.Plato
-                {
-                    Id = Convert.ToInt32(dr["id"]),
-                    Nombre = dr["nombre"].ToString(),
-                    FechaDeCreacion = Convert.ToDateTime(dr["fechaDeCreacion"]),
-                    Categoria = dr["categoria"].ToString()
-                };
-
-                // Obtener los insumos con cantidades para este plato
-                plato.PlatoInsumos = new List<PlatoInsumo>();
-
-                DataTable dtInsumos = objConexion.LeerPorStoreProcedure("sp_PlatoInsumo_ObtenerPorPlato", new SqlParameter[]
-                {
-            objConexion.crearParametro("@id", plato.Id)
-                });
-
-                foreach (DataRow insumoRow in dtInsumos.Rows)
-                {
-                    BE.PlatoInsumo pi = new BE.PlatoInsumo
-                    {
-                        Id_Plato = plato.Id,
-                        Id_Insumo = Convert.ToInt32(insumoRow["insumo_id"]),
-                        Cantidad = Convert.ToInt32(insumoRow["cantidad"]),
-                        Insumo = new BE.Insumo
-                        {
-                            Id = Convert.ToInt32(insumoRow["insumo_id"]),
-                            Nombre = insumoRow["nombre"].ToString()
-                        }
-                    };
-
-                    plato.PlatoInsumos.Add(pi);
-                }
-
-                return plato;
-            }
-
-            return null;
+            return resultado;
         }
 
-
-        public int Eliminar(BE.Plato plato)
+        public int EditarPlato(BE.Plato plato, out string mensaje)
         {
-            int filasAfectadas = 0;
+            Conexion conexion = new Conexion();
 
-            // Primero elimino relaciones en la tabla intermedia
-            SqlParameter[] parametrosEliminarRelacion = new SqlParameter[]
+            int resultado = 0;
+            mensaje = string.Empty;
+
+            string idsInsumos = string.Join(",", plato.Insumos.Select(i => i.Id));
+
+            SqlParameter[] parametros = new SqlParameter[]
             {
-                objConexion.crearParametro("@plato_id", plato.Id)
+            new SqlParameter("@id_plato", plato.Id),
+            new SqlParameter("@nombre", plato.Nombre),
+            new SqlParameter("@precio", plato.Precio),
+            new SqlParameter("@descripcion", plato.Descripcion),
+            new SqlParameter("@insumos_ids", idsInsumos),
+            new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+            new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
-            objConexion.EscribirPorStoreProcedure("sp_PlatoInsumo_EliminarPorPlato", parametrosEliminarRelacion);
 
-            // Luego elimino el plato
-            SqlParameter[] parametrosPlato = new SqlParameter[]
+            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_editar_plato", parametros);
+
+            mensaje = parametros[5].Value.ToString();
+            resultado = Convert.ToInt32(parametros[6].Value);
+
+            return resultado;
+
+        }
+
+        public bool EliminarPlato(int idPlato, out string mensaje)
+        {
+            Conexion conexion = new Conexion();
+
+            bool resultado = false;
+            mensaje = string.Empty;
+
+            try
             {
-                objConexion.crearParametro("@id", plato.Id)
-            };
+                SqlParameter[] parametrosSql = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", idPlato),
+                    new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                    new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+                };
 
-            filasAfectadas = objConexion.EscribirPorStoreProcedure("sp_Plato_Eliminar", parametrosPlato);
+                int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_plato", parametrosSql);
 
-            return filasAfectadas;
+                mensaje = parametrosSql[1].Value.ToString();
+                resultado = Convert.ToBoolean(parametrosSql[2].Value);
+
+                return resultado;
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547) // Restriccion de FK
+                {
+                    mensaje = "¡El Plato tiene vinculos activos con un Menu!";
+                }
+                else
+                {
+                    mensaje = "Error en la base de datos: " + ex.Message;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error inesperado" + ex.Message;
+                return false;
+            }
         }
 
         public List<BE.Plato> Listar()
@@ -188,7 +130,7 @@ namespace DAL
                 unPlato.Id = Convert.ToInt32(fila["id"]);
                 unPlato.Nombre = fila["nombre"].ToString();
                 unPlato.Precio = Convert.ToInt32(fila["precio"]);
-                unPlato.Descripcon = fila["descripcion"].ToString();
+                unPlato.Descripcion = fila["descripcion"].ToString();
                 unPlato.FechaDeCreacion = Convert.ToDateTime(fila["fechaDeCreacion"]);
 
                 platos.Add(unPlato);
@@ -237,7 +179,6 @@ namespace DAL
 
             return idCotizacion;
         }
-
 
     }
 }

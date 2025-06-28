@@ -22,14 +22,14 @@
 
         <hr />
 
-        <table id="tabla" class="display cell-border" style="width:100%">
+        <table id="tablaPlatos" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Descripción</th>
                     <th>Precio</th>
-                    <th>Categoría</th>
-                    <th>Insumos</th>
+                    <th>Descripción</th>
+                    <th>Fecha de Creación</th>
+                    <th>Acciones</th>
                     <th></th>
                 </tr>
             </thead>
@@ -38,8 +38,8 @@
     </div>
 </div>
 
-<!-- Modal Crear Nuevo Plato-->
-<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<!-- MODAL CREAR NUEVO PLATO O EDITARLO -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
@@ -47,6 +47,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
+                <input type="hidden" id="id" value="0" /> <!-- para editar el plato -->
+
                 <div class="row g-2">
 
                     <div class="col-sm-6">
@@ -55,27 +58,403 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="descripcion" class="form-label">Descripción</label>
-                        <input type="text" class="form-control" id="descripcion" autocomplete="off">
-                    </div>
-
-                    <div class="col-sm-6">
                         <label for="precio" class="form-label">Precio</label>
                         <input type="number" class="form-control" id="precio" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="categoria" class="form-label">Categoría</label>
-                        <input type="text" class="form-control" id="categoria" autocomplete="off">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" class="form-control" id="descripcion" autocomplete="off">
                     </div>
 
+                    <div class="col-sm-12 mt-3">
+                        <label class="form-label">Seleccionar Insumos (mínimo 1, máximo 25)</label>
+                        <div class="table-responsive">
+                            <table id="tablaSeleccionInsumos" class="display table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Nombre</th>
+
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 mt-2">
+                        <div id="mensajeMaximoInsumos" class="alert alert-warning d-none">
+                            Ya se seleccionaron 25 insumos.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="enviarSugerencia()">Enviar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- MODAL PARA VER INSUMOS DEL PLATO -->
+<div class="modal fade" id="modalVerInsumosPlato" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="tituloModalInsumos">Insumos del Plato: </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="tablaInsumos" class="display table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre del Insumo</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        var tabledataPlatos;
+
+        tabledataPlatos = $('#tablaPlatos').DataTable({
+            responsive: true,
+            ordering: false,
+            ajax: {
+                url: '@Url.Action("ListarPlatos", "Home")',
+                type: "GET",
+                datatype: "json",
+                complete: function () {
+                    $('#tablaPlatos').DataTable().columns.adjust().draw();
+                }
+            },
+            columns: [
+                { data: "Nombre" },
+                {
+                    data: 'Precio',
+                    title: 'Precio',
+                    render: function (data, type, row) {
+                        return `$${parseFloat(data).toFixed(2)}`;
+                    },
+                },
+                { data: "Descripcion" },
+                { data: "FechaDeCreacion" },
+                {
+                    data: null,
+                    defaultContent: `<div class="btn-group gap-2">
+                        <button class="btn btn-primary btn-sm rounded-2 btn-editar">Editar</button>
+                        <button class="btn btn-danger btn-sm rounded-2 btn-eliminar">Eliminar</button>
+                        <button class="btn btn-info btn-sm rounded-2 btn-ver-insumosPlato">Ver insumos</button>
+                        </div>`,
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json',
+            }
+        });
+
+        // PARA EDITAR O CREAR PLATO
+        function abrirModal(json) {
+            $("#msjError").hide();
+
+            if (json != null) { // entra acá para editar
+                $("#id").val(json.Id);
+                $("#nombre").val(json.Nombre);
+                $("#precio").val(json.Precio);
+                $("#descripcion").val(json.Descripcion);
+                $("#exampleModalLabel").text(`Editar Plato: ${json.Nombre}`);
+            } else {
+                $("#id").val(0);
+                $("#nombre").val("");
+                $("#precio").val("");
+                $("#descripcion").val("");
+                $("#exampleModalLabel").text("Nuevo Plato");
+            }
+
+            cargarInsumos(json?.Insumos || []);
+
+            $("#FormModal").modal("show");
+
+            $("#FormModal").on("shown.bs.modal", function () {
+                $('#tablaSeleccionInsumos').DataTable().columns.adjust().draw();
+            });
+
+        }
+
+        $('#tablaPlatos tbody').on('click', '.btn-ver-insumosPlato', function () {
+            var data = tabledataPlatos.row($(this).parents('tr')).data();
+            verInsumosPlato(data.Id, data.Nombre);
+        });
+
+        $('#tablaPlatos tbody').on('click', '.btn-editar', function () {
+            var fila = $(this).closest('tr');
+            var data = tabledataPlatos.row(fila).data();
+
+            if (!data) {
+                data = tabledataPlatos.row(fila.prev()).data();
+            }
+
+            if (!data) {
+                console.error("No se pudo obtener la data del plato para editar.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("ObtenerInsumosDelPlato", "Home")',
+                type: 'GET',
+                data: { plato_id: data.Id },
+                success: function (response) {
+                    abrirModal({
+                        Id: data.Id,
+                        Nombre: data.Nombre,
+                        Precio: data.Precio,
+                        Descripcion: data.Descripcion,
+                        Insumos: response.data
+                    });
+                },
+                error: function () {
+                    swal("Error", "No se pudieron cargar los insumos del plato", "error");
+                }
+            });
+        });
+
+        $('#tablaPlatos tbody').on('click', '.btn-eliminar', function () {
+            var platoSeleccionado = $(this).closest("tr");
+
+            var data = tabledataPlatos.row(platoSeleccionado).data(); // los datos de la fila seleccionada
+
+            console.log(data);
+
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Queres Eliminar el Plato?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+                async function () {
+                    try {
+                        const response = await fetch("/Home/EliminarPlato", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            },
+                            body: JSON.stringify({ idPlato: data.Id })
+
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Error al realizar la solicitud al servidor.")
+                        }
+
+                        const result = await response.json();
+
+                        if (result.resultado) {
+                            tabledataPlatos.row(platoSeleccionado).remove().draw(false);
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "No se pudo eliminar.",
+                                text: result.mensaje
+                            });
+                        }
+
+                    } catch (error) {
+                        $("#msjError").text("Error con fetch");
+                        console.error("Error en la solicitud fetch:", error);
+                        swal("Error", "Faltan completar campos", "error");
+                    }
+                });
+        });
+
+        function cargarInsumos(insumosSeleccionados = []) {
+            $.ajax({
+                url: '@Url.Action("ListarInsumos", "Home")',
+                method: 'GET',
+                success: function (response) {
+                    const data = response.data
+
+                    if ($.fn.DataTable.isDataTable('#tablaSeleccionInsumos')) {
+                        $('#tablaSeleccionInsumos').DataTable().clear().destroy();
+                    }
+
+                    $('#tablaSeleccionInsumos tbody').empty();
+
+                    data.forEach(insumo => {
+                        const estaSeleccionado = insumosSeleccionados.some(i => i.Id == insumo.Id);
+                        $('#tablaSeleccionInsumos tbody').append(`
+                        <tr>
+                            <td class="text-center">
+                                <input class="form-check-input insumo-checkbox" type="checkbox" value="${insumo.Id}" ${estaSeleccionado ? 'checked' : ''}>
+                            </td>
+                            <td>${insumo.Nombre}</td>
+                            <td>${insumo.TipoNombre}</td>
+                        </tr>
+                        `);
+                    });
+
+                    $(".insumo-checkbox").trigger("change");
+
+                    // Marcar o desmarcar checkbox al hacer clic en la fila
+                    $('#tablaSeleccionInsumos tbody').on('click', 'tr', function (e) {
+                        if (e.target.type !== 'checkbox') {
+                            const checkbox = $(this).find('.insumo-checkbox');
+
+                            // Solo actuar si no está deshabilitado
+                            if (!checkbox.prop('disabled')) {
+                                checkbox.prop('checked', !checkbox.prop('checked')).trigger('change');
+                            }
+                        }
+                    });
+
+                    $('#tablaSeleccionInsumos').DataTable({
+                        language: {
+                            url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+                        },
+                        orderable: true,
+                        order: [],
+                        columnDefs: [
+                            {
+                                targets: 0, // índice de la columna (la del checkbox)
+                                orderable: false // desactiva el ordenamiento
+                            }
+                        ],
+                        paging: false, // paginación desactivada
+                        lengthChange: false, // ocultar el selector de cantidad
+                        scrollY: '300px', // altura fija con scroll vertical
+                        scrollCollapse: true
+                    });
+
+                    $(".insumo-checkbox").on("change", function () {
+                        const seleccionados = $(".insumo-checkbox:checked").length;
+                        const max = 25;
+
+                        if (seleccionados >= max) {
+                            $(".insumo-checkbox:not(:checked)").prop("disabled", true);
+                            $("#mensajeMaximoInsumos").removeClass("d-none");
+                        } else {
+                            $(".insumo-checkbox").prop("disabled", false);
+                            $("#mensajeMaximoInsumos").addClass("d-none");
+                        }
+                    });
+
+                },
+
+                error: function () {
+                    $("#msjError").removeClass("d-none").text("Error al cargar los insumos.");
+                }
+            });
+        }
+
+        function verInsumosPlato(idPlato, nombrePlato) {
+            $('#modalVerInsumosPlato').modal('show');
+
+            $('#tituloModalInsumos').text(`Insumos del Plato: ${nombrePlato}`);
+
+            if ($.fn.DataTable.isDataTable('#tablaInsumos')) {
+                $('#tablaInsumos').DataTable().clear().destroy();
+            }
+
+            $('#tablaInsumos').DataTable({
+                ajax: {
+                    url: '@Url.Action("ObtenerInsumosDelPlato", "Home")',
+                    type: 'GET',
+                    data: { plato_id: idPlato },
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: 'Nombre', title: 'Nombre del Insumo' },
+                    { data: 'TipoNombre', title: 'Tipo' }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                }
+            });
+        }
+
+        function guardar() {
+            var insumosSeleccionados = [];
+
+            // para recorrer los insumos seleccionados
+            var table = $('#tablaSeleccionInsumos').DataTable();
+            table.rows().every(function () {
+                var row = $(this.node());
+                var checkbox = row.find('.insumo-checkbox');
+                if (checkbox.is(':checked')) {
+                    insumosSeleccionados.push({ Id: parseInt(checkbox.val()) });
+                }
+            });
+
+            if (insumosSeleccionados.length < 1) {
+                swal("Se debe seleccionar al menos 1 insumo", "", "warning");
+                return;
+            }
+
+            var plato = {
+                Id: parseInt($("#id").val()),
+                Nombre: $("#nombre").val(),
+                Precio: $("#precio").val(),
+                Descripcion: $("#descripcion").val(),
+                Insumos: insumosSeleccionados
+            };
+
+            $.ajax({
+                url: '@Url.Action("GuardarPlato", "Home")',
+                type: "POST",
+                data: JSON.stringify(plato),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.resultado != 0) {
+                        $("#FormModal").modal("hide");
+                        swal("¡Plato guardado!", "", "success");
+                        $('#tablaPlatos').DataTable().ajax.reload();
+                    } else {
+                        $("#msjError").text(data.mensaje).show();
+                    }
+                },
+                error: function (err) {
+                    console.error("Error en AJAX", err);
+                }
+            });
+        }
+
+    </script>
+}
