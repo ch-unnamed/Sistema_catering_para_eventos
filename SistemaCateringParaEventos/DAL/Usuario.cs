@@ -11,6 +11,10 @@ namespace DAL
 {
     public class Usuario
     {
+        /// <summary>
+        /// Obtiene una lista de todos los usuarios desde la base de datos.
+        /// </summary>
+        /// <returns>Lista de objetos <see cref="BE.Usuario"/>.</returns>
         public List<BE.Usuario> ListarUsuario()
         {
             Conexion conexion = new Conexion();
@@ -39,19 +43,12 @@ namespace DAL
 
             return usuarios;
         }
-        /*
-        public bool EditarUsuario(string nombreUsuario, string apellidoUsuario, string emailUsuario, Rol rolUsuario)
-        {
-
-        }
-        public bool EliminarUsuario(int IDUsuario)
-        {
-
-        }
-        public bool CrearUsuario(string nombreUsuario, string apellidoUsuario, string emailUsuario, string passwordHash, Rol rolUsuario)
-        {
-        }*/
     
+        /// <summary>
+        /// Obtiene el usuario correspondiente al rol de vendedor según el ID de rol proporcionado.
+        /// </summary>
+        /// <param name="rol_id">ID del rol a buscar.</param>
+        /// <returns>Objeto <see cref="BE.Usuario"/> correspondiente al vendedor, o null si no se encuentra.</returns>
         public BE.Usuario idVendedor(int rol_id)
         {
             Conexion conexion = new Conexion();
@@ -63,7 +60,7 @@ namespace DAL
 
             DataTable dt = conexion.LeerPorStoreProcedure("sp_id_usuario", parametros);
 
-            if(dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0)
             {
                 DataRow fila = dt.Rows[0];
 

@@ -16,6 +16,12 @@ namespace DAL
             objConexion = new Conexion();
         }
 
+        /// <summary>
+        /// Crea un nuevo plato en la base de datos utilizando un procedimiento almacenado.
+        /// </summary>
+        /// <param name="plato">Objeto BE.Plato con los datos del plato a crear.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>El identificador del plato creado, o 0 si hay error de validación.</returns>
         public int CrearPlato(BE.Plato plato, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -23,7 +29,6 @@ namespace DAL
             int resultado = 0;
             mensaje = string.Empty;
 
-            // para leer en el store procedure la cadena de ids e insertar en la tabla PLATO_INSUMO
             string idsInsumos = string.Join(",", plato.Insumos.Select(i => i.Id));
 
             SqlParameter[] parametros = new SqlParameter[]
@@ -45,6 +50,12 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Edita un plato existente en la base de datos utilizando un procedimiento almacenado.
+        /// </summary>
+        /// <param name="plato">Objeto BE.Plato con los datos actualizados del plato.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>El identificador del plato editado, o 0 si hay error de validación.</returns>
         public int EditarPlato(BE.Plato plato, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -56,13 +67,13 @@ namespace DAL
 
             SqlParameter[] parametros = new SqlParameter[]
             {
-            new SqlParameter("@id_plato", plato.Id),
-            new SqlParameter("@nombre", plato.Nombre),
-            new SqlParameter("@precio", plato.Precio),
-            new SqlParameter("@descripcion", plato.Descripcion),
-            new SqlParameter("@insumos_ids", idsInsumos),
-            new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
-            new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
+                new SqlParameter("@id_plato", plato.Id),
+                new SqlParameter("@nombre", plato.Nombre),
+                new SqlParameter("@precio", plato.Precio),
+                new SqlParameter("@descripcion", plato.Descripcion),
+                new SqlParameter("@insumos_ids", idsInsumos),
+                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
 
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_editar_plato", parametros);
@@ -74,6 +85,12 @@ namespace DAL
 
         }
 
+        /// <summary>
+        /// Elimina un plato de la base de datos utilizando un procedimiento almacenado.
+        /// </summary>
+        /// <param name="idPlato">Identificador del plato a eliminar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>True si se eliminó correctamente, false en caso contrario.</returns>
         public bool EliminarPlato(int idPlato, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -99,7 +116,7 @@ namespace DAL
             }
             catch (SqlException ex)
             {
-                if (ex.Number == 547) // Restriccion de FK
+                if (ex.Number == 547)
                 {
                     mensaje = "¡El Plato tiene vinculos activos con un Menu!";
                 }
@@ -116,6 +133,10 @@ namespace DAL
             }
         }
 
+        /// <summary>
+        /// Lista todos los platos disponibles en la base de datos.
+        /// </summary>
+        /// <returns>Lista de objetos BE.Plato.</returns>
         public List<BE.Plato> Listar()
         {
             Conexion conexion = new Conexion();
@@ -139,8 +160,18 @@ namespace DAL
             return platos;
         }
 
+        /// <summary>
+        /// Inserta los platos seleccionados en una cotización personalizada.
+        /// </summary>
+        /// <param name="eventoId">ID del evento asociado.</param>
+        /// <param name="clienteId">ID del cliente asociado.</param>
+        /// <param name="menu_platos">Lista de objetos BE.Menu_Plato a insertar.</param>
+        /// <param name="fechaRealizacion">Fecha de realización de la cotización.</param>
+        /// <param name="total">Total de la cotización.</param>
+        /// <param name="estado_id">ID del estado de la cotización.</param>
+        /// <param name="vendedor_id">ID del vendedor responsable.</param>
+        /// <returns>El identificador de la cotización creada.</returns>
         public int InsertarPlatosCotizacion(int eventoId, int clienteId, List<BE.Menu_Plato> menu_platos, DateTime fechaRealizacion, decimal total, int estado_id, int vendedor_id)
-
         {
             Conexion conexion = new Conexion();
 

@@ -11,6 +11,12 @@ namespace DAL
 {
     public class PlatoInsumo
     {
+        /// <summary>
+        /// Obtiene la lista de insumos asociados a un plato específico.
+        /// Utiliza el procedimiento almacenado <c>sp_ObtenerInsumosDelPlato</c>.
+        /// </summary>
+        /// <param name="plato_insumo">Objeto <see cref="BE.PlatoInsumo"/> que contiene el identificador del plato.</param>
+        /// <returns>Lista de objetos <see cref="BE.PlatoInsumo"/> que representan los insumos asociados al plato.</returns>
         public List<BE.PlatoInsumo> ObtenerInsumosDelPlato(BE.PlatoInsumo plato_insumo)
         {
             Conexion conexion = new Conexion();

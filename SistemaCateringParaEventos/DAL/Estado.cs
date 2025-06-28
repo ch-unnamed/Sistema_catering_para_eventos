@@ -9,7 +9,10 @@ namespace DAL
 {
     public class Estado
     {
-        // Esto es para el vendedor, si lo borran se rompe cotizacion, es para mostrarlo en un select y no hacerlo hardcodeado como bot
+        /// <summary>
+        /// Obtiene la lista de estados desde la base de datos utilizando un procedimiento almacenado.
+        /// </summary>
+        /// <returns>Lista de objetos <see cref="BE.Estado"/> con los datos obtenidos.</returns>
         public List<BE.Estado> Listar()
         {
             Conexion conexion = new Conexion();

@@ -8,36 +8,30 @@ using DAL;
 
 namespace BLL
 {
+    /// <summary>
+    /// Clase de lógica de negocio para operaciones relacionadas con usuarios.
+    /// </summary>
     public class Usuario
     {
+        /// <summary>
+        /// Obtiene una lista de todos los usuarios.
+        /// </summary>
+        /// <returns>Lista de objetos BE.Usuario.</returns>
         public List<BE.Usuario> ListarUsuario()
         {
             DAL.Usuario usuarioDAL = new DAL.Usuario();
             return usuarioDAL.ListarUsuario();
         }
-        /*
 
-        public bool CrearUsuario(string nombreUsuario, string apellidoUsuario, string emailUsuario, string passwordHash, Rol rolUsuario)
-        {
-        }
-        
-        public bool EditarUsuario(string nombreUsuario, string apellidoUsuario, string emailUsuario,string passwordHash, Rol rolUsuario)
-        {
-
-        }
-
-        public bool EliminarUsuario(int IDUsuario)
-        {
-
-        }
-        */
-
+        /// <summary>
+        /// Obtiene el usuario que corresponde al rol de vendedor según el ID de rol proporcionado.
+        /// </summary>
+        /// <param name="rol_id">ID del rol a buscar.</param>
+        /// <returns>Objeto BE.Usuario correspondiente al vendedor.</returns>
         public BE.Usuario idVendedor(int rol_id)
         {
             DAL.Usuario usuario = new DAL.Usuario();
-
             return usuario.idVendedor(rol_id);
         }
-
     }
 }

@@ -12,6 +12,11 @@ namespace DAL
     {
         private readonly Conexion conexion = new Conexion();
 
+        /// <summary>
+        /// Lista los lotes, opcionalmente filtrando por el identificador de insumo.
+        /// </summary>
+        /// <param name="idInsumo">Identificador del insumo para filtrar (opcional).</param>
+        /// <returns>Lista de objetos <see cref="BE.Lote"/> recuperados de la base de datos.</returns>
         public List<BE.Lote> ListarLotes(int? idInsumo = null)
         {
             List<BE.Lote> lotes = new List<BE.Lote>();
@@ -38,12 +43,17 @@ namespace DAL
             return lotes;
         }
 
+        /// <summary>
+        /// Inserta un nuevo lote en la base de datos.
+        /// </summary>
+        /// <param name="objLote">Objeto <see cref="BE.Lote"/> a insertar.</param>
+        /// <exception cref="ArgumentNullException">Si el objeto lote es nulo.</exception>
+        /// <exception cref="Exception">Si ocurre un error al crear los parámetros o al insertar el lote.</exception>
         public void Insertar(BE.Lote objLote)
         {
             try
             {
                 if (objLote == null) throw new ArgumentNullException(nameof(objLote));
-
 
                 var pIdInsumo = conexion.crearParametro("@IdInsumo", objLote.InsumoId);
                 var pCantidad = conexion.crearParametro("@Cantidad", objLote.Cantidad);
@@ -66,6 +76,10 @@ namespace DAL
 
 
 
+        /// <summary>
+        /// Edita un lote existente en la base de datos.
+        /// </summary>
+        /// <param name="objLote">Objeto <see cref="BE.Lote"/> con los datos actualizados.</param>
         public void Editar(BE.Lote objLote)
         {
             var parametros = new SqlParameter[]
@@ -79,6 +93,10 @@ namespace DAL
             conexion.EscribirPorStoreProcedure("sp_EditarLote", parametros);
         }
 
+        /// <summary>
+        /// Elimina un lote de la base de datos por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador del lote a eliminar.</param>
         public void Eliminar(int id)
         {
             var parametros = new SqlParameter[]

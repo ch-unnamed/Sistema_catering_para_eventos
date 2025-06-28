@@ -10,6 +10,10 @@ namespace DAL
 {
     public class Cliente
     {
+        /// <summary>
+        /// Obtiene la lista de todos los clientes desde la base de datos.
+        /// </summary>
+        /// <returns>Lista de objetos BE.Cliente.</returns>
         public List<BE.Cliente> Listar()
         {
             Conexion conexion = new Conexion();
@@ -41,6 +45,12 @@ namespace DAL
             return clientes;
         }
 
+        /// <summary>
+        /// Crea un nuevo cliente en la base de datos.
+        /// </summary>
+        /// <param name="cliente">Objeto BE.Cliente con los datos a insertar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>Entero indicando el resultado de la operación.</returns>
         public int CrearCliente(BE.Cliente cliente, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -71,6 +81,12 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Edita los datos de un cliente existente en la base de datos.
+        /// </summary>
+        /// <param name="cliente">Objeto BE.Cliente con los datos actualizados.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>True si la edición fue exitosa, false en caso contrario.</returns>
         public bool EditarCliente(BE.Cliente cliente, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -102,10 +118,16 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Elimina un cliente de la base de datos.
+        /// </summary>
+        /// <param name="idCliente">ID del cliente a eliminar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>True si la eliminación fue exitosa, false en caso contrario.</returns>
         public bool EliminarCliente(int idCliente, out string mensaje)
         {
             Conexion conexion = new Conexion();
-            
+
             bool resultado = false;
             mensaje = string.Empty;
 
@@ -117,20 +139,21 @@ namespace DAL
                     new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
                     new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
                 };
-                
+
                 int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_cliente", parametrosSql);
-                
+
                 mensaje = parametrosSql[1].Value.ToString();
                 resultado = Convert.ToBoolean(parametrosSql[2].Value);
-                
+
                 return resultado;
             }
-            catch(SqlException ex)
+            catch (SqlException ex)
             {
-                if(ex.Number == 547) // Restriccion de FK
+                if (ex.Number == 547) // Restriccion de FK
                 {
                     mensaje = "¡El Cliente tiene vinculos activos con Cotizacion!";
-                } else
+                }
+                else
                 {
                     mensaje = "Error en la base de datos: " + ex.Message;
                 }
@@ -143,6 +166,11 @@ namespace DAL
             }
         }
 
+        /// <summary>
+        /// Obtiene la cantidad de registros asociados a un cliente específico.
+        /// </summary>
+        /// <param name="cliente_id">ID del cliente.</param>
+        /// <returns>Cantidad de registros encontrados.</returns>
         public int cantidadCliente(int cliente_id)
         {
             Conexion conexion = new Conexion();
@@ -160,6 +188,11 @@ namespace DAL
             }
             return 0;
         }
+        /// <summary>
+        /// Obtiene el DNI de un cliente a partir de su ID.
+        /// </summary>
+        /// <param name="cliente_id">ID del cliente.</param>
+        /// <returns>Objeto BE.Cliente con el DNI, o null si no se encuentra.</returns>
         public BE.Cliente dniCliente(int cliente_id)
         {
             Conexion conexion = new Conexion();

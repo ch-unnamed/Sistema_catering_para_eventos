@@ -10,47 +10,57 @@ using System.Linq;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Web.Security; // Para autenticación basada en Forms Authentication
+using System.Web.Security; 
 using System.Web.Services.Description;
 
 namespace IUVendedor.Controllers
 {
-    [Authorize] // Solo usuarios autenticados pueden acceder a este controlador
+    [Authorize]
     public class HomeController : Controller
     {
+        /// <summary>
+        /// Muestra la vista principal del sistema.
+        /// </summary>
         public ActionResult Index()
         {
             return View();
         }
 
-        //VENDEDOR (mati)
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Muestra la vista de eventos para gerente o vendedor.
+        /// </summary>
         [PermisosRol(Models.Rol.Gerente, Models.Rol.Vendedor)]
         public ActionResult Eventos()
         {
             return View();
         }
 
+        /// <summary>
+        /// Muestra la vista de clientes para el vendedor.
+        /// </summary>
         [PermisosRol(Models.Rol.Vendedor)]
         public ActionResult Clientes()
         {
             return View();
         }
 
+        /// <summary>
+        /// Muestra la vista de cotizaciones para el vendedor.
+        /// </summary>
         [PermisosRol(Models.Rol.Vendedor)]
         public ActionResult Cotizaciones()
         {
             return View();
         }
 
+        /// <summary>
+        /// Obtiene la lista de clientes y la retorna en formato JSON.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarClientes()
         {
             List<BE.Cliente> oLista = new List<BE.Cliente>();
-
-            oLista = new BLL.Cliente().Listar(); // Almacena los clientes de negocio
-
+            oLista = new BLL.Cliente().Listar();
             var clientesFormateados = oLista.Select(e => new
             {
                 e.IdCliente,
@@ -65,16 +75,18 @@ namespace IUVendedor.Controllers
                     e.Tipo_Cliente.Nombre
                 }
             });
-
-            return Json(new { data = clientesFormateados }, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
+            return Json(new { data = clientesFormateados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Guarda un cliente nuevo o edita uno existente.
+        /// </summary>
+        /// <param name="oCliente">Cliente a guardar o editar.</param>
         [HttpPost]
         public JsonResult GuardarCliente(BE.Cliente oCliente)
         {
             Dictionary<string, string> errores;
             object resultado;
-
             if (oCliente.IdCliente == 0)
             {
                 resultado = new BLL.Cliente().CrearCliente(oCliente, out errores);
@@ -83,28 +95,30 @@ namespace IUVendedor.Controllers
             {
                 resultado = new BLL.Cliente().EditarCliente(oCliente, out errores);
             }
-
             return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Elimina un cliente por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador del cliente.</param>
         [HttpPost]
         public JsonResult EliminarCliente(int id)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
-
             respuesta = new BLL.Cliente().EliminarCliente(id, out mensaje);
-
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Obtiene la lista de eventos y la retorna en formato JSON.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarEventos()
         {
             List<BE.Evento> oLista = new List<BE.Evento>();
-
             oLista = new BLL.Evento().Listar();
-
             var eventosFormateados = oLista.Select(e => new
             {
                 e.IdEvento,
@@ -124,16 +138,18 @@ namespace IUVendedor.Controllers
                     e.Ubicacion.Provincia
                 }
             });
-
             return Json(new { data = eventosFormateados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Guarda un evento nuevo o edita uno existente.
+        /// </summary>
+        /// <param name="oEvento">Evento a guardar o editar.</param>
         [HttpPost]
         public JsonResult GuardarEvento(BE.Evento oEvento)
         {
             Dictionary<string, string> errores;
             object resultado;
-
             if (oEvento.IdEvento == 0)
             {
                 resultado = new BLL.Evento().CrearEvento(oEvento, out errores);
@@ -142,30 +158,30 @@ namespace IUVendedor.Controllers
             {
                 resultado = new BLL.Evento().EditarEvento(oEvento, out errores);
             }
-
             return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Elimina un evento por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador del evento.</param>
         [HttpPost]
         public JsonResult EliminarEvento(int id)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
-
             respuesta = new BLL.Evento().EliminarEvento(id, out mensaje);
-
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-        // me va a servir para la cotizacion
-        //Fecha = e.Fecha.ToString("dd/MM/yyyy"), // Formato personalizado
-
+        /// <summary>
+        /// Obtiene la lista de cotizaciones y la retorna en formato JSON.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarCotizaciones()
         {
             List<BE.Cotizacion> oLista = new List<BE.Cotizacion>();
             oLista = new BLL.Cotizacion().Listar();
-
             var eventosFormateados = oLista.Select(e => new
             {
                 e.IdCotizacion,
@@ -189,99 +205,96 @@ namespace IUVendedor.Controllers
                 e.Total,
                 FechaRealizacion = e.FechaRealizacion.ToString("yyyy-MM-dd")
             });
-
             return Json(new { data = eventosFormateados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Lista los menús disponibles para el vendedor.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarMenusVendedor()
         {
             List<BE.Menu> oLista = new BLL.Menu().ListarMenusVendedor();
-
-            // proyecto solo el campo nombre
             var menusFiltrados = oLista.Select(
                 menu => new
                 {
                     menu.Id,
                     menu.Nombre
                 });
-
             return Json(new { data = menusFiltrados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Lista los estados disponibles.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarEstados()
         {
             List<BE.Estado> oLista = new BLL.Estado().Listar();
-
-            // proyecto solo el campo nombre
             var estadosFiltrados = oLista.Select(
                 estado => new
                 {
                     estado.IdEstado,
                     estado.Nombre
                 });
-
             return Json(new { data = estadosFiltrados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Obtiene los nombres de los platos asociados a un menú.
+        /// </summary>
+        /// <param name="menu_id">Identificador del menú.</param>
         [HttpGet]
         public JsonResult ObtenerNombresPlatosPorMenu(int menu_id)
         {
-            // creo un objeto Menu_Plato y le asigno un Menu con el id recibido
             BE.Menu_Plato menuPlato = new BE.Menu_Plato();
             menuPlato.Menu = new BE.Menu();
             menuPlato.Menu.Id = menu_id;
-
             List<BE.Menu_Plato> listaPlatos = new BLL.Menu_Plato().ObtenerNombresPlatosPorMenu(menuPlato);
-
-            // lista de platos con nombre
             var platos = listaPlatos.Select(mp => new
             {
                 IdPlato = mp.Plato.Id,
                 Nombre = mp.Plato.Nombre,
                 Descripcion = mp.Plato.Descripcion,
                 Precio = mp.Plato.Precio
-            }).ToList(); // es lista para que dentro del id de menu se ponga todos los platos correspondientes
-
-            // estructura final
+            }).ToList();
             var resultado = new
             {
                 menu_id = menu_id,
                 platos = platos
             };
-
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
-
         }
 
+        /// <summary>
+        /// Obtiene la capacidad de un evento por su identificador.
+        /// </summary>
+        /// <param name="evento_id">Identificador del evento.</param>
         [HttpGet]
         public JsonResult ObtenerCapacidadPorIdEvento(int evento_id)
         {
             BE.Evento evento = new BLL.Evento().ObtenerCapacidadPorIdEvento(evento_id);
-
             var resultado = new
             {
                 IdEvento = evento.IdEvento,
                 Capacidad = evento.Capacidad
             };
-
             if (evento != null)
             {
                 return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
             }
-
             return Json(new { error = "Evento no encontrado" }, JsonRequestBehavior.AllowGet);
         }
 
-        //plato para cotizacion
+        /// <summary>
+        /// Inserta platos personalizados en una cotización.
+        /// </summary>
         [HttpPost]
         public JsonResult InsertarPlatosCotizacionPersonalizada(int eventoId, int clienteId, List<MenuConPlatosDTO> menus, DateTime fechaRealizacion, decimal total,
             int estado_id, int vendedor_id)
         {
             try
             {
-                // Crear objetos BE
                 BE.Cotizacion cotizacion = new BE.Cotizacion
                 {
                     FechaRealizacion = fechaRealizacion,
@@ -289,9 +302,7 @@ namespace IUVendedor.Controllers
                 };
                 BE.Evento evento = new BE.Evento { IdEvento = eventoId };
                 BE.Cliente cliente = new BE.Cliente { IdCliente = clienteId };
-
                 var menu_platos = new List<BE.Menu_Plato>();
-
                 foreach (var menu in menus)
                 {
                     foreach (var platoId in menu.Platos)
@@ -303,14 +314,10 @@ namespace IUVendedor.Controllers
                         });
                     }
                 }
-
                 BE.Estado estado = new BE.Estado { IdEstado = estado_id };
                 BE.Usuario vendedor = new BE.Usuario { IdUsuario = vendedor_id };
-
                 BLL.Plato gestor = new BLL.Plato();
                 int idGenerado = gestor.InsertarPlatosCotizacion(cotizacion, evento, cliente, menu_platos, estado, vendedor);
-
-                // devuelvo una respuesta con ID generado
                 return Json(new
                 {
                     success = true,
@@ -324,151 +331,160 @@ namespace IUVendedor.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtiene el porcentaje de ganancia general de la empresa.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerPorcentajeGananciaGeneral(string nombre)
         {
             nombre = "Ganancia General";
-
             BE.Configuracion_Empresa configuracion = new BLL.Configuracion_Empresa().ObtenerPorcentajeGanancia(nombre);
-
-
             var resultado = new
             {
                 PorcentajeGanancia = configuracion.PorcentajeGanancia
             };
-
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
-        
+
+        /// <summary>
+        /// Obtiene el porcentaje de descuento para clientes de primera vez.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerPorcentajeDescuentoPrimeraVez(string nombre)
         {
             nombre = "Primera vez ";
-
             BE.Configuracion_Empresa configuracion = new BLL.Configuracion_Empresa().ObtenerPorcentajeGanancia(nombre);
-
-
             var resultado = new
             {
                 PorcentajeGanancia = configuracion.PorcentajeGanancia
             };
-
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
-        
+
+        /// <summary>
+        /// Obtiene el porcentaje de descuento para más de 3 menús.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerPorcentajeDescuentoMasDe3Menus(string nombre)
         {
             nombre = "Mas de 3 menus";
-
             BE.Configuracion_Empresa configuracion = new BLL.Configuracion_Empresa().ObtenerPorcentajeGanancia(nombre);
-
-
             var resultado = new
             {
                 PorcentajeGanancia = configuracion.PorcentajeGanancia
             };
-
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Consulta la cantidad asociada a un cliente.
+        /// </summary>
         [HttpGet]
-        public JsonResult consultarCliente (int cliente_id)
+        public JsonResult consultarCliente(int cliente_id)
         {
             int configuracion = new BLL.Configuracion_Empresa().consultarCliente(cliente_id);
-
             return Json(new { data = configuracion }, JsonRequestBehavior.AllowGet);
-
         }
 
+        /// <summary>
+        /// Obtiene la cantidad de registros asociados a un cliente.
+        /// </summary>
         [HttpGet]
-        public JsonResult cantidadCliente (int cliente_id)
+        public JsonResult cantidadCliente(int cliente_id)
         {
             int cliente = new BLL.Cliente().cantidadCliente(cliente_id);
-
             return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
-
         }
 
+        /// <summary>
+        /// Obtiene la cantidad de registros asociados a un evento.
+        /// </summary>
         [HttpGet]
         public JsonResult cantidadEvento(int evento_id)
         {
             int evento = new BLL.Evento().cantidadEvento(evento_id);
-
             return Json(new { data = evento }, JsonRequestBehavior.AllowGet);
-
         }
 
+        /// <summary>
+        /// Obtiene el nombre de un evento por su identificador.
+        /// </summary>
         [HttpGet]
         public JsonResult nombreEvento(int evento_id)
         {
             string evento = new BLL.Evento().nombreEvento(evento_id);
-
             return Json(new { data = evento }, JsonRequestBehavior.AllowGet);
-
         }
 
+        /// <summary>
+        /// Obtiene el DNI de un cliente por su identificador.
+        /// </summary>
         [HttpGet]
         public JsonResult dniCliente(int cliente_id)
         {
             BE.Cliente cliente = new BLL.Cliente().dniCliente(cliente_id);
-
             var resultado = new
             {
                 dni = cliente.Dni
             };
-
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Obtiene el identificador de un vendedor por el id de rol.
+        /// </summary>
         [HttpGet]
         public JsonResult idVendedor(int rol_id)
         {
             BE.Usuario usuario = new BLL.Usuario().idVendedor(rol_id);
-
             var resultado = new
             {
                 idUsuario = usuario.IdUsuario
             };
-
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Elimina una cotización por su identificador.
+        /// </summary>
         [HttpPost]
         public JsonResult EliminarCotizacion(int cotizacion_id)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
-
             respuesta = new BLL.Cotizacion().EliminarCotizacion(cotizacion_id, out mensaje);
-
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Edita una cotización existente.
+        /// </summary>
         [HttpPost]
         public JsonResult EditarCotizacion(BE.Cotizacion cotizacion)
         {
             object resultado;
             string mensaje = string.Empty;
-
             resultado = new BLL.Cotizacion().EditarCotizacion(cotizacion, out mensaje);
-
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Obtiene el correo electrónico de un cliente por su identificador.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerMailCliente(int cliente_id)
         {
             string cotizacion = new BLL.Cotizacion().ObtenerMailCliente(cliente_id);
-
             var resultado = new
             {
                 email = cotizacion
             };
-
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Envía un correo electrónico con la cotización generada.
+        /// </summary>
         [HttpPost]
         public JsonResult EnviarMailCotizacion(string email, string html)
         {
@@ -476,22 +492,22 @@ namespace IUVendedor.Controllers
             return Json(new { success = enviado }, JsonRequestBehavior.AllowGet);
         }
 
-
-
-        //////////////////////////////////////////////////////////////////
-        
+        /// <summary>
+        /// Muestra la vista de insumos.
+        /// </summary>
         public ActionResult Insumos()
         {
             return View();
         }
 
+        /// <summary>
+        /// Lista todos los insumos y retorna en formato JSON.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarInsumos()
         {
             List<BE.Insumo> oLista = new List<BE.Insumo>();
-
             oLista = new BLL.Insumo().Listar();
-
             var InsumosFormateados = oLista.Select(e => new
             {
                 e.Id,
@@ -502,16 +518,17 @@ namespace IUVendedor.Controllers
                 e.Costo,
                 e.StockMinimo,
             });
-
             return Json(new { data = InsumosFormateados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Elimina un insumo por su identificador.
+        /// </summary>
         [HttpPost]
         public JsonResult EliminarInsumo(int Id)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
-
             try
             {
                 respuesta = new BLL.Insumo().EliminarInsumo(Id);
@@ -521,17 +538,18 @@ namespace IUVendedor.Controllers
             {
                 mensaje = "Error al eliminar el insumo: " + ex.Message;
             }
-
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Guarda un insumo nuevo o edita uno existente.
+        /// </summary>
         [HttpPost]
         public JsonResult GuardarInsumo(BE.Insumo oInsumo)
         {
             string mensaje = string.Empty;
             bool exito = true;
             int nuevoId = 0;
-
             try
             {
                 if (oInsumo.Id == 0)
@@ -550,10 +568,12 @@ namespace IUVendedor.Controllers
                 exito = false;
                 mensaje = ex.Message;
             }
-
             return Json(new { nuevoId = nuevoId, exito = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Descuenta stock de un insumo en lotes.
+        /// </summary>
         [HttpPost]
         public JsonResult DescontarStock(int idInsumo, int cantidad)
         {
@@ -568,18 +588,22 @@ namespace IUVendedor.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Muestra la vista de platos para el chef.
+        /// </summary>
         [PermisosRol(Models.Rol.Chef)]
         public ActionResult Platos()
         {
             return View();
         }
 
+        /// <summary>
+        /// Lista todos los platos y retorna en formato JSON.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarPlatos()
         {
             List<BE.Plato> oLista = new BLL.Plato().Listar();
-
             var platosFiltrados = oLista.Select(
                 plato => new
                 {
@@ -589,16 +613,17 @@ namespace IUVendedor.Controllers
                     plato.Descripcion,
                     FechaDeCreacion = plato.FechaDeCreacion.ToString("dd-MM-yyyy"),
                 });
-
             return Json(new { data = platosFiltrados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Guarda un plato nuevo o edita uno existente.
+        /// </summary>
         [HttpPost]
         public JsonResult GuardarPlato(BE.Plato plato)
         {
             object resultado;
             string mensaje = string.Empty;
-
             if (plato.Id == 0)
             {
                 resultado = new BLL.Plato().CrearPlato(plato, out mensaje);
@@ -607,45 +632,43 @@ namespace IUVendedor.Controllers
             {
                 resultado = new BLL.Plato().EditarPlato(plato, out mensaje);
             }
-
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Elimina un plato por su identificador.
+        /// </summary>
         [HttpPost]
         public JsonResult EliminarPlato(int idPlato)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
-
             respuesta = new BLL.Plato().EliminarPlato(idPlato, out mensaje);
-
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Obtiene los insumos asociados a un plato.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerInsumosDelPlato(int plato_id)
         {
-            // creo un objeto PlatoInsumo y le asigno un Plato con el id recibido
             BE.PlatoInsumo platoInsumo = new BE.PlatoInsumo();
             platoInsumo.Plato = new BE.Plato();
             platoInsumo.Plato.Id = plato_id;
-
-            // obtengo la lista de insumos asociados al plato seleccionado
             List<BE.PlatoInsumo> listaInsumos = new BLL.PlatoInsumo().ObtenerInsumosDelPlato(platoInsumo);
-
-            // proyecto la lista para devolver los campos necesarios
             var insumos = listaInsumos.Select(p_i => new
             {
                 Id = p_i.Insumo.Id,
                 Nombre = p_i.Insumo.Nombre,
                 TipoNombre = p_i.Insumo.TipoNombre
             }).ToList();
-
             return Json(new { data = insumos }, JsonRequestBehavior.AllowGet);
         }
 
-        ///LOTES
-
+        /// <summary>
+        /// Guarda o edita un lote de insumo.
+        /// </summary>
         [HttpPost]
         public JsonResult GuardarLote(string Cantidad, string FechaDeVencimiento, string InsumoId, int Id = 0)
         {
@@ -657,20 +680,15 @@ namespace IUVendedor.Controllers
             {
                 return Json(new { resultado = false, mensaje = "Todos los campos son obligatorios." }, JsonRequestBehavior.AllowGet);
             }
-
             try
             {
                 int cantidad = int.Parse(Cantidad);
                 DateTime fechaDeVencimiento = DateTime.Parse(FechaDeVencimiento);
                 int insumoId = int.Parse(InsumoId);
-
                 if (cantidad <= 0)
                     return Json(new { resultado = false, mensaje = "La cantidad debe ser mayor a cero." }, JsonRequestBehavior.AllowGet);
-
                 if (fechaDeVencimiento <= DateTime.Today)
                     return Json(new { resultado = false, mensaje = "La fecha de vencimiento debe ser posterior a hoy." }, JsonRequestBehavior.AllowGet);
-
-                // Crear objeto Lote
                 BE.Lote oLote = new BE.Lote
                 {
                     Id = Id,
@@ -678,7 +696,6 @@ namespace IUVendedor.Controllers
                     FechaDeVencimiento = fechaDeVencimiento,
                     InsumoId = insumoId
                 };
-
                 if (oLote.Id == 0)
                 {
                     new BLL.Lote().CrearLote(oLote, out mensaje);
@@ -693,10 +710,12 @@ namespace IUVendedor.Controllers
                 exito = false;
                 mensaje = "Error inesperado al guardar lote: " + ex.Message;
             }
-
             return Json(new { resultado = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Lista los lotes asociados a un insumo.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarLoteInsumo(int idInsumo)
         {
@@ -705,14 +724,14 @@ namespace IUVendedor.Controllers
                 BLL.Lote gestorLote = new BLL.Lote();
                 var lotes = gestorLote.ListarLotes()
                     .Where(l => l.InsumoId == idInsumo)
-                    .Select(l => new {
+                    .Select(l => new
+                    {
                         Id = l.Id,
-                        insumo_id = l.InsumoId,  // acá usá el nombre exacto
+                        insumo_id = l.InsumoId,
                         Cantidad = l.Cantidad,
-                        fecha_vencimiento = l.FechaDeVencimiento.ToString("yyyy-MM-dd") // formato fecha
+                        fecha_vencimiento = l.FechaDeVencimiento.ToString("yyyy-MM-dd")
                     })
                     .ToList();
-
                 return Json(new { data = lotes }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -721,20 +740,22 @@ namespace IUVendedor.Controllers
             }
         }
 
-        
-        
-        
+        /// <summary>
+        /// Muestra la vista de menús para el chef.
+        /// </summary>
         [PermisosRol(Models.Rol.Chef)]
         public ActionResult Menus()
         {
             return View();
         }
 
+        /// <summary>
+        /// Lista todos los menús para el chef.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarMenusChef()
         {
             List<BE.Menu> oLista = new BLL.Menu().ListarMenus();
-
             var menusFiltrados = oLista.Select(
                 menu => new
                 {
@@ -743,22 +764,19 @@ namespace IUVendedor.Controllers
                     menu.Descripcion,
                     FechaDeCreacion = menu.FechaDeCreacion.ToString("dd-MM-yyyy"),
                 });
-
             return Json(new { data = menusFiltrados }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Obtiene los platos asociados a un menú.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerPlatosDelMenu(int menu_id)
         {
-            // creo un objeto Menu_Plato y le asigno un Menu con el id recibido
             BE.Menu_Plato menuPlato = new BE.Menu_Plato();
             menuPlato.Menu = new BE.Menu();
             menuPlato.Menu.Id = menu_id;
-
-            // obtengo la lista de platos asociados al menú seleccionado
             List<BE.Menu_Plato> listaPlatos = new BLL.Menu_Plato().ObtenerPlatosDelMenu(menuPlato);
-
-            // proyecto la lista para devolver los campos necesarios
             var platos = listaPlatos.Select(mp => new
             {
                 Id = mp.Plato.Id,
@@ -766,71 +784,70 @@ namespace IUVendedor.Controllers
                 Precio = mp.Plato.Precio,
                 Descripcion = mp.Plato.Descripcion
             }).ToList();
-
             return Json(new { data = platos }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Guarda un menú nuevo o edita uno existente.
+        /// </summary>
         [HttpPost]
         public JsonResult GuardarMenu(BE.Menu menu)
         {
             object resultado;
             string mensaje = string.Empty;
-
             if (menu.Id == 0)
             {
                 resultado = new BLL.Menu().CrearMenu(menu, out mensaje);
             }
-            else // TODO
+            else
             {
                 resultado = new BLL.Menu().EditarMenu(menu, out mensaje);
             }
-
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-
+        /// <summary>
+        /// Elimina un menú por su identificador.
+        /// </summary>
         [HttpPost]
         public JsonResult EliminarMenu(int idMenu)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
-
             respuesta = new BLL.Menu().EliminarMenu(idMenu, out mensaje);
-
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-        //Tipo_Insumo
+        /// <summary>
+        /// Obtiene los tipos de insumo disponibles.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerTiposInsumo()
         {
             try
             {
                 var objListInsumo = new BLL.Tipo_Insumo().Listar();
-
                 var tiposInsumosFormateados = objListInsumo.Select(e => new
                 {
                     e.Id,
                     e.Nombre
                 });
-
                 return Json(new { data = tiposInsumosFormateados }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
-                //Control de error
                 return Json(new { success = false, message = "Error al obtener los tipos de insumo." }, JsonRequestBehavior.AllowGet);
             }
         }
 
-
+        /// <summary>
+        /// Lista todas las temporadas.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarTemporadas()
         {
             List<BE.Temporada> oLista = new List<BE.Temporada>();
-
             oLista = new BLL.Temporada().ListarTemporada();
-
             var TemporadasFormateadas = oLista.Select(t => new
             {
                 t.IdTemporada,
@@ -843,19 +860,18 @@ namespace IUVendedor.Controllers
                     t.Id_CategoriaTemporada.Nombre
                 },
             });
-
-
             return Json(new { data = TemporadasFormateadas }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Obtiene una temporada por su identificador.
+        /// </summary>
         [HttpGet]
         public JsonResult ObtenerTemporada(int id)
         {
             var temporada = new BLL.Temporada().ObtenerTemporada(id);
-
             if (temporada == null)
                 return Json(null, JsonRequestBehavior.AllowGet);
-
             var temporadaJson = new
             {
                 temporada.IdTemporada,
@@ -868,10 +884,12 @@ namespace IUVendedor.Controllers
                     temporada.Id_CategoriaTemporada.Nombre
                 }
             };
-
             return Json(temporadaJson, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Compara la cantidad de eventos entre dos temporadas.
+        /// </summary>
         [HttpGet]
         public JsonResult CompararCantidadEventos(int id1, int id2)
         {
@@ -879,14 +897,14 @@ namespace IUVendedor.Controllers
             return Json(new { mensaje = resultado }, JsonRequestBehavior.AllowGet);
         }
 
-
+        /// <summary>
+        /// Lista todos los usuarios.
+        /// </summary>
         [HttpGet]
         public JsonResult ListarUsuario()
         {
             List<BE.Usuario> oLista = new List<BE.Usuario>();
-
             oLista = new BLL.Usuario().ListarUsuario();
-
             var UsuariosFormateados = oLista.Select(u => new
             {
                 u.IdUsuario,
@@ -895,36 +913,42 @@ namespace IUVendedor.Controllers
                 u.Nombre,
                 u.Apellido
             });
-
             return Json(new { data = UsuariosFormateados }, JsonRequestBehavior.AllowGet);
         }
 
-
-
-        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Muestra la vista de temporadas para el gerente.
+        /// </summary>
         [PermisosRol(Models.Rol.Gerente)]
         public ActionResult Temporadas()
         {
             return View();
         }
 
+        /// <summary>
+        /// Muestra la vista de usuarios para el administrador.
+        /// </summary>
         [PermisosRol(Models.Rol.Administrador)]
         public ActionResult Usuarios()
         {
             return View();
         }
 
+        /// <summary>
+        /// Muestra la vista de configuración del sistema para el administrador.
+        /// </summary>
         [PermisosRol(Models.Rol.Administrador)]
         public ActionResult ConfigurarSistema()
         {
             return View();
         }
 
-        //////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Muestra la vista de acceso denegado.
+        /// </summary>
         public ActionResult SinPermiso()
         {
             ViewBag.Message = "No tenes permisos.";
-
             return View();
         }
     }

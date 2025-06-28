@@ -6,20 +6,32 @@ using System.Web.Mvc;
 
 using IUVendedor.Models;
 using IUVendedor.Data;
-using System.Web.Security;  // Para manejar la autenticación con Forms Authentication
-using System.Security.Principal; // Para obtener información del usuario autenticado
+using System.Web.Security;  
+using System.Security.Principal; 
 
 
 namespace IUVendedor.Controllers
 {
+    /// <summary>
+    /// Controlador responsable de la autenticación y acceso de usuarios.
+    /// </summary>
     public class AccesoController : Controller
     {
+        /// <summary>
+        /// Muestra la vista de inicio de sesión.
+        /// </summary>
+        /// <returns>Vista de inicio de sesión.</returns>
         [AllowAnonymous]
         public ActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Procesa el inicio de sesión del usuario.
+        /// </summary>
+        /// <param name="_usuario">Objeto Usuario con los datos ingresados.</param>
+        /// <returns>Redirige al Home si es exitoso, de lo contrario muestra error.</returns>
         [HttpPost]
         [AllowAnonymous]
         public ActionResult Index(Usuario _usuario)
@@ -42,12 +54,14 @@ namespace IUVendedor.Controllers
             }
         }
 
+        /// <summary>
+        /// Cierra la sesión del usuario actual.
+        /// </summary>
+        /// <returns>Redirige a la vista de inicio de sesión.</returns>
         public ActionResult Salir()
         {
             Session["usuario"] = null;
-            return RedirectToAction("Index", "Acceso"); 
+            return RedirectToAction("Index", "Acceso");
         }
-
-
     }
 }

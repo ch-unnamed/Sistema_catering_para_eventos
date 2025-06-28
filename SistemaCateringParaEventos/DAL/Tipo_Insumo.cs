@@ -10,6 +10,10 @@ namespace DAL
 {
     public class Tipo_Insumo
     {
+        /// <summary>
+        /// Obtiene una lista de todos los tipos de insumo desde la base de datos.
+        /// </summary>
+        /// <returns>Lista de objetos <see cref="BE.Tipo_Insumo"/>.</returns>
         public static List<BE.Tipo_Insumo> ListarTipos()
         {
             List<BE.Tipo_Insumo> lista = new List<BE.Tipo_Insumo>();

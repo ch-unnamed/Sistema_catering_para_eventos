@@ -12,7 +12,10 @@ namespace DAL
 {
     public class Menu
     {
-        // Esto es para el vendedor, si lo borran se rompe cotizacion, es para mostrarlo en un select y no hacerlo hardcodeado como bot
+        /// <summary>
+        /// Lista los menús disponibles para el vendedor.
+        /// </summary>
+        /// <returns>Lista de menús para el vendedor.</returns>
         public List<BE.Menu> ListarMenusVendedor()
         {
             Conexion conexion = new Conexion();
@@ -33,6 +36,10 @@ namespace DAL
             return menus;
         }
 
+        /// <summary>
+        /// Lista todos los menús disponibles para el chef.
+        /// </summary>
+        /// <returns>Lista de todos los menús con detalles.</returns>
         public List<BE.Menu> ListarMenus()
         {
             Conexion conexion = new Conexion();
@@ -55,6 +62,12 @@ namespace DAL
             return menus;
         }
 
+        /// <summary>
+        /// Crea un nuevo menú después de validar los datos proporcionados.
+        /// </summary>
+        /// <param name="menu">El menú a crear.</param>
+        /// <param name="mensaje">Mensaje de validación o resultado.</param>
+        /// <returns>El identificador del menú creado, o 0 si hay error de validación.</returns>
         public int CrearMenu(BE.Menu menu, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -62,7 +75,6 @@ namespace DAL
             int resultado = 0;
             mensaje = string.Empty;
 
-            // para leer en el store procedure la cadena de ids e insertar en la tabla MENU_PLATO
             string idsPlatos = string.Join(",", menu.Platos.Select(p => p.Id));
 
             SqlParameter[] parametros = new SqlParameter[]
@@ -84,6 +96,12 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Edita un menú existente después de validar los datos proporcionados.
+        /// </summary>
+        /// <param name="menu">El menú a editar.</param>
+        /// <param name="mensaje">Mensaje de validación o resultado.</param>
+        /// <returns>El identificador del menú editado, o 0 si hay error de validación.</returns>
         public int EditarMenu(BE.Menu menu, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -111,6 +129,12 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Elimina un menú por su identificador.
+        /// </summary>
+        /// <param name="idMenu">Identificador del menú a eliminar.</param>
+        /// <param name="mensaje">Mensaje de resultado.</param>
+        /// <returns>True si se eliminó correctamente, false en caso contrario.</returns>
         public bool EliminarMenu(int idMenu, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -136,7 +160,7 @@ namespace DAL
             }
             catch (SqlException ex)
             {
-                if (ex.Number == 547) // Restriccion de FK
+                if (ex.Number == 547)
                 {
                     mensaje = "¡El Menu tiene vinculos activos con Cotizacion!";
                 }

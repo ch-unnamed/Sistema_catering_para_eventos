@@ -9,8 +9,15 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
+    /// <summary>
+    /// Clase de acceso a datos para la gestión de cotizaciones.
+    /// </summary>
     public class Cotizacion
     {
+        /// <summary>
+        /// Lista todas las cotizaciones obtenidas desde la base de datos.
+        /// </summary>
+        /// <returns>Lista de objetos <see cref="BE.Cotizacion"/>.</returns>
         public List<BE.Cotizacion> Listar()
         {
             Conexion conexion = new Conexion();
@@ -23,14 +30,10 @@ namespace DAL
             {
                 BE.Cotizacion unaCotizacion = new BE.Cotizacion();
 
-                // tomar cada fila como se usa en el procedimiento almacenado
-
                 unaCotizacion.IdCotizacion = Convert.ToInt32(fila["cotizacion_id"]);
                 unaCotizacion.FechaPedido = Convert.ToDateTime(fila["fecha_pedido"]);
                 unaCotizacion.Total = Convert.ToInt32(fila["total"]);
                 unaCotizacion.FechaRealizacion = Convert.ToDateTime(fila["fecha_realizacion"]);
-
-                // Crear instancia de cada clase individual para obtener el campo requerido
 
                 BE.Evento evento_nombre = new BE.Evento();
                 evento_nombre.Nombre = fila["evento_nombre"].ToString();
@@ -54,6 +57,12 @@ namespace DAL
             return cotizaciones;
         }
 
+        /// <summary>
+        /// Edita una cotización existente en la base de datos.
+        /// </summary>
+        /// <param name="cotizacion">Cotización a editar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>True si la edición fue exitosa, false en caso contrario.</returns>
         public bool EditarCotizacion(BE.Cotizacion cotizacion, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -78,6 +87,12 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Elimina una cotización de la base de datos.
+        /// </summary>
+        /// <param name="cotizacion_id">Identificador de la cotización a eliminar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>True si la eliminación fue exitosa, false en caso contrario.</returns>
         public bool EliminarCotizacion(int cotizacion_id, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -100,6 +115,11 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Obtiene el correo electrónico de un cliente a partir de su identificador.
+        /// </summary>
+        /// <param name="cliente_id">Identificador del cliente.</param>
+        /// <returns>Correo electrónico del cliente si existe, cadena vacía en caso contrario.</returns>
         public string ObtenerMailCliente(int cliente_id)
         {
             Conexion conexion = new Conexion();
