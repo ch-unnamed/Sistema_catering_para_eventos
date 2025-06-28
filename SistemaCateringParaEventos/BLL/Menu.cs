@@ -43,12 +43,6 @@ namespace BLL
         {
             mensaje = string.Empty;
 
-            if (menu.Id <= 0)
-            {
-                mensaje = "ID de menú inválido.";
-                return 0;
-            }
-
             if (string.IsNullOrWhiteSpace(menu.Nombre))
                 mensaje = "El menú debe tener un nombre.";
 

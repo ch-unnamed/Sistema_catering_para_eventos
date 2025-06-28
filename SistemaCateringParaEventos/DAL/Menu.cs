@@ -95,7 +95,7 @@ namespace DAL
 
             SqlParameter[] parametros = new SqlParameter[]
             {
-            new SqlParameter("@id", menu.Id),
+            new SqlParameter("@id_menu", menu.Id),
             new SqlParameter("@nombre", menu.Nombre),
             new SqlParameter("@descripcion", menu.Descripcion),
             new SqlParameter("@platos_ids", idsPlatos),

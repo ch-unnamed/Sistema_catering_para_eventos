@@ -45,6 +45,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Configuracion_Empresa.cs" />
     <Compile Include="Lote.cs" />
+    <Compile Include="PlatoInsumo.cs" />
     <Compile Include="Tipo_Insumo.cs" />
     <Compile Include="Cotizacion.cs" />
     <Compile Include="Estado.cs" />

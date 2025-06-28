@@ -8,42 +8,54 @@ namespace BLL
 {
     public class Plato
     {
-        private readonly DAL.Plato objPlatoDAL;
-        private readonly DAL.Insumo objInsumoDAL;
-
-        public Plato()
+        public int CrearPlato(BE.Plato plato, out string mensaje)
         {
-            objPlatoDAL = new DAL.Plato();
-            objInsumoDAL = new DAL.Insumo();
+            mensaje = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(plato.Nombre))
+                mensaje = "El plato debe tener un nombre.";
+
+            if (plato.Precio <= 0)
+                mensaje = "El plato debe tener un precio.";
+
+            if (string.IsNullOrEmpty(plato.Descripcion))
+                mensaje = "El plato debe tener una descripción.";
+
+            if (plato.Insumos == null)
+                mensaje = "Debe seleccionar al menos 1 insumo.";
+
+            if (!string.IsNullOrEmpty(mensaje))
+                return 0;
+
+            return new DAL.Plato().CrearPlato(plato, out mensaje);
         }
 
-        public void CrearPlato(BE.Plato objPlato)
+        public int EditarPlato(BE.Plato plato, out string mensaje)
         {
-            //validaciones
-            if (string.IsNullOrEmpty(objPlato.Categoria))
-            {
-                throw new Exception("Debe indicar una categoría.");
-            }
+            mensaje = string.Empty;
 
-            objPlato.FechaDeCreacion = DateTime.Now;
-            objPlatoDAL.Insertar(objPlato);
+            if (string.IsNullOrWhiteSpace(plato.Nombre))
+                mensaje = "El plato debe tener un nombre.";
+
+            if (plato.Precio <= 0)
+                mensaje = "El plato debe tener un precio.";
+
+            if (string.IsNullOrEmpty(plato.Descripcion))
+                mensaje = "El plato debe tener una descripción.";
+
+            if (plato.Insumos == null)
+                mensaje = "Debe seleccionar al menos 1 insumo.";
+
+            if (!string.IsNullOrEmpty(mensaje))
+                return 0;
+
+            return new DAL.Plato().EditarPlato(plato, out mensaje);
         }
 
-        public void EditarPlato(BE.Plato objPlato)
+        public bool EliminarPlato(int idPlato, out string mensaje)
         {
-            objPlatoDAL.Editar(objPlato);
-
-        }
-
-        public BE.Plato BuscarPlato(string NombrePlato)
-        {
-            BE.Plato PlatoEncontrado = objPlatoDAL.Buscar(NombrePlato);
-            return PlatoEncontrado;
-        }
-
-        public void EliminarPlato(BE.Plato objPlato)
-        {
-            objPlatoDAL.Eliminar(objPlato);
+            DAL.Plato platoDAL = new DAL.Plato();
+            return platoDAL.EliminarPlato(idPlato, out mensaje);
         }
 
         public List<BE.Plato> Listar()

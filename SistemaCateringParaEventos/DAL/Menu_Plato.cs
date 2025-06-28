@@ -33,7 +33,7 @@ namespace DAL
                 unMenuPlato.Menu.Id = Convert.ToInt32(fila["menu_id"]);
                 unMenuPlato.Plato.Id = Convert.ToInt32(fila["id"]);
                 unMenuPlato.Plato.Nombre = fila["Nombre"].ToString(); 
-                unMenuPlato.Plato.Descripcon = fila["descripcion"].ToString(); 
+                unMenuPlato.Plato.Descripcion = fila["descripcion"].ToString(); 
                 unMenuPlato.Plato.Precio = Convert.ToDecimal(fila["precio"]);
 
                 platosPorMenuId.Add(unMenuPlato);
@@ -67,7 +67,7 @@ namespace DAL
                 unMenuPlato.Plato.Id = Convert.ToInt32(fila["id"]);
                 unMenuPlato.Plato.Nombre = fila["Nombre"].ToString();
                 unMenuPlato.Plato.Precio = Convert.ToDecimal(fila["precio"]);
-                unMenuPlato.Plato.Descripcon = fila["descripcion"].ToString();
+                unMenuPlato.Plato.Descripcion = fila["descripcion"].ToString();
 
                 platosPorMenuId.Add(unMenuPlato);
             }

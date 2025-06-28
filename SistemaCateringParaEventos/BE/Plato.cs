@@ -34,7 +34,7 @@ namespace BE
 
         private string _descripcion;
 
-        public string Descripcon
+        public string Descripcion
         {
             get { return _descripcion; }
             set { _descripcion = value; }
@@ -48,20 +48,12 @@ namespace BE
             set { _fechaDeCreacion = value; }
         }
 
-        private string _categoria;
+        private List<Insumo> _insumos;
 
-        public string Categoria
+        public List<Insumo> Insumos
         {
-            get { return _categoria; }
-            set { _categoria = value; }
-        }
-
-        private List<PlatoInsumo> _platoInsumo;
-
-        public List<PlatoInsumo> PlatoInsumos
-        {
-            get { return _platoInsumo; }
-            set { _platoInsumo = value; }
+            get { return _insumos; }
+            set { _insumos = value; }
         }
 
 

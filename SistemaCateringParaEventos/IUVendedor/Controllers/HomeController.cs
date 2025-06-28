@@ -240,7 +240,7 @@ namespace IUVendedor.Controllers
             {
                 IdPlato = mp.Plato.Id,
                 Nombre = mp.Plato.Nombre,
-                Descripcion = mp.Plato.Descripcon,
+                Descripcion = mp.Plato.Descripcion,
                 Precio = mp.Plato.Precio
             }).ToList(); // es lista para que dentro del id de menu se ponga todos los platos correspondientes
 
@@ -578,10 +578,71 @@ namespace IUVendedor.Controllers
         [HttpGet]
         public JsonResult ListarPlatos()
         {
-            var platos = new BLL.Plato().Listar();
-            return Json(platos, JsonRequestBehavior.AllowGet);
+            List<BE.Plato> oLista = new BLL.Plato().Listar();
+
+            var platosFiltrados = oLista.Select(
+                plato => new
+                {
+                    plato.Id,
+                    plato.Nombre,
+                    plato.Precio,
+                    plato.Descripcion,
+                    FechaDeCreacion = plato.FechaDeCreacion.ToString("dd-MM-yyyy"),
+                });
+
+            return Json(new { data = platosFiltrados }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult GuardarPlato(BE.Plato plato)
+        {
+            object resultado;
+            string mensaje = string.Empty;
+
+            if (plato.Id == 0)
+            {
+                resultado = new BLL.Plato().CrearPlato(plato, out mensaje);
+            }
+            else
+            {
+                resultado = new BLL.Plato().EditarPlato(plato, out mensaje);
+            }
+
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EliminarPlato(int idPlato)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new BLL.Plato().EliminarPlato(idPlato, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerInsumosDelPlato(int plato_id)
+        {
+            // creo un objeto PlatoInsumo y le asigno un Plato con el id recibido
+            BE.PlatoInsumo platoInsumo = new BE.PlatoInsumo();
+            platoInsumo.Plato = new BE.Plato();
+            platoInsumo.Plato.Id = plato_id;
+
+            // obtengo la lista de insumos asociados al plato seleccionado
+            List<BE.PlatoInsumo> listaInsumos = new BLL.PlatoInsumo().ObtenerInsumosDelPlato(platoInsumo);
+
+            // proyecto la lista para devolver los campos necesarios
+            var insumos = listaInsumos.Select(p_i => new
+            {
+                Id = p_i.Insumo.Id,
+                Nombre = p_i.Insumo.Nombre,
+                TipoNombre = p_i.Insumo.TipoNombre
+            }).ToList();
+
+            return Json(new { data = insumos }, JsonRequestBehavior.AllowGet);
+        }
 
         ///LOTES
 
@@ -700,9 +761,10 @@ namespace IUVendedor.Controllers
             // proyecto la lista para devolver los campos necesarios
             var platos = listaPlatos.Select(mp => new
             {
+                Id = mp.Plato.Id,
                 Nombre = mp.Plato.Nombre,
                 Precio = mp.Plato.Precio,
-                Descripcion = mp.Plato.Descripcon
+                Descripcion = mp.Plato.Descripcion
             }).ToList();
 
             return Json(new { data = platos }, JsonRequestBehavior.AllowGet);

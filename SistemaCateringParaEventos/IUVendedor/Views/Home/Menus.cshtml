@@ -2,13 +2,15 @@
     ViewBag.Title = "Menus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <ol class="breadcrumb mb-4 mt-2">
     <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
     <li class="breadcrumb-item active">Menús</li>
 </ol>
+
 <div class="card">
     <div class="card-header">
-        <i class="fa fa-utensils me-1"></i> Lista de Menús
+        <i class="fas fa-clipboard me-1"></i> Lista de Menús
     </div>
     <div class="card-body">
         <div class="row">
@@ -38,7 +40,7 @@
     </div>
 </div>
 
-<!-- MODAL PARA CREAR NUEVO MENU -->
+<!-- MODAL PARA CREAR NUEVO MENU O EDITAR -->
 <div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -47,6 +49,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
+                <input type="hidden" id="id" value="0" /> <!-- para editar menu -->
+
                 <div class="row g-2">
 
                     <div class="col-sm-6">
@@ -123,7 +128,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                     
+
                                 </tbody>
                             </table>
                         </div>
@@ -141,7 +146,6 @@
 @section Scripts {
     <script>
         var tabledataMenus;
-        var filaSeleccionada;
 
         tabledataMenus = $('#tablaMenus').DataTable({
             responsive: true,
@@ -176,21 +180,28 @@
 
         // PARA EDITAR O CREAR MENU
         function abrirModal(json) {
-            $("#id").val(0);
-            $("#nombre").val("");
-            $("#descripcion").val("");
-
             $("#msjError").hide();
 
             if (json != null) { // entra acá para editar
                 $("#id").val(json.Id);
                 $("#nombre").val(json.Nombre);
                 $("#descripcion").val(json.Descripcion);
+                $("#exampleModalLabel").text(`Editar Menú: ${json.Nombre}`);
+            } else {
+                $("#id").val(0);
+                $("#nombre").val("");
+                $("#descripcion").val("");
+                $("#exampleModalLabel").text("Nuevo Menú");
             }
 
-            cargarPlatos();
+            cargarPlatos(json?.Platos || []);
 
             $("#FormModal").modal("show");
+
+            $("#FormModal").on("shown.bs.modal", function () {
+                $('#tablaSeleccionPlatos').DataTable().columns.adjust().draw();
+            });
+
         }
 
         $('#tablaMenus tbody').on('click', '.btn-ver-platosMenu', function () {
@@ -198,29 +209,66 @@
             verPlatosMenu(data.Id, data.Nombre);
         });
 
-        function cargarPlatos() {
+        $('#tablaMenus tbody').on('click', '.btn-editar', function () {
+            var fila = $(this).closest('tr');
+            var data = tabledataMenus.row(fila).data();
+
+            if (!data) {
+                data = tabledataMenus.row(fila.prev()).data();
+            }
+
+            if (!data) {
+                console.error("No se pudo obtener la data del menú para editar.");
+                return;
+            }
+
+            // traigo los platos del menú (por id)
+            $.ajax({
+                url: '@Url.Action("ObtenerPlatosDelMenu", "Home")',
+                type: 'GET',
+                data: { menu_id: data.Id },
+                success: function (response) {
+                    abrirModal({
+                        Id: data.Id,
+                        Nombre: data.Nombre,
+                        Descripcion: data.Descripcion,
+                        Platos: response.data
+                    });
+                },
+                error: function () {
+                    swal("Error", "No se pudieron cargar los platos del menú", "error");
+                }
+            });
+        });
+
+        function cargarPlatos(platosSeleccionados = []) {
             $.ajax({
                 url: '@Url.Action("ListarPlatos", "Home")',
                 method: 'GET',
-                success: function (data) {
+                success: function (response) {
+                    const data = response.data;
+
                     if ($.fn.DataTable.isDataTable('#tablaSeleccionPlatos')) {
                         $('#tablaSeleccionPlatos').DataTable().clear().destroy();
                     }
-        
+
                     $('#tablaSeleccionPlatos tbody').empty();
 
                     data.forEach(plato => {
+                        const estaSeleccionado = platosSeleccionados.some(p => p.Id == plato.Id);
                         $('#tablaSeleccionPlatos tbody').append(`
                             <tr>
-                                <td class="text-center">
-                                    <input class="form-check-input plato-checkbox" type="checkbox" value="${plato.Id}">
-                                </td>
-                                <td>${plato.Nombre}</td>
-                                <td>${plato.Precio ? `$${plato.Precio.toFixed(2)}` : '-'}</td>
-                                <td>${plato.Descripcon || ''}</td>
-                            </tr>
+                            <td class="text-center">
+                                <input class="form-check-input plato-checkbox" type="checkbox" value="${plato.Id}" ${estaSeleccionado ? 'checked' : ''}>
+                            </td>
+                            <td>${plato.Nombre}</td>
+                            <td>${plato.Precio ? `$${plato.Precio.toFixed(2)}` : '-'}</td>
+                            <td>${plato.Descripcion || ''}</td>
+                        </tr>
                         `);
-                    }); 
+                    });
+
+                    $(".plato-checkbox").trigger("change");
 
                     // Marcar o desmarcar checkbox al hacer clic en la fila
                     $('#tablaSeleccionPlatos tbody').on('click', 'tr', function (e) {
@@ -238,7 +286,14 @@
                         language: {
                             url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
                         },
-                        ordering: false,
+                        orderable: true,
+                        order: [],
+                        columnDefs: [
+                            {
+                                targets: 0, // índice de la columna (la del checkbox)
+                                orderable: false // desactiva el ordenamiento
+                            }
+                        ],
                         paging: false, // paginación desactivada
                         lengthChange: false, // ocultar el selector de cantidad
                         scrollY: '300px', // altura fija con scroll vertical
@@ -284,7 +339,13 @@
                 },
                 columns: [
                     { data: 'Nombre', title: 'Nombre del Plato' },
-                    { data: 'Precio', title: 'Precio' },
+                    {
+                        data: 'Precio',
+                        title: 'Precio',
+                        render: function (data, type, row) {
+                            return `$${parseFloat(data).toFixed(2)}`;
+                        },
+                    },
                     { data: 'Descripcion', title: 'Descripción' }
                 ],
                 language: {
@@ -341,13 +402,13 @@
 
         // ELIMINAR MENU
         $("#tablaMenus tbody").on("click", '.btn-eliminar', function () {
-            
+
             var menuSeleccionado = $(this).closest("tr");
 
             var data = tabledataMenus.row(menuSeleccionado).data(); // los datos de la fila seleccionada
 
             console.log(data);
-            
+
             swal({
                 title: "¿Esta Seguro?",
                 text: "¿Queres Eliminar el Menu?",
