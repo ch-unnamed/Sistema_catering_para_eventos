@@ -1,10 +1,10 @@
 ﻿
-    // Funcionalidad de que al hacer click en editar se muestren los valores de la fila seleccionada
+    // Al editar se muestran sus valores
     $("#tabla tbody").on("click", '.btn-editar', function () {
 
         filaSeleccionada = $(this).closest("tr");
 
-        var data = tabledata.row(filaSeleccionada).data(); // los datos de la fila seleccionada
+        var data = tabledata.row(filaSeleccionada).data(); 
 
         abrirModal(data);
     });

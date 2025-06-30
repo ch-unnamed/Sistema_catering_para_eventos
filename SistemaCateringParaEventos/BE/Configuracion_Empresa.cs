@@ -24,12 +24,12 @@ namespace BE
 			set { _nombre = value; }
 		}
 
-		private decimal _porcentajeGanancia;
+		private decimal _porcentaje;
 
-		public decimal PorcentajeGanancia
+		public decimal Porcentaje
 		{
-			get { return _porcentajeGanancia; }
-			set { _porcentajeGanancia = value; }
+			get { return _porcentaje; }
+			set { _porcentaje = value; }
 		}
 
 		private Usuario _admin;

@@ -1,7 +1,8 @@
 ﻿
-    async function cargarEstados() {
+    async function cargarEstados(edita) {
 
         try {
+
             const response = await fetch('/Home/ListarEstados');
             const data = await response.json();
 
@@ -10,17 +11,29 @@
 
             selectEstado.innerHTML += '<option value="" selected>Elija una opción</option>';
 
-            data.data.forEach(item => {
-                selectEstado.innerHTML += `<option value="${item.IdEstado}">${item.Nombre}</option>`;
-            });
+            if (edita === 1) {
+                
+                data.data.forEach(item => {
+                    selectEstado.innerHTML += `<option value="${item.IdEstado}">${item.Nombre}</option>`;
+                });
+            } else {
+                
+                const pendiente = data.data.find(item => item.IdEstado === 3);
+                if (pendiente) {
+                    selectEstado.innerHTML += `<option value="${pendiente.IdEstado}">${pendiente.Nombre}</option>`;
+                }
+            }
+
 
         } catch (error) {
-            console.error("Error al obtener los estados:", error);
+            swal("Error", error, "error");
         }
     }
 
     async function cargarOpcionesMenu(menuId) {
+
         try {
+
             const response = await fetch('/Home/ListarMenusVendedor');
             const data = await response.json();
 
@@ -41,52 +54,52 @@
             });
 
         } catch (error) {
-            console.error(`Error al cargar opciones de menú en ${menuId}:`, error);
+            swal("Error", error, "error");
         }
     }
 
     async function cargarGanancia() {
+
         try {
 
             const response = await fetch('/Home/ObtenerPorcentajeGananciaGeneral');
             const data = await response.json();
 
             if (data.data) {
-                const porcentaje = parseFloat(data.data.PorcentajeGanancia);
-                console.log(`El porcentaje de ganancia es ${porcentaje}`);
+                const porcentaje = parseFloat(data.data.Porcentaje);
+                
                 return porcentaje;
             } else {
-                console.log("Algo falló");
                 return 0;
             }
 
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
         }
     }
 
     async function descuentoPrimeraVez() {
+
         try {
 
             const response = await fetch('/Home/ObtenerPorcentajeDescuentoPrimeraVez');
             const data = await response.json();
 
             if (data.data) {
-                const porcentaje = parseFloat(data.data.PorcentajeGanancia);
-                console.log(`El porcentaje de descuento por primera vez es ${porcentaje}`);
+                const porcentaje = parseFloat(data.data.Porcentaje);
                 return porcentaje;
             } else {
-                console.log("Algo falló");
                 return 0;
             }
 
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
             return 0;
         }
     }
 
     async function descuentoMasDe3Menus() {
+
         try {
 
             const response = await fetch('/Home/ObtenerPorcentajeDescuentoMasDe3Menus');
@@ -94,20 +107,22 @@
 
             if (data.data) {
                 const porcentaje = parseFloat(data.data.PorcentajeGanancia);
-                console.log(`El porcentaje de descuento por selcionar mas de 3 menus es ${porcentaje}`);
+                
                 return porcentaje;
             } else {
-                console.log("Algo falló");
+                
                 return 0;
             }
 
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
         }
     }
 
-    async function consultarCantidadClientes(clienteId) {
+    async function consultarClientes(clienteId) {
+
         try {
+
             const response = await fetch(`/Home/consultarCliente?cliente_id=${clienteId}`);
             const data = await response.json();
 
@@ -119,13 +134,15 @@
             }
 
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
             return 0;
         }
     }
 
     async function consultarNombreEventos(eventoId) {
+
         try {
+
             const response = await fetch(`/Home/nombreEvento?evento_id=${eventoId}`);
             const data = await response.json();
 
@@ -137,13 +154,15 @@
             }
 
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
             return "";
         }
     }
 
     async function consultarDniCliente(clienteId) {
+
         try {
+
             const response = await fetch(`/Home/dniCliente?cliente_id=${clienteId}`);
             const data = await response.json();
 
@@ -155,12 +174,13 @@
             }
 
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
             return "";
         }
     }
 
     async function consultarIdVendedor(rolId) {
+
         try {
             const response = await fetch(`/Home/idVendedor?rol_id=${rolId}`);
             const data = await response.json();
@@ -171,29 +191,29 @@
                 return "";
             }
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
             return "";
         }
     }
 
-async function consultarMailCliente(clienteID) {
-    try {
-        const response = await fetch(`/Home/ObtenerMailCliente?cliente_id=${clienteID}`);
-        const data = await response.json();
+    async function consultarMailCliente(clienteId) {
 
-        let email = data.data.email;
+        try {
+            const response = await fetch(`/Home/ObtenerMailCliente?cliente_id=${clienteId}`);
+            const data = await response.json();
 
-        if (email) {
-            return email;
-        } else {
-            return "error";
+            let email = data.data.email;
+
+            if (email) {
+                return email.trim();
+            } else {
+                return "error";
+            }
+
+        } catch (error) {
+            swal("Error", error, "error");
         }
-
-    } catch (error) {
-        console.error(`Error al obtener el email`, error);
-        return "";
     }
-}
 
     let totalMenusRenderizados = 1;
 
@@ -204,46 +224,56 @@ async function consultarMailCliente(clienteID) {
         return data.data.platos;
     }
 
-function crearContenedorPlatos(menuId, selectMenu) {
-    let contenedorPlatos = document.getElementById(`contenedor-platos-${menuId}`);
+    async function consultarPlato(idPlato) {
+        const response = await fetch(`/Home/ConsultarPlato?idPlato=${idPlato}`);
+        const data = await response.json();
 
-    if (!contenedorPlatos) {
-        contenedorPlatos = document.createElement("div");
-        contenedorPlatos.id = `contenedor-platos-${menuId}`;
-        contenedorPlatos.className = "mt-3 d-none";
-        contenedorPlatos.style.display = "block";
-        contenedorPlatos.style.width = "100%";
-        contenedorPlatos.style.clear = "both";
-
-        selectMenu.parentElement.insertAdjacentElement("afterend", contenedorPlatos);
+        return data.data;
     }
 
-    return contenedorPlatos;
-}
+    function crearContenedorPlatos(menuId, selectMenu) {
+        let contenedorPlatos = document.getElementById(`contenedor-platos-${menuId}`);
 
-function actualizarMenusDisponibles() {
-    const todosLosSelects = document.querySelectorAll("select[id^='menu-']");
-    const menusSeleccionados = Array.from(todosLosSelects)
-        .map(s => s.value)
-        .filter(v => v); // solo valores válidos
+        if (!contenedorPlatos) {
+            contenedorPlatos = document.createElement("div");
+            contenedorPlatos.id = `contenedor-platos-${menuId}`;
+            contenedorPlatos.className = "mt-3 d-none";
+            contenedorPlatos.style.display = "block";
+            contenedorPlatos.style.width = "100%";
+            contenedorPlatos.style.clear = "both";
 
-    todosLosSelects.forEach(select => {
-        const opciones = select.querySelectorAll("option");
+            selectMenu.parentElement.insertAdjacentElement("afterend", contenedorPlatos);
+        }
 
-        opciones.forEach(opcion => {
-            if (opcion.value === "" || opcion.value === select.value) {
-                // Mantenemos la opción actual seleccionada
-                opcion.disabled = false;
-            } else if (menusSeleccionados.includes(opcion.value)) {
-                opcion.disabled = true;
-            } else {
-                opcion.disabled = false;
-            }
+        return contenedorPlatos;
+    }
+
+    function actualizarMenusDisponibles() {
+
+        const todosLosSelects = document.querySelectorAll("select[id^='menu-']");
+        const menusSeleccionados = Array.from(todosLosSelects)
+            .map(s => s.value)
+            .filter(v => v); 
+
+        todosLosSelects.forEach(select => {
+            const opciones = select.querySelectorAll("option");
+
+            opciones.forEach(opcion => {
+                if (opcion.value === "" || opcion.value === select.value) {
+                    
+                    opcion.disabled = false;
+                } else if (menusSeleccionados.includes(opcion.value)) {
+                    opcion.disabled = true;
+                } else {
+                    opcion.disabled = false;
+                }
+            });
         });
-    });
-}
-const opcionSi = document.getElementById("opcion-si");
-const opcionNo = document.getElementById("opcion-no");
+    }
+
+    let descuentoPrimeraVezFinal = 0;
+    let descuentoMasDe3MenusFinal = 0;
+    let nombreMenuElecto = "";
 
     async function cargarMenusDinamico(menuId, maximaPlatos, cantidadMenus) {
 
@@ -258,7 +288,7 @@ const opcionNo = document.getElementById("opcion-no");
             // EVENTOS AL SELECCIONAR UN MENU
 
             selectMenu.addEventListener("change", async function () {
-                //actualizarMenusDisponibles();
+                actualizarMenusDisponibles();
                 let menuIdSeleccionado = this.value;
                 const idNumericoMenu = menuId.replace("menu-", "");
 
@@ -266,251 +296,243 @@ const opcionNo = document.getElementById("opcion-no");
                 contenedorPlatos.innerHTML = "";
 
                 if (menuIdSeleccionado) {
-                    console.log(`el valor ahora PRIMERO del menu es:${menuIdSeleccionado}`);
+                    
                     // SI EXISTE EL MENU MUESTRO LOS PLATOS 
 
                     let platos = await obtenerPlatos(menuIdSeleccionado);
 
-                        //FORMATO DEL EL TEXTO DEL PLATO DEL MENU
-                        const label = document.createElement("label");
-                        label.textContent = `Platos del Menú ${idNumericoMenu} seleccionado`;
-                        label.className = "form-label";
-                        contenedorPlatos.appendChild(label);
+                    //FORMATO DEL EL TEXTO DEL PLATO DEL MENU
+                    const label = document.createElement("label");
+                    label.textContent = `Platos del Menú ${idNumericoMenu} seleccionado`;
+                    label.className = "form-label";
+                    contenedorPlatos.appendChild(label);
 
-                        const lista = document.createElement("div"); // CONTENEDOR DE TODOS LOS PLATOS
+                    const lista = document.createElement("div"); // CONTENEDOR DE TODOS LOS PLATOS
 
-                        // A CADA PLATO LE DOY UN FORMATO (CHECKBOX, NOMBRE, BTN-DETALLE)
+                    // A CADA PLATO LE DOY UN FORMATO (CHECKBOX, NOMBRE, BTN-DETALLE)
 
-                        platos.forEach(plato => {
-                            const divPlato = document.createElement("div");
-                            divPlato.className = "form-check d-flex justify-content-between align-items-start mb-2";
+                    platos.forEach(plato => {
+                        const divPlato = document.createElement("div");
+                        divPlato.className = "form-check d-flex justify-content-between align-items-start mb-2";
 
-                            const izquierda = document.createElement("div");
-                            izquierda.className = "d-flex flex-column";
+                        const izquierda = document.createElement("div");
+                        izquierda.className = "d-flex flex-column";
 
-                            const subFila = document.createElement("div");
-                            subFila.className = "d-flex align-items-center gap-2";
+                        const subFila = document.createElement("div");
+                        subFila.className = "d-flex align-items-center gap-2";
 
-                            const checkbox = document.createElement("input");
-                            checkbox.type = "checkbox";
-                            checkbox.className = "form-check-input";
-                            checkbox.id = `plato_${plato.IdPlato}`;
-                            checkbox.name = "platosSeleccionados";
-                            checkbox.value = plato.IdPlato;
+                        const checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.className = "form-check-input";
+                        checkbox.id = `plato_${plato.IdPlato}`;
+                        checkbox.name = "platosSeleccionados";
+                        checkbox.value = plato.IdPlato;
 
-                            const labelCheckbox = document.createElement("label");
-                            labelCheckbox.className = "form-check-label";
-                            labelCheckbox.htmlFor = checkbox.id;
-                            labelCheckbox.textContent = plato.Nombre;
+                        const labelCheckbox = document.createElement("label");
+                        labelCheckbox.className = "form-check-label";
+                        labelCheckbox.htmlFor = checkbox.id;
+                        labelCheckbox.textContent = plato.Nombre;
 
-                            const descripcionDiv = document.createElement("div");
-                            descripcionDiv.className = "text-muted ms-4";
-                            descripcionDiv.style.display = "none";
-                            descripcionDiv.textContent = plato.Descripcion || "Sin descripción disponible.";
+                        const descripcionDiv = document.createElement("div");
+                        descripcionDiv.className = "text-muted ms-4";
+                        descripcionDiv.style.display = "none";
+                        descripcionDiv.textContent = plato.Descripcion || "Sin descripción disponible.";
 
-                            const botonIcono = document.createElement("button");
-                            botonIcono.className = "btn btn-sm btn-outline-success";
-                            botonIcono.innerHTML = `<i class="fas fa-plus"></i>`;
-                            botonIcono.title = `Mostrar descripción del plato ID ${plato.IdPlato}`;
-
-                            console.log("se creo el contenedor de platos");
-
-                            let descripcionVisible = false;
-
-                            console.log(`la cantidad de menus son:${menuIdSeleccionado}`);
-
-                            // LOGICA DE POR CADA PLATO PODER AGREGAR MAS O REGINSTRIR 
-
-                            checkbox.addEventListener("click", async () => {
-                                console.log("asndkasnawdqf");
-                                const clienteId = document.getElementById("idCliente").value;
-                                let cantidad = await consultarCantidadClientes(clienteId);
-                                let descuentoPrimeraVezFinal = 0;
-                                let descuentoMasDe3MenusFinal = 0;
-
-                                const precioPlato = parseFloat(plato.Precio);
-
-                                console.log("---------------------------");
-
-                                if (checkbox.checked) {
-                                    totalPrecioBase += precioPlato;
-                                } else {
-                                    totalPrecioBase -= precioPlato;
-                                }
-                                console.log(`precio plato es ${precioPlato}`);
-                                const porcentajeGanancia = await cargarGanancia();
-                                const ganancia = totalPrecioBase * (porcentajeGanancia / 100);
-
-                                if (cantidad === 0) {
-                                    const descuentPrimeraVez = await descuentoPrimeraVez();
-                                    descuentoPrimeraVezFinal = totalPrecioBase * (descuentPrimeraVez / 100);
-                                    console.log(`El descuento por primera vez del plato es ${descuentoPrimeraVezFinal}`);
-                                }
-
-                                if (cantidadMenus > 3) {
-                                    const descuentMasDe3Menus = await descuentoMasDe3Menus();
-                                    descuentoMasDe3MenusFinal = totalPrecioBase * (descuentMasDe3Menus / 100);
-                                    console.log(`El descuento por + de 3 menus del plato es ${descuentoMasDe3MenusFinal}`);
-                                }
-
-                                let totalFinal = totalPrecioBase + ganancia - descuentoPrimeraVezFinal - descuentoMasDe3MenusFinal;
+                        const botonIcono = document.createElement("button");
+                        botonIcono.className = "btn btn-sm btn-outline-success";
+                        botonIcono.innerHTML = `<i class="fas fa-plus"></i>`;
+                        botonIcono.title = `Mostrar descripción del plato ID ${plato.IdPlato}`;
 
 
+                        let descripcionVisible = false;
 
-                                const inputTotal = document.getElementById("total");
-                                inputTotal.value = parseFloat(totalFinal).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
+                        // LOGICA DE POR CADA PLATO PODER AGREGAR MAS O REGINSTRIR 
 
-                                console.log(`Total sin ganancia y descuentos: $${totalPrecioBase.toFixed(2)}`);
-                                console.log(`Ganancia: ${porcentajeGanancia}%`);
-                                console.log(`Total con ganancia + descuento primera vez + descuento + 3menus: $${totalFinal.toFixed(2)} del menu ${menuIdSeleccionado}`);
+                        checkbox.addEventListener("click", async () => {
 
-                                console.log(`se selecciono el plato con id ${plato.IdPlato} del menu ${menuIdSeleccionado}, su precio es ${plato.Precio}`);
+                            let clienteId = document.getElementById("idCliente").value;
+                            let cantidad = await consultarClientes(clienteId);
 
-                                const cantidadPlatos = contarPlatosSeleccionados(maximaPlatos);
-                                console.log(`la cantidad de platos de ${menuIdSeleccionado} es ${cantidadPlatos}`);
-                                const contenedorPregunta = document.getElementById("contenedor-pregunta");
+                            const precioPlato = parseFloat(plato.Precio);
 
-                                console.log("---------------------------");
+                            if (checkbox.checked) {
+                                totalPrecioBase += precioPlato;
+                            } else {
+                                totalPrecioBase -= precioPlato;
+                            }
 
-                                if (cantidadPlatos < maximaPlatos) {
-                                    contenedorPregunta.classList.remove("d-none");
+                            // Por cada plato se le asigna el % de ganancia y descuento
 
-                                    opcionSi.addEventListener("change", () => {
-                                        
-                                        if (opcionSi.checked) {
+                            const porcentajeGanancia = await cargarGanancia();
+                            const ganancia = totalPrecioBase * (porcentajeGanancia / 100);
 
-                                            menuIdSeleccionado++;
-                                            console.log(`el valor ahora del menu es:${menuIdSeleccionado}`);
+                            if (cantidad === 0) {
+                                const descuentPrimeraVez = await descuentoPrimeraVez();
+                                descuentoPrimeraVezFinal = totalPrecioBase * (descuentPrimeraVez / 100);
 
-                                            opcionNo.checked = false;
-                                            let mensajeExtra = document.querySelector(".mensaje-menu-extra");
-                                            let wrapperExtra = document.getElementById(`wrapper-menu-${menuIdSeleccionado}`);
+                                dtoPrimeraVez = 1;
+                            }
 
-                                            if (!mensajeExtra && !wrapperExtra) {
-                                                // Crear el contenedor general
-                                                const contenedorNuevo = document.createElement("div");
-                                                contenedorNuevo.id = "menuNuevo";
+                            if (cantidadMenus > 3) {
+                                const descuentMasDe3Menus = await descuentoMasDe3Menus();
+                                descuentoMasDe3MenusFinal = totalPrecioBase * (descuentMasDe3Menus / 100);
 
-                                                // Crear el mensaje
-                                                mensajeExtra = document.createElement("p");
-                                                mensajeExtra.textContent = "Agregue un menú más";
-                                                mensajeExtra.className = "mt-3 fw-bold mensaje-menu-extra";
+                                dtoMas3Menus = 1;
+                            }
 
-                                                // Crear el wrapper para el select
-                                                wrapperExtra = document.createElement("div");
-                                                wrapperExtra.className = "mt-1";
-                                                wrapperExtra.id = `wrapper-menu-${menuIdSeleccionado}`;
+                            let totalFinal = totalPrecioBase + ganancia - descuentoPrimeraVezFinal - descuentoMasDe3MenusFinal;
 
-                                                // Crear el select
-                                                const nuevoSelect = document.createElement("select");
-                                                nuevoSelect.id = `menu-${menuIdSeleccionado}`;
-                                                nuevoSelect.className = "form-select";
+                            const inputTotal = document.getElementById("total");
+                            inputTotal.value = parseFloat(totalFinal).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
 
-                                                // Armar la estructura
-                                                wrapperExtra.appendChild(nuevoSelect);
-                                                contenedorNuevo.appendChild(mensajeExtra);
-                                                contenedorNuevo.appendChild(wrapperExtra);
+                            const cantidadPlatos = contarPlatosSeleccionados(maximaPlatos);
 
-                                                // Insertar el contenedor completo
-                                                contenedorPregunta.insertAdjacentElement("afterend", contenedorNuevo);
+                            const contenedorPregunta = document.getElementById("contenedor-pregunta");
 
-                                                // Lógica adicional
-                                                cargarMenusDinamico(nuevoSelect.id, maximaPlatos);
-                                             
-                                            } else {
-                                                mensajeExtra.style.display = "block";
-                                                wrapperExtra.style.display = "block";
-                                            }
+                            //MOSTRAR OPCION DE AGREGAR MENU SI HAY MENOS PLATOS DEL MAXIMO PERMITIDO
+
+                            if (cantidadPlatos < maximaPlatos) {
+                                contenedorPregunta.classList.remove("d-none");
+
+                                // Si elije que si quiere agregar un menu se cargan menus + platos
+                                opcionSi.addEventListener("change", () => {
+
+                                    if (opcionSi.checked) {
+
+                                        let nuevoValorMenu = cantidadMenus + 1;
+                                        menuIdSeleccionado++;
+
+                                        opcionNo.checked = false;
+                                        let mensajeExtra = document.querySelector(".mensaje-menu-extra");
+                                        let wrapperExtra = document.getElementById(`wrapper-menu-${menuIdSeleccionado}`);
+
+                                        if (!mensajeExtra && !wrapperExtra) {
+                                            
+                                            const contenedorNuevo = document.createElement("div");
+                                            contenedorNuevo.id = "menuNuevo";
+
+                                            
+                                            mensajeExtra = document.createElement("p");
+                                            mensajeExtra.textContent = "Agregue un menú más";
+                                            mensajeExtra.className = "mt-3 fw-bold mensaje-menu-extra";
+
+                                            wrapperExtra = document.createElement("div");
+                                            wrapperExtra.className = "mt-1";
+                                            wrapperExtra.id = `wrapper-menu-${nuevoValorMenu}`;
+
+                                            const nuevoSelect = document.createElement("select");
+                                            nuevoSelect.id = `menu-${nuevoValorMenu}`;
+                                            nuevoSelect.className = "form-select";
+
+                                            // armo la estructura completa
+                                            wrapperExtra.appendChild(nuevoSelect);
+                                            contenedorNuevo.appendChild(mensajeExtra);
+                                            contenedorNuevo.appendChild(wrapperExtra);
+                                            contenedorPregunta.insertAdjacentElement("afterend", contenedorNuevo);
+
+                                            // en base lo nuevo cargar el menu electo
+                                            cargarMenusDinamico(nuevoSelect.id, maximaPlatos);
 
                                         } else {
-                                            menuIdSeleccionado--;
-                                            console.log(`el valor ahora del menu es:${menuIdSeleccionado}`);
-
-                                            document.querySelector(".mensaje-menu-extra")?.style && (
-                                                document.querySelector(".mensaje-menu-extra").style.display = "none"
-                                            );
-                                            document.getElementById(`wrapper-menu-${menuIdSeleccionado}`)?.style && (
-                                                document.getElementById(`wrapper-menu-${menuIdSeleccionado}`).style.display = "none"
-                                            );
+                                            mensajeExtra.style.display = "block";
+                                            wrapperExtra.style.display = "block";
                                         }
-                                    });
 
-                                    opcionNo.addEventListener("change", () => {
-                                        if (opcionNo.checked) {
-                                            opcionSi.checked = false;
+                                    } else {
+                                        menuIdSeleccionado--;
 
-                                            const menuViejo = document.getElementById("menuNuevo");
-                                            if (menuViejo) {
-                                                menuViejo.remove();
-                                                console.log("menuNuevo eliminado por cambio a NO");
-                                            }
+                                        document.querySelector(".mensaje-menu-extra")?.style && (
+                                            document.querySelector(".mensaje-menu-extra").style.display = "none"
+                                        );
+                                        document.getElementById(`wrapper-menu-${menuIdSeleccionado}`)?.style && (
+                                            document.getElementById(`wrapper-menu-${menuIdSeleccionado}`).style.display = "none"
+                                        );
+                                    }
+                                });
 
-                                            menuIdSeleccionado = Math.max(0, menuIdSeleccionado - 1);
-                                            console.log(`el valor ahora del menu es: ${menuIdSeleccionado}`);
+                                // Si no quiere agregar nada
+                                opcionNo.addEventListener("change", () => {
+                                    if (opcionNo.checked) {
+                                        opcionSi.checked = false;
+
+                                        const menuViejo = document.getElementById("menuNuevo");
+                                        if (menuViejo) {
+                                            menuViejo.remove();
                                         }
-                                    });
-                                } else if (cantidadPlatos > maximaPlatos) {
-                                    const opcionSiExistente = document.getElementById("opcion-si");
-                                    if (opcionSiExistente) {
-                                        opcionSiExistente.disabled = true;
-                                        opcionSiExistente.checked = false;
+
+                                        menuIdSeleccionado = Math.max(0, menuIdSeleccionado - 1);
                                     }
+                                });
+                            } else if (cantidadPlatos > maximaPlatos) {
 
-                                    const opcionNoExistente = document.getElementById("opcion-no");
-                                    if (opcionNoExistente) {
-                                        opcionNoExistente.checked = true;
-                                    }
-
-                                    const mensajeLimite = document.createElement("p");
-                                    mensajeLimite.textContent = "Se alcanzó el máximo de 15 platos. No se pueden agregar más.";
-                                    mensajeLimite.className = "text-danger mt-2";
-
-                                    const contenedorActual = document.getElementById(`contenedor-platos-${menuId}`);
-                                    contenedorActual.insertAdjacentElement("afterend", mensajeLimite);
+                                // Si hay mas cantidad de platos que la maxima se deshabilitan ls paltos
+                                const opcionSiExistente = document.getElementById("opcion-si");
+                                if (opcionSiExistente) {
+                                    opcionSiExistente.disabled = true;
+                                    opcionSiExistente.checked = false;
                                 }
-                            });
 
-                            botonIcono.addEventListener("click", () => {
-                                descripcionVisible = !descripcionVisible;
+                                const opcionNoExistente = document.getElementById("opcion-no");
+                                if (opcionNoExistente) {
+                                    opcionNoExistente.checked = true;
+                                }
 
-                                descripcionDiv.style.display = descripcionVisible ? "block" : "none";
-                                botonIcono.classList.toggle("btn-outline-success", !descripcionVisible);
-                                botonIcono.classList.toggle("btn-outline-danger", descripcionVisible);
-                                botonIcono.innerHTML = `<i class="fas fa-${descripcionVisible ? "minus" : "plus"}"></i>`;
-                            });
+                                const mensajeLimite = document.createElement("p");
+                                mensajeLimite.textContent = "Se alcanzó el máximo de 15 platos. No se pueden agregar más.";
+                                mensajeLimite.className = "text-danger mt-2";
 
-                            subFila.appendChild(checkbox);
-                            subFila.appendChild(labelCheckbox);
-                            izquierda.appendChild(subFila);
-                            izquierda.appendChild(descripcionDiv);
-
-                            divPlato.appendChild(izquierda);
-                            divPlato.appendChild(botonIcono);
-                            lista.appendChild(divPlato);
+                                const contenedorActual = document.getElementById(`contenedor-platos-${menuId}`);
+                                contenedorActual.insertAdjacentElement("afterend", mensajeLimite);
+                            }
                         });
+
+                        // DESCRIPCION DEL PLATO
+                        botonIcono.addEventListener("click", () => {
+                            descripcionVisible = !descripcionVisible;
+
+                            descripcionDiv.style.display = descripcionVisible ? "block" : "none";
+                            botonIcono.classList.toggle("btn-outline-success", !descripcionVisible);
+                            botonIcono.classList.toggle("btn-outline-danger", descripcionVisible);
+                            botonIcono.innerHTML = `<i class="fas fa-${descripcionVisible ? "minus" : "plus"}"></i>`;
+                        });
+
+                        // ARMO LA ESTRUCTURA COMPLETA
+                        subFila.appendChild(checkbox);
+                        subFila.appendChild(labelCheckbox);
+                        izquierda.appendChild(subFila);
+                        izquierda.appendChild(descripcionDiv);
+
+                        divPlato.appendChild(izquierda);
+                        divPlato.appendChild(botonIcono);
+                        lista.appendChild(divPlato);
+                    });
 
                     contenedorPlatos.appendChild(lista);
 
-                    console.log(lista);
                 } else {
                     contenedorPlatos.innerHTML = "<p>Seleccione un menú para ver los platos.</p>";
                     contenedorPlatos.classList.add('d-none');
                 }
 
+                // MOMENTO EN EL QUE SE GUARDA LA COTIZACION Y SE DEBEN ENVIAR LOS DATOS RECIENTEMENTE GENERADOS
 
                 btnGuardarSeleccion.replaceWith(btnGuardarSeleccion.cloneNode(true));
                 const newBtnGuardarSeleccion = document.getElementById('btnGuardarSeleccion');
 
                 newBtnGuardarSeleccion.addEventListener('click', async () => {
+
                     try {
 
-                        const clienteId = document.getElementById("idCliente").value;
+                        // OBTENER LOS VALORES GENERADOS Y MAS DATOS PARA GENERAR LA COTIZACION Y LUEGO EL PDF
+
+                        let clienteId = document.getElementById("idCliente").value;
                         const eventoId = parseInt(document.getElementById("idEvento").value);
                         const fechaRealizacion = document.getElementById("fechaRealizacion").value;
                         const totalTexto = document.getElementById("total").value;
                         const total = parseFloat(
                             totalTexto.replace(/\$/g, "").replace(/\./g, "").replace(",", ".").trim()
                         );
+
                         const estado_id = parseInt(document.getElementById("estado").value);
                         const vendedor_id = await consultarIdVendedor(idRol);
 
@@ -519,7 +541,9 @@ const opcionNo = document.getElementById("opcion-no");
                         const selectsMenus = document.querySelectorAll("select[id^='menu-']");
                         selectsMenus.forEach(select => {
                             const menuIdSeleccionado = parseInt(select.value);
-                            if (!menuIdSeleccionado) return; // ignorar si no se eligio menu
+                            if (!menuIdSeleccionado) return; 
+
+                            const menuNombre = select.options[select.selectedIndex].text;
 
                             const contenedorId = `contenedor-platos-${select.id}`;
                             const checkboxes = document.querySelectorAll(`#${contenedorId} input[name="platosSeleccionados"]:checked`);
@@ -528,19 +552,20 @@ const opcionNo = document.getElementById("opcion-no");
                             if (platos.length > 0) {
                                 menusEnviados.push({
                                     menuId: menuIdSeleccionado,
+                                    nombre: menuNombre, 
                                     platos: platos
                                 });
                             }
                         });
+
+
 
                         if (menusEnviados.length === 0) {
                             swal("Error", "Hay campos incompletos.", "error");
                             return;
                         }
 
-                        let mail = await consultarMailCliente(clienteId);
-                        console.log(`EL MAIL DEL CLIENTE ES${mail}`);
-
+                        // formato que se va a enviar
                         const data = {
                             eventoId,
                             clienteId,
@@ -550,8 +575,6 @@ const opcionNo = document.getElementById("opcion-no");
                             estado_id,
                             vendedor_id
                         };
-
-                        console.log("Datos a enviar:", data);
 
                         const response = await fetch('/home/InsertarPlatosCotizacionPersonalizada', {
                             method: 'POST',
@@ -563,7 +586,6 @@ const opcionNo = document.getElementById("opcion-no");
 
                         const result = await response.json();
                         const idCotizacion = result.idCotizacion;
-                        console.log("ID Cotización generada:", idCotizacion);
 
                         let nombreEvento = await consultarNombreEventos(eventoId);
                         let DNI = await consultarDniCliente(clienteId);
@@ -571,6 +593,7 @@ const opcionNo = document.getElementById("opcion-no");
                         // SE CREA UNA COTIZACION
                         if (result.success) {
 
+                            let mail = await consultarMailCliente(clienteId);
                             const nuevaFila = {
                                 CotizacionID: idCotizacion,
                                 Evento: { Nombre: nombreEvento },
@@ -585,24 +608,171 @@ const opcionNo = document.getElementById("opcion-no");
                             $("#FormModal").modal("hide");
 
                             swal("¡Cotizacion Creada Exitosamente!", "Presiona OK para continuar", "success");
-                            opcionSi.checked = false;
-                            tabledata.row.add(nuevaFila).draw(false); // agrego la fila al datatable
+                            const totalDescuento = descuentoPrimeraVezFinal + descuentoMasDe3MenusFinal;
+                            const formateadoARS = new Intl.NumberFormat('es-AR', {
+                                style: 'currency',
+                                currency: 'ARS'
+                            }).format(totalDescuento);
+
+                            // PDF
+                            const platosElegidos = [];
+
+                            // Obtener los platos electos
+                            for (const menu of menusEnviados) {
+
+                                for (const idPlato of menu.platos) {
+
+                                    try {
+
+                                        const plato = await consultarPlato(idPlato);
+                                        platosElegidos.push({
+                                            nombre: plato.Nombre,
+                                            precio: parseFloat(plato.Precio)
+                                        });
+
+                                    } catch (error) {
+                                        swal("Error", error, "error");
+                                    }
+                                }
+                            }
+
+                            // logica pdf
+                            const { jsPDF } = window.jspdf;
+                            const doc = new jsPDF();
+
+                            // fuente general 
+                            doc.setFont("courier");
+
+                            // ===== ENCABEZADO =====
+                            doc.setFontSize(18);
+                            doc.setFont("courier", "bold");
+                            doc.text("COTIZACIÓN", 105, 20, null, null, "center");
+                            doc.setLineWidth(0.5);
+                            doc.line(20, 25, 190, 25);
+
+                            // ===== CABECERA: COTIZACION Y CLIENTE =====
+                            doc.setFontSize(11);
+                            doc.setFont("courier", "bold");
+                            doc.text("Cotización", 20, 30);
+
+                            doc.setFont("courier", "normal");
+                            doc.text(`N°: ${nuevaFila.CotizacionID}`, 20, 36);
+                            doc.text(`Estado: ${nuevaFila.Estado.Nombre}`, 20, 42);
+
+                            doc.setFont("courier", "bold");
+                            doc.text("Vendedor ID:", 20, 48);
+                            doc.setFont("courier", "normal");
+                            doc.text(`${nuevaFila.Vendedor.IdUsuario}`, 50, 48);
+                            doc.setFont("courier", "bold");
+                            doc.text("Cliente", 120, 30);
+                            doc.setFont("courier", "normal");
+                            doc.text(`DNI: ${nuevaFila.Cliente.Dni}`, 120, 36);
+                            doc.text(`Mail: ${mail}`, 120, 42);
+
+                            // ===== EVENTO Y FECHAS =====
+                            doc.setFont("courier", "bold");
+                            doc.text("Evento", 20, 52);
+                            doc.setFont("courier", "normal");
+                            doc.text(`${nuevaFila.Evento.Nombre}`, 20, 58);
+                            doc.text(`Fecha Pedido: ${nuevaFila.FechaPedido}`, 20, 64);
+                            doc.text(`Fecha Realización: ${nuevaFila.FechaRealizacion}`, 20, 70);
+
+                            // ===== MENUS ELEGIDOS =====
+                            const nombresMenus = data.menus.map(menu => menu.nombre);
+                            doc.setFont("courier", "bold");
+                            doc.text("Menús Elegidos:", 120, 52);
+                            doc.setFont("courier", "normal");
+
+                            let yMenu = 58;
+                            nombresMenus.forEach(nombre => {
+                                doc.text(`- ${nombre}`, 120, yMenu);
+                                yMenu += 6;
+                            });
+
+                            // ===== TABLA DE PLATOS =====
+                            let y = Math.max(80, yMenu + 10);
+
+                            doc.setFont("courier", "bold");
+                            doc.setFontSize(12);
+                            doc.text("Detalle de Platos Seleccionados", 105, y, null, null, "center");
+                            y += 6;
+
+                            doc.setLineWidth(0.2);
+                            doc.rect(20, y, 170, 8);
+                            doc.setFont("courier", "bold");
+                            doc.setFontSize(10);
+                            doc.text("Nombre del Plato", 25, y + 6);
+                            doc.text("Precio", 170, y + 6, null, null, "right");
+                            y += 8;
+
+                            doc.setFont("courier", "normal");
+
+                            platosElegidos.forEach(plato => {
+                                doc.rect(20, y, 170, 8);
+                                doc.text(plato.nombre, 25, y + 6);
+                                doc.text(`$${plato.precio.toFixed(2)}`, 170, y + 6, null, null, "right");
+                                y += 8;
+
+                                if (y > 240) {
+                                    doc.addPage();
+                                    doc.setFont("courier");
+                                    y = 20;
+                                }
+                            });
+
+                            // ===== RESUMEN =====
+                            y += 10;
+                            doc.setFont("courier", "bold");
+                            doc.text("Resumen", 20, y);
+                            y += 6;
+                            doc.setFont("courier", "normal");
+                            // arreglos para mostrar los datos de forma prolija
+                            const columnaIzqX = 20;
+                            const columnaDerY1 = y;         
+                            const columnaDerY2 = y + 8;     
+
+                            doc.text(`Descuento Primera Vez: ${dtoPrimeraVez === 1 ? "APLICA" : "NO APLICA"}`, columnaIzqX, columnaDerY1);
+                            doc.text(`Descuento por Cantidad: ${dtoMas3Menus === 1 ? "APLICA" : "NO APLICA"}`, columnaIzqX, columnaDerY2);
+
+                            // ==== COLUMNA DERECHA--DESCUENTO Y TOTAL ====
+                            const labelX = 120;
+                            const montoX = 190;
+
+                            doc.setFont("courier", "bold");
+                            doc.text("Descuento Total:", labelX, columnaDerY1);
+                            doc.setFont("courier", "normal");
+                            doc.text(`${formateadoARS}`, montoX, columnaDerY1, null, null, "right");
+
+                            doc.setFont("courier", "bold");
+                            doc.text("TOTAL:", labelX, columnaDerY2);
+                            doc.setFont("courier", "normal");
+                            doc.text(`$${nuevaFila.Total.toFixed(2)}`, montoX, columnaDerY2, null, null, "right");
+
+                            // ==== PIE DE PAGINA ====
+                            doc.setFontSize(10);
+                            doc.setFont("courier", "italic");
+                            doc.text("Gracias por confiar en nosotros 'Alta Mesa' Presente.", 105, 285, null, null, "center");
+
+
+                            // ===== GUARDAR PDF =====
+                            doc.save(`cotizacion_${nuevaFila.CotizacionID}.pdf`);
+
+                            tabledata.row.add(nuevaFila).draw(false); // agrego la fila al datatable de cotizacion
 
                             document.querySelectorAll('.mt-3.fw-bold.mensaje-menu-extra').forEach(el => {
                                 el.remove();
                             });
                             const wrappers = document.querySelectorAll('[id^="wrapper-menu-"]');
 
+                            // remover errores
                             wrappers.forEach(wrapper => {
-                                const contenedor = wrapper.closest('*'); // podés poner 'section', 'div', etc. para afinar
+                                const contenedor = wrapper.closest('*');
                                 if (contenedor) {
                                     contenedor.remove();
                                 }
                             });
 
                         } else {
-                            console.log("Error con el sp de crear cotizacion");
-                            console.log(result.message); // mostrará el mensaje personalizado
                             swal("Error", result.message || "Faltan completar campos", "error");
                         }
                     } catch (error) {
@@ -613,7 +783,7 @@ const opcionNo = document.getElementById("opcion-no");
             });
 
         } catch (error) {
-            console.error(`Error al obtener los menús para ${menuId}:`, error);
+            swal("Error", error, "error");
         }
     }
 
@@ -632,18 +802,18 @@ const opcionNo = document.getElementById("opcion-no");
             });
             return platosSeleccionados.length;
         }
-}
+    }
 
-function generarHtmlCotizacion(data) {
-    let html = `<h2>Cotización Generada</h2>`;
-    html += `<p>Evento ID: ${data.eventoId}</p>`;
-    html += `<p>Fecha de realización: ${data.fechaRealizacion}</p>`;
-    html += `<p>Total: $${data.total.toFixed(2)}</p>`;
-    html += `<h3>Menús:</h3>`;
+    function generarHtmlCotizacion(data) {
+        let html = `<h2>Cotización Generada</h2>`;
+        html += `<p>Evento ID: ${data.eventoId}</p>`;
+        html += `<p>Fecha de realización: ${data.fechaRealizacion}</p>`;
+        html += `<p>Total: $${data.total.toFixed(2)}</p>`;
+        html += `<h3>Menús:</h3>`;
 
-    data.menus.forEach((menu, index) => {
-        html += `<p><strong>Menú ${index + 1} (ID: ${menu.menuId}):</strong> ${menu.platos.join(', ')}</p>`;
-    });
+        data.menus.forEach((menu, index) => {
+            html += `<p><strong>Menú ${index + 1} (ID: ${menu.menuId}):</strong> ${menu.platos.join(', ')}</p>`;
+        });
 
-    return html;
-}
+        return html;
+    }

@@ -48,19 +48,19 @@
                     let clase = '';
                     switch (estado) {
                         case "Completado":
-                            clase = 'background-color: #28a745; color: white;'; // verde
+                            clase = 'background-color: #28a745; color: white;';
                             break;
                         case "Confirmado":
-                            clase = 'background-color: #0056b3; color: white;'; // azul oscuro
+                            clase = 'background-color: #0056b3; color: white;'; 
                             break;
                         case "Pendiente":
-                            clase = 'background-color: #ffc107; color: white;'; // amarillo
+                            clase = 'background-color: #ffc107; color: white;'; 
                             break;
                         case "Rechazado":
-                            clase = 'background-color: #dc3545; color: white;'; // rojo/naranja
+                            clase = 'background-color: #dc3545; color: white;'; 
                             break;
                         default:
-                            clase = 'background-color: #6c757d; color: white;'; // gris por defecto
+                            clase = 'background-color: #6c757d; color: white;'; 
                     }
 
                     return `<span class="badge" style="padding: 5px 12px; font-size: 1rem; font-weight: 600; border-radius: 8px; ${clase}">${estado}</span>`;

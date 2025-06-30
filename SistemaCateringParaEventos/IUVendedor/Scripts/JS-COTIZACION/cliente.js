@@ -2,13 +2,17 @@
     let clienteValido = false; 
 
     async function consultarCantidadClientes(clienteId) {
+
         try {
+
             const response = await fetch(`/Home/cantidadCliente?cliente_id=${clienteId}`);
             const data = await response.json();
             let cantidad = data.data;
+
             return cantidad ? cantidad : 0;
+
         } catch (error) {
-            console.error(`Error al obtener el cliente`, error);
+            swal("Error", error, "error");
             return 0;
         }
     }
@@ -36,7 +40,7 @@
                 clienteId.parentNode.insertBefore(mensaje, clienteId.nextSibling);
 
                 // desactivo si no existe el cliente
-                console.log("Ahora cliente no tiene valor");
+
                 document.querySelectorAll(".menu-dinamico select").forEach(sel => sel.disabled = true);
                 document.querySelectorAll('[id*="contenedor-platos-menu-"]').forEach(div => {
                     div.style.pointerEvents = "none";
@@ -44,6 +48,7 @@
                     div.style.opacity = "0.5";
                     div.style.filter = "greenscale(100%)";
                 });
+
                 // desmarco todos los checkboxes de platos
                 document.querySelectorAll('input[type="checkbox"][id^="plato_"]').forEach(checkbox => {
                     checkbox.checked = false;

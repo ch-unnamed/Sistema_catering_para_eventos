@@ -8,12 +8,91 @@
 </ol>
 <div class="card">
     <div class="card-header">
-        <i class="fa fa-users me-1"></i> Configuraciones de Sistema
+        <i class="fa fa-users me-1"></i> Configuraciones de Sistema (Descuentos)
     </div>
     <div class="card-body">
 
-     
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Porcentaje</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @* AJAX, JQUERY*@
+
+            </tbody>
+        </table>
+
     </div>
 </div>
 
 
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    @* Ocultar id para que solo se maneje con ajax *@
+                    <input type="hidden" id="id" value="0" />
+
+                    <div class="col-sm-6">
+                        <label for="nombre" class="form-label fw-bold">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                        <span class="text-danger" id="error-nombre"></span>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="porcentaje" class="form-label fw-bold">Porcentaje</label>
+                        <input type="text" class="form-control" id="porcentaje" autocomplete="off">
+                        <span class="text-danger" id="error-porcentaje"></span>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div id="msjError" class="alert alert-danger" role="alert">
+                                A simple danger alert—check it out!
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnCerrar" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="guardarCliente" type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* t0d0s los scripts son renderizados a layout, en la parte de RenderSection *@
+@section Scripts {
+    <script>
+
+        // variables globales 
+        var tabledata;
+        var filaSeleccionada;
+        const urlListarConfiguraciones = '@Url.Action("ListarConfiguraciones", "Home")';
+        const idRol = document.getElementById("idUsuario").value;
+    </script>
+
+    @* script base que contiene todos los archivos JS de Configuracion del Sistema *@
+    <script src="~/Scripts/JS-CONFIG-EMP/base.js"></script>
+}

@@ -143,6 +143,10 @@ namespace BLL
             return idCotizacion;
         }
 
-
+        public BE.Plato ConsultarPlato(int idPlato)
+        {
+            DAL.Plato platoDAL = new DAL.Plato();
+            return platoDAL.ConsultarPlato(idPlato);
+        }
     }
 }

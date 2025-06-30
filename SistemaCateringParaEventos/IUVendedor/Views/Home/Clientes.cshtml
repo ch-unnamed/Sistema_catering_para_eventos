@@ -23,7 +23,7 @@
         <table id="tabla" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
-                    <th>DNI</th>
+                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Region</th>
@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                @* AJAX *@
+                @* AJAX, JQUERY *@
 
             </tbody>
         </table>
@@ -53,7 +53,7 @@
                 <div class="row g-2">
 
                     @* Ocultar id para que solo se maneje con ajax *@
-                    <input type="text" id="id" value="0" />
+                    <input type="hidden" id="id" value="0" />
 
                     <div class="col-sm-6">
                         <label for="nombre" class="form-label fw-bold">Nombre</label>
@@ -120,14 +120,17 @@
     </div>
 </div>
 
-@* t0d0s los scripts son renderizados a layour, en la parte de RenderSection *@
+@* t0d0s los scripts son renderizados a layout, en la parte de RenderSection *@
 @section Scripts {
     <script>
+
+        // variables globales para todos los archivos dentro de base.js
         var tabledata;
-        var filaSeleccionada; // para acceder a, por ej, editar desde ver el contenido de fila y cambiar el valor de fila
-        const urlListarClientes = '@Url.Action("ListarClientes", "Home")';
+        var filaSeleccionada;
+        const urlListarClientes = '@Url.Action("ListarClientes", "Home")'; 
 
     </script>
 
+    @* script base que contiene todos los archivos JS de Clientes *@
     <script src="~/Scripts/JS-CLIENTE/base.js"></script>
 }

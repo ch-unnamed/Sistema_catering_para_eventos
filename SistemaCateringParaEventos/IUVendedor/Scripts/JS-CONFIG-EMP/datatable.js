@@ -1,33 +1,18 @@
 ﻿
-    tabledata = $('#tabla').DataTable({ 
+    tabledata = $('#tabla').DataTable({
         responsive: true,
-        ordening: false, 
+        ordening: false,
         "ajax": {
-            "url": urlListarClientes,
+            "url": urlListarConfiguraciones,
             "type": "GET",
             "datatype": "json",
             "complete": function () {
-                $('#tabla').DataTable().columns.adjust().draw(); 
+                $('#tabla').DataTable().columns.adjust().draw();
             }
         },
         "columns": [
-            { "data": "IdCliente" },
-            {
-                "data": null,
-                "render": function (data, type, row) {
-                    return row.Nombre + " " + row.Apellido;
-                }
-            },
-            { "data": "Email" },
-            { "data": "Region" },
-            { "data": "Telefono" },
-            {   
-                "data": "Tipo_Cliente",
-                "title": "Tipo",
-                "render": function (data, type, row) {
-                    return row.Tipo_Cliente.Nombre;
-                }
-            },
+            { "data": "Nombre" },
+            { "data": "Porcentaje" },
             {
                 "data": null,
                 "defaultContent": '<div class="btn-group">' +

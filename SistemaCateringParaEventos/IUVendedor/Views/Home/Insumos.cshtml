@@ -473,12 +473,13 @@ $('#tablaInsumos tbody').on('click', '.btn-eliminar', function () {
             success: function (response) {
                 if (response.resultado) {
                     tabledata.row(insumoSeleccionado).remove().draw(false); // Eliminar visualmente la fila
+                    swal("Insumo eliminado exitosamente", "presione OK para continuar", "success");
                 } else {
                     swal("No se pudo eliminar", response.mensaje, "error");
                 }
             },
             error: function (error) {
-                $("#msjError").text("Error Ajax");
+                swal("No se pudo eliminar", error, "error");
                 console.error(error);
             }
         });

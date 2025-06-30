@@ -5,9 +5,7 @@
 
         filaSeleccionada = $(this).closest("tr");
         
-        var data = tabledata.row(filaSeleccionada).data(); // los datos de la fila seleccionada
-
-        console.log(data);
+        var data = tabledata.row(filaSeleccionada).data(); 
 
         abrirModal(data);
     });

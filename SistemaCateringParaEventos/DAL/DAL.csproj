@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Configuracion_Empresa.cs" />
+    <Compile Include="Cotizacion_Menu.cs" />
+    <Compile Include="Cotizacion_Menu_Plato.cs" />
     <Compile Include="Lote.cs" />
     <Compile Include="PlatoInsumo.cs" />
     <Compile Include="Temporada.cs" />

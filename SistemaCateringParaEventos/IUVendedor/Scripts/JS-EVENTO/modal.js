@@ -1,5 +1,5 @@
 ﻿
-    function abrirModal(json) {
+function abrirModal(json) {
 
         $("#id").val(0);
         $("#nombre").val("");
@@ -20,7 +20,7 @@
             $("#nombre").val(json.Nombre);
             $("#capacidad").val(json.Capacidad);
             $("#tipo").val(json.Tipo_Evento.Nombre);
-            // Verifica si Ubicacion está definida
+
             if (json.Ubicacion) {
                 $("#calle").val(json.Ubicacion.Calle);
                 $("#altura").val(json.Ubicacion.Altura);
