@@ -1,9 +1,11 @@
 ﻿
     async function consultarCantidadEventos(eventoId) {
+
         try {
+
             const response = await fetch(`/Home/cantidadEvento?evento_id=${eventoId}`);
             const data = await response.json();
-
+            
             let cantidad = data.data;
             if (cantidad) {
                 return cantidad;
@@ -12,7 +14,7 @@
             }
 
         } catch (error) {
-            console.error(`Error al obtener el descuento`, error);
+            swal("Error", error, "error");
             return 0;
         }
     }
@@ -24,7 +26,6 @@
 
         idEvento.addEventListener("input", async function () {
             const eventoId = this.value;
-            console.log(`Se seleccionó el id: ${eventoId}`);
 
             document.querySelectorAll(".menu-dinamico").forEach(menu => menu.remove());
             contenedorPregunta.classList.toggle("d-none", true);
@@ -58,13 +59,16 @@
                     const response = await fetch(`/Home/ObtenerCapacidadPorIdEvento?evento_id=${eventoId}`);
                     const data = await response.json();
                     const capacidad = data.data.Capacidad;
+                    const fecha = data.data.Fecha;
+                    $("#fechaRealizacion").val(fecha);
 
-                    console.log(`La capacidad de este evento es ${capacidad}`);
+
+                    // LOGICA DE LOS MENUS QUE SE VAN A MOSTRAR EN BASE A CUANTA GENTE ASISTE AL EVENTO
 
                     let cantidadMenus = 0;
                     let maximaPlatos = 0;
 
-                    if (capacidad >= 20 && capacidad <= 30) {
+                    if (capacidad >= 10 && capacidad <= 30) {
                         cantidadMenus = 1;
                         maximaPlatos = 15;
                     } else if (capacidad >= 30 && capacidad <= 60) {
@@ -121,7 +125,7 @@
                     }
 
                 } catch (error) {
-                    console.error("Error al obtener la cantidad y asignar más menús:", error);
+                    swal("Error", error, "error");
                 }
             }
         });

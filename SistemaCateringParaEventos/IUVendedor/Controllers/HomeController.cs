@@ -263,7 +263,8 @@ namespace IUVendedor.Controllers
             var resultado = new
             {
                 IdEvento = evento.IdEvento,
-                Capacidad = evento.Capacidad
+                Capacidad = evento.Capacidad,
+                Fecha = evento.Fecha.ToString("yyyy-MM-dd")
             };
 
             if (evento != null)
@@ -334,7 +335,7 @@ namespace IUVendedor.Controllers
 
             var resultado = new
             {
-                PorcentajeGanancia = configuracion.PorcentajeGanancia
+                Porcentaje = configuracion.Porcentaje
             };
 
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
@@ -350,7 +351,7 @@ namespace IUVendedor.Controllers
 
             var resultado = new
             {
-                PorcentajeGanancia = configuracion.PorcentajeGanancia
+                Porcentaje = configuracion.Porcentaje
             };
 
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
@@ -366,7 +367,7 @@ namespace IUVendedor.Controllers
 
             var resultado = new
             {
-                PorcentajeGanancia = configuracion.PorcentajeGanancia
+                Porcentaje = configuracion.Porcentaje
             };
 
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
@@ -469,17 +470,8 @@ namespace IUVendedor.Controllers
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public JsonResult EnviarMailCotizacion(string email, string html)
-        {
-            bool enviado = new BLL.Cotizacion().EnviarMailCotizacion(email, html);
-            return Json(new { success = enviado }, JsonRequestBehavior.AllowGet);
-        }
-
-
-
         //////////////////////////////////////////////////////////////////
-        
+
         public ActionResult Insumos()
         {
             return View();
@@ -668,6 +660,12 @@ namespace IUVendedor.Controllers
         {
             return View();
         }
+        
+        [PermisosRol(Models.Rol.Chef)]
+        public ActionResult Ordenes()
+        {
+            return View();
+        }
 
         [HttpGet]
         public JsonResult ListarMenusChef()
@@ -708,6 +706,21 @@ namespace IUVendedor.Controllers
             return Json(new { data = platos }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult ConsultarPlato(int idPlato)
+        {
+            BE.Plato plato = new BLL.Plato().ConsultarPlato(idPlato);
+
+            var resultado = new
+            {
+                Nombre = plato.Nombre,
+                Precio = plato.Precio
+            };
+            
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+        
         [HttpPost]
         public JsonResult GuardarMenu(BE.Menu menu)
         {
@@ -736,6 +749,61 @@ namespace IUVendedor.Controllers
             respuesta = new BLL.Menu().EliminarMenu(idMenu, out mensaje);
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ListarCotizacionMenu()
+        {
+            List<BE.Cotizacion_Menu> oLista = new List<BE.Cotizacion_Menu>();
+
+            oLista = new BLL.Cotizacion_Menu().Listar();
+
+            var resultado = oLista.Select(e => new
+            {
+                e.Id,
+                Cotizacion = new
+                {
+                    e.Cotizacion.IdCotizacion
+                },
+                Menu = new
+                {
+                    e.Menu.Id
+                },
+                e.Estado
+            });
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
+        }
+
+
+        [HttpPost]
+        public JsonResult EditarCotizacionMenu(BE.Cotizacion_Menu oCotizacionMenu)
+        {
+            Dictionary<string, string> errores;
+            object resultado;
+
+            resultado = new BLL.Cotizacion_Menu().EditarCotizacionMenu(oCotizacionMenu, out errores);        
+
+            return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ListarCotizacionMenuPlato(int cotizacionMenuPlatoId)
+        {
+            List<BE.Cotizacion_Menu_Plato> oLista = new List<BE.Cotizacion_Menu_Plato>();
+
+            oLista = new BLL.Cotizacion_Menu_Plato().Listar(cotizacionMenuPlatoId);
+
+            var resultado = oLista.Select(e => new
+            {
+                Plato = new
+                {
+                    e.Plato.Id,
+                    e.Plato.Nombre
+                }
+            });
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
         }
 
         //Tipo_Insumo
@@ -837,7 +905,51 @@ namespace IUVendedor.Controllers
             return Json(new { data = UsuariosFormateados }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult ListarConfiguraciones()
+        {
+            List<BE.Configuracion_Empresa> oLista = new List<BE.Configuracion_Empresa>();
 
+            oLista = new BLL.Configuracion_Empresa().Listar(); // Almacena los clientes de negocio
+
+            var configuraciones = oLista.Select(e => new
+            {
+                e.ID,
+                e.Nombre,
+                e.Porcentaje
+            });
+
+            return Json(new { data = configuraciones }, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
+        }
+
+        [HttpPost]
+        public JsonResult GuardarConfiguracion(BE.Configuracion_Empresa oConfiguracion)
+        {
+            Dictionary<string, string> errores;
+            object resultado;
+
+            if (oConfiguracion.ID == 0)
+            {
+                resultado = new BLL.Configuracion_Empresa().CrearConfiguracion(oConfiguracion, out errores);
+            }
+            else
+            {
+                resultado = new BLL.Configuracion_Empresa().EditarConfiguracion(oConfiguracion, out errores);
+            }
+
+            return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EliminarConfiguracion(int idConfiguracion)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new BLL.Configuracion_Empresa().EliminarConfiguracion(idConfiguracion, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
 
         //////////////////////////////////////////////////////////////////
         [PermisosRol(Models.Rol.Gerente)]

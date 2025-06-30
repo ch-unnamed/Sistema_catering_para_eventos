@@ -1,52 +1,65 @@
 ﻿
-    // Funcionalidad de crear evento o editarlo
+    async function consultarIdAdmin(rolId) {
+
+        try {
+
+            const response = await fetch(`/Home/idVendedor?rol_id=${rolId}`);
+            const data = await response.json();
+            let idAdmin = data.data.idUsuario;
+
+            if (idAdmin) {
+                return idAdmin;
+            } else {
+                return "";
+            }
+
+        } catch (error) {
+            return "";
+        }
+    }
+
     async function guardar() {
 
-        const Evento = {
-            IdEvento: $("#id").val(),
+        const admin_id = await consultarIdAdmin(idRol);
+
+        // obj estructurado igual que los datos usados en tabledata
+        var Configuracion = {
+            ID: $("#id").val(),
             Nombre: $("#nombre").val(),
-            Capacidad: $("#capacidad").val(),
-            Tipo_Evento: {
-                Nombre: $("#tipo").val(),
-            },
-            Ubicacion: {
-                Calle: $("#calle").val(),
-                Altura: $("#altura").val(),
-                Ciudad: $("#ciudad").val(),
-                Provincia: $("#provincia").val(),
-            },
-            Fecha: $("#fecha").val(),
+            Porcentaje: $("#porcentaje").val(),
+            Admin: {
+                IdUsuario: admin_id
+            }
         };
 
         try {
-            
-            const response = await fetch("/Home/GuardarEvento", {
+            const response = await fetch("/Home/GuardarConfiguracion", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8"
                 },
-                body: JSON.stringify(Evento)
+                body: JSON.stringify(Configuracion)
             });
 
             if (!response.ok) {
-                throw new Error("Error en la solicitud");
+                throw new Error("Error en la solicitud fetch");
             }
 
             const data = await response.json();
 
-            // limpiar errores
             $(".text-danger").text("");
 
-            if (Evento.IdEvento == 0 || Evento.IdEvento === "" || Evento.IdEvento === null) {
+            if (Configuracion.ID == 0) {
+                // se crea una configuracion
 
-                // se crea un evento
                 if (data.resultado != 0) {
-                    Evento.IdEvento = data.resultado;
 
-                    tabledata.row.add(Evento).draw(false); 
+                    Configuracion.ID = data.resultado; 
+
+                    tabledata.row.add(Configuracion).draw(false);
 
                     $("#FormModal").modal("hide");
-                    swal("¡Evento Creado Exitosamente!", "Presiona OK para continuar", "success");
+                    swal("¡Configuracion Creada Exitosamente!", "Presiona OK para continuar", "success");
                 } else {
                     // mostrar errores por campo
                     if (data.errores) {
@@ -58,15 +71,18 @@
                     }
                     return;
                 }
-            } else {
-                // se edita un evento existente
 
+            } else {
+                // se edita un usuario
                 if (data.resultado) {
-                    tabledata.row(filaSeleccionada).data(Evento).draw(false);
+                    
+                    tabledata.row(filaSeleccionada).data(Configuracion).draw(false);
                     filaSeleccionada = null;
+
                     $("#FormModal").modal("hide");
-                    swal("¡Evento Editado Exitosamente!", "Presiona OK para continuar", "success");
+                    swal("¡Configuracion Editada Exitosamente!", "Presiona OK para continuar", "success");
                 } else {
+                    // mostrar errores por campo
                     if (data.errores) {
                         for (const campo in data.errores) {
                             $(`#error-${campo}`).text(data.errores[campo]);
@@ -85,4 +101,5 @@
                 text: error
             });
         }
+
     }

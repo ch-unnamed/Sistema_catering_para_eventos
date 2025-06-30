@@ -238,6 +238,29 @@ namespace DAL
             return idCotizacion;
         }
 
+        public BE.Plato ConsultarPlato(int idPlato)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@idPlato", idPlato)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_consultar_nombre_precio_plato", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow fila = dt.Rows[0];
+                return new BE.Plato
+                {
+                    Nombre = Convert.ToString(fila["nombre"]),
+                    Precio = Convert.ToDecimal(fila["precio"])
+                };
+            }
+
+            return null; 
+        }
 
     }
 }

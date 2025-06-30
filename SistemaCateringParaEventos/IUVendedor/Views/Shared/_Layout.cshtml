@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
@@ -92,6 +93,14 @@
                                 <a class="nav-link" href="@Url.Action("Menus","Home")">
                                     <div class="sb-nav-link-icon"><i class="fas fa-utensils me-1"></i></div>
                                     Menús
+                                </a>
+                            }
+
+                            if (usuario.Rol_id == Rol.Chef)
+                            {
+                                <a class="nav-link" href="@Url.Action("Ordenes","Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
+                                    Órdenes
                                 </a>
                             }
 

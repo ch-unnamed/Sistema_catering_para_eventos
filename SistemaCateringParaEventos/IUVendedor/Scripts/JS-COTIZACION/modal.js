@@ -1,49 +1,63 @@
-﻿   
+﻿
+    async function abrirModal(json) {
 
-async function abrirModal(json) {
-    let btnGuardarCotizacion = document.getElementById("btnGuardarSeleccion");
-    btnGuardarCotizacion.classList.remove('d-none');
-    document.querySelectorAll('.mt-3.fw-bold.mensaje-menu-extra').forEach(el => {
-        el.remove();
-    });
-    document.querySelectorAll('*').forEach(el => {
-        if (el.querySelector('#menu')) {
-            el.remove();
-        }
-    });
-        await cargarEstados();
+        $("#menuNuevo").remove();
+        const modal = document.getElementById("FormModal");
+        const btnGuardarCotizacion = document.getElementById("btnGuardarSeleccion");
+        btnGuardarCotizacion.classList.remove('d-none');
 
-        document.querySelectorAll('[id*="contenedor-platos-"]').forEach(elemento => elemento.remove());
-        document.querySelectorAll(".menu-dinamico").forEach(menu => menu.remove());
+        // eliminar mensajes y menus si es que existian
+        document.querySelectorAll('.mensaje-menu-extra').forEach(el => el.remove());
+        document.querySelectorAll(".menu-dinamico, [id*='contenedor-platos-']").forEach(el => el.remove());
         document.getElementById("contenedor-pregunta").classList.add('d-none');
 
-        $("#id").val(0);
-        $("#idEvento").val("");
-        $("#idCliente").val("");
-        $("#menu").val("");
-        $("#fechaRealizacion").val("");
-        $("#total").val("");
-        $("#estado").val("");
+        // Resetear todos los inputs dentro del modal por prevencion 
+        const inputs = modal.querySelectorAll("input, select, textarea");
+        inputs.forEach(input => {
+            const type = input.type;
+            if (type === "checkbox" || type === "radio") {
+                input.checked = false;
+            } else {
+                input.value = "";
+            }
+        });
 
-        if (json != null) {
-            document.querySelectorAll('.mt-3.fw-bold.mensaje-menu-extra').forEach(el => {
-                el.remove();
-            });
-            document.querySelectorAll('*').forEach(el => {
-                if (el.querySelector('#menu')) {
-                    el.remove();
-                }
-            });
+        $("#estado").val("0");
+        $("#total").val("0");
 
+        // Si es nuevo (sin datos JSON)
+        if (json == null) {
+
+            await cargarEstados();
+
+            // Cambiar nombre de Labels para ingresar lo adecuado
+            $("label[for='idEvento']").text("Evento (ID)");
+            $("label[for='idCliente']").text("Cliente (ID)");
+
+            // cambiar input
+            $("#idEvento").attr("type", "number");
+
+            // Habilitar inputs
+            $("#idEvento, #idCliente").prop("readonly", false)
+                .removeAttr("data-bs-toggle")
+                .removeAttr("title")
+                .css({
+                    "background-color": "",
+                    "pointer-events": "",
+                    "user-select": "",
+                    "cursor": ""
+                });
+        } else {
+
+            await cargarEstados(1);
+
+            // Si viene con datos JSON, cargar los valores
             btnGuardarCotizacion.classList.add('d-none');
-            // cambio los nombres
+
             $("label[for='idEvento']").text("Evento (Nombre)");
             $("label[for='idCliente']").text("Cliente (DNI)");
-
-            // cambio el tipo de input para que me acepte el nombre del evento
             $("#idEvento").attr("type", "text");
 
-            // impido q pueda editar el evento y cliente, solo se podra el estado y fecha
             $("#idEvento").prop("readonly", true)
                 .attr("data-bs-toggle", "tooltip")
                 .css({
@@ -61,54 +75,30 @@ async function abrirModal(json) {
                     "user-select": "none",
                     "cursor": "not-allowed"
                 });
+
             $('[data-bs-toggle="tooltip"]').tooltip();
-        
-            // cargo los datos
+
+            // Cargar datos del JSON
             $("#id").val(json?.CotizacionID || json?.IdCotizacion);
-            $("#idEvento").val(json?.Evento.Nombre || "");
-            $("#idCliente").val(json?.Cliente.Dni || "");
+            $("#idEvento").val(json?.Evento?.Nombre || "");
+            $("#idCliente").val(json?.Cliente?.Dni || "");
             $("#fechaRealizacion").val(json?.FechaRealizacion || "");
-            $("#total").val(json?.Total != null ? parseFloat(json.Total).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : "");
+            $("#total").val(
+                json?.Total != null
+                    ? parseFloat(json.Total).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })
+                    : ""
+            );
+
             const estados = {
                 "Completado": "1",
                 "Confirmado": "2",
                 "Pendiente": "3",
                 "Rechazado": "4"
             };
-
             const estadoNombre = json?.Estado?.Nombre;
             $("#estado").val(estados[estadoNombre] || "0");
+        }  
 
-        }
-        else {
-
-            // VUELVO A PONER TODO COMO ESTA EN EL HTML
-
-            $("label[for='idEvento']").text("Evento (ID)");
-            $("label[for='idCliente']").text("Cliente (ID)");
-
-            $("#idEvento").attr("type", "number");
-
-            $("#idEvento").prop("readonly", false)
-                .removeAttr("data-bs-toggle")
-                .removeAttr("title")
-                .css({
-                    "background-color": "",
-                    "pointer-events": "",
-                    "user-select": "",
-                    "cursor": ""
-                });
-
-            $("#idCliente").prop("readonly", false)
-                .removeAttr("data-bs-toggle")
-                .removeAttr("title")
-                .css({
-                    "background-color": "",
-                    "pointer-events": "",
-                    "user-select": "",
-                    "cursor": ""
-                });
-        }
-
+        // Mostrar modal
         $("#FormModal").modal("show");
     }

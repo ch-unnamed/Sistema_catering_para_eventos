@@ -1,15 +1,42 @@
-﻿using System;
+﻿using BE;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace DAL
 {
+
     public class Configuracion_Empresa
     {
+
+        public List<BE.Configuracion_Empresa> Listar()
+        {
+            Conexion conexion = new Conexion();
+
+            List<BE.Configuracion_Empresa> configuraciones = new List<BE.Configuracion_Empresa>();
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_config");
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Configuracion_Empresa unaConfig = new BE.Configuracion_Empresa();
+
+                unaConfig.ID = Convert.ToInt32(fila["Id"]);
+                unaConfig.Nombre = fila["Nombre"].ToString();
+                unaConfig.Porcentaje = Convert.ToDecimal(fila["Porcentaje"]);
+
+                configuraciones.Add(unaConfig);
+            }
+
+            return configuraciones;
+
+        }
+
         public BE.Configuracion_Empresa ObtenerPorcentajeGanancia(string nombre)
         {
             Conexion conexion = new Conexion();
@@ -26,7 +53,7 @@ namespace DAL
                 DataRow fila = dt.Rows[0];
                 return new BE.Configuracion_Empresa
                 {
-                    PorcentajeGanancia = Convert.ToDecimal(fila["PorcentajeGanancia"])
+                    Porcentaje = Convert.ToDecimal(fila["Porcentaje"])
                 };
             }
 
@@ -44,11 +71,79 @@ namespace DAL
 
             DataTable dt = conexion.LeerPorStoreProcedure("sp_descuento_cliente", parametros);
 
-            if (dt.Rows.Count > 0)
+            return Convert.ToInt32(dt.Rows[0]["cantidad"]);
+
+        }
+
+        public int CrearConfiguracion(BE.Configuracion_Empresa configuracion, out string mensaje)
+        {
+            Conexion conexion = new Conexion();
+
+            int resultado = 0;
+            mensaje = string.Empty;
+
+            SqlParameter[] parametrosSql = new SqlParameter[]
             {
-                return Convert.ToInt32(dt.Rows[0]["cantidad"]);
-            }
-            return 0;
+                new SqlParameter("@admin_id", configuracion.Admin.IdUsuario),
+                new SqlParameter("@Nombre", configuracion.Nombre),
+                new SqlParameter("@Porcentaje", configuracion.Porcentaje),
+                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
+            };
+
+            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_crear_config", parametrosSql);
+
+            mensaje = parametrosSql[3].Value.ToString();
+            resultado = Convert.ToInt32(parametrosSql[4].Value);
+
+            return resultado;
+        }
+
+        public bool EditarConfiguracion(BE.Configuracion_Empresa configuracion, out string mensaje)
+        {
+            Conexion conexion = new Conexion();
+
+            bool resultado = false;
+            mensaje = string.Empty;
+
+            SqlParameter[] parametrosSql = new SqlParameter[]
+            {
+                new SqlParameter("@idConfig", configuracion.ID),
+                new SqlParameter("@Nombre", configuracion.Nombre),
+                new SqlParameter("@Porcentaje", configuracion.Porcentaje),
+                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
+            };
+
+            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_editar_config", parametrosSql);
+
+            mensaje = parametrosSql[3].Value.ToString();
+            resultado = Convert.ToBoolean(parametrosSql[4].Value);
+
+            return resultado;
+        }
+
+        public bool EliminarConfiguracion(int idConfiguracion, out string mensaje)
+        {
+            Conexion conexion = new Conexion();
+
+            bool resultado = false;
+            mensaje = string.Empty;
+
+            SqlParameter[] parametrosSql = new SqlParameter[]
+            {
+                new SqlParameter("@idConfig", idConfiguracion),
+                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+            };
+
+            int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_eliminar_config", parametrosSql);
+
+            mensaje = parametrosSql[1].Value.ToString();
+            resultado = Convert.ToBoolean(parametrosSql[2].Value);
+
+            return resultado;
+
         }
     }
 }

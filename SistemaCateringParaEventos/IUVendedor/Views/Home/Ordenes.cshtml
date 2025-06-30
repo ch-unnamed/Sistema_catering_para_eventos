@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "Ordenes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-2">
+    <li class="breadcrumb-item"><a href="./">Dashboard</a></li>
+    <li class="breadcrumb-item active">Órdenes</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-receipt"></i> Lista de Órdenes
+    </div>
+    <div class="card-body">
+
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cotizacion (ID)</th>
+                    <th>Menu (ID)</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @* AJAX *@
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+
+                    @* id manejado con ajax *@
+                    <input type="hidden" id="id" value="0" />
+
+                    <div class="col-sm-6">
+                        <label for="cotizacionId" class="form-label fw-bold">Cotizacion (ID)</label>
+                        <input type="text" class="form-control" id="cotizacionId" autocomplete="off"
+                               readonly disabled data-bs-toggle="tooltip" data-bs-placement="top">
+                        <span class="text-danger" id="error-cotizacionId"></span>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="menuId" class="form-label fw-bold">Menu (ID)</label>
+                        <input type="text" class="form-control" id="menuId" autocomplete="off"
+                               readonly disabled data-bs-toggle="tooltip" data-bs-placement="top">
+                        <span class="text-danger" id="error-menuId"></span>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="estado" class="form-label fw-bold">Estado</label>
+                        <select id="estado" class="form-select">
+                            <option selected disabled>Elija una opcion</option>
+                            <option value="1">Concretado</option>
+                            <option value="2">En espera</option>
+                        </select>
+                        <span class="text-danger" id="error-estado"></span>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div id="msjError" class="alert alert-danger" role="alert">
+                                A simple danger alert—check it out!
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnCerrar" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="editarCotizacionMenu" type="button" class="btn btn-primary" onclick="editar()">Editar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Platos-->
+
+<div class="modal fade" id="modalVerPlatosCotizacion" tabindex="-1" aria-labelledby="tituloModalPlatosCotizacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="tituloModalPlatosCotizacion">
+                    Platos de la Cotización-Menú
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive rounded">
+                    <table id="tablaPlatosCotizacion" class="table table-striped align-middle mb-0 w-100">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre del Plato</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <small class="text-muted">Total de platos cargados dinámicamente</small>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@* t0d0s los scripts son renderizados a layout, en la parte de RenderSection *@
+@section Scripts {
+    <script>
+
+        // variables globales
+        var tabledata;
+        var filaSeleccionada;
+        const urlListarCotizacionMenu = '@Url.Action("ListarCotizacionMenu", "Home")';
+
+    </script>
+
+    @* script base que contiene todos los archivos JS de Ordenes *@
+    <script src="~/Scripts/JS-ORDENES/base.js"></script>
+}
