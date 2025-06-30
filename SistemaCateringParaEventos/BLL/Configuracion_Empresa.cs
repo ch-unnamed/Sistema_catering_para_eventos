@@ -46,8 +46,9 @@ namespace BLL
         {
             var errores = new Dictionary<string, string>();
 
-            if (string.IsNullOrWhiteSpace(configuracion.Nombre) || (configuracion.Nombre is string))
-                errores["nombre"] = "La Configuracion debe tener un Nombre valido";
+            if (string.IsNullOrWhiteSpace(configuracion.Nombre) ||
+                !System.Text.RegularExpressions.Regex.IsMatch(configuracion.Nombre, @"^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$"))
+                errores["nombre"] = "La configuración debe tener un nombre válido";
 
             if (!decimal.TryParse(configuracion.Porcentaje.ToString(), out decimal porcentaje) || porcentaje <= 0)
                 errores["porcentaje"] = "La Configuracion debe tener un porcentaje valido";

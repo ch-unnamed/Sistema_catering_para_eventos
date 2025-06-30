@@ -12,7 +12,6 @@
             return cantidad ? cantidad : 0;
 
         } catch (error) {
-            swal("Error", error, "error");
             return 0;
         }
     }

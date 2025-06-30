@@ -14,7 +14,6 @@
             }
 
         } catch (error) {
-            swal("Error", error, "error");
             return 0;
         }
     }
