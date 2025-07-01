@@ -362,7 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# key
-SistemaCateringParaEventos/IUVendedor/Web.config
+# key SistemaCateringParaEventos/IUVendedor/Web.config
 
 
