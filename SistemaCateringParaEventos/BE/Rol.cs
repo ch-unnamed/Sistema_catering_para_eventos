@@ -18,7 +18,7 @@ namespace BE
 
 		private string _nombre;
 
-		public string Nombre
+		public string NombreRol
 		{
 			get { return _nombre; }
 			set { _nombre = value; }

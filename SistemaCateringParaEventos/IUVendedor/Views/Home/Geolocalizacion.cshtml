@@ -1,0 +1,215 @@
+﻿@{
+    ViewBag.Title = "Mapa de Eventos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-2">
+    <li class="breadcrumb-item"><a href="/Home/Index">Dashboard</a></li>
+    <li class="breadcrumb-item active">Geolocalización</li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-map-marked-alt me-1"></i> Ubicación Inicial
+    </div>
+    <div class="card-body">
+        <div id="map" style="height: 500px;"></div>
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editarModal">Editar Ubicación Inicial</button>
+    </div>
+</div>
+
+<!-- Modal para editar ubicación -->
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formGeo">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarModalLabel">Editar Ubicación Inicial</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="inputIdUbicacion" />
+                    <input type="hidden" id="inputIdGeolocalizacion" />
+                    <div class="mb-3">
+                        <label for="inputCalle" class="form-label">Calle</label>
+                        <input type="text" class="form-control" id="inputCalle" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputAltura" class="form-label">Altura</label>
+                        <input type="number" class="form-control" id="inputAltura" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputCiudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="inputCiudad" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputProvincia" class="form-label">Provincia</label>
+                        <input type="text" class="form-control" id="inputProvincia" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    @{
+        var apiKey = System.Configuration.ConfigurationManager.AppSettings["ApiKeyGoogleMaps"];
+    }
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=@apiKey&callback=initMap"
+            async
+            defer>
+    </script>
+
+    <script>
+        let map;
+        let markerInicial;
+
+        let ubicacion = {
+            id: 0,
+            idGeolocalizacion: 0,
+            lat: 0,
+            lng: 0,
+            calle: "",
+            altura: 0,
+            ciudad: "",
+            provincia: ""
+        };
+
+        function initMap() {
+            fetch('@Url.Action("ObtenerUbicacionInicial", "Home")')
+                .then(res => res.json())
+                .then(data => {
+                    if (data) {
+                        ubicacion.id = data.Id;
+                        ubicacion.idGeolocalizacion = data.IdGeolocalizacion;
+                        ubicacion.lat = parseFloat(data.Latitud);
+                        ubicacion.lng = parseFloat(data.Longitud);
+                        ubicacion.calle = data.Calle;
+                        ubicacion.altura = data.Altura;
+                        ubicacion.ciudad = data.Ciudad;
+                        ubicacion.provincia = data.Provincia;
+
+
+                        document.getElementById("inputIdUbicacion").value = data.Id || data.IdUbicacion;
+                        document.getElementById("inputIdGeolocalizacion").value = data.IdGeolocalizacion;
+                        document.getElementById("inputCalle").value = ubicacion.calle;
+                        document.getElementById("inputAltura").value = ubicacion.altura;
+                        document.getElementById("inputCiudad").value = ubicacion.ciudad;
+                        document.getElementById("inputProvincia").value = ubicacion.provincia;
+                    }
+
+                    const center = { lat: ubicacion.lat, lng: ubicacion.lng };
+
+                    map = new google.maps.Map(document.getElementById("map"), {
+                        zoom: 12,
+                        center: center
+                    });
+
+                    markerInicial = new google.maps.Marker({
+                        position: center,
+                        map: map,
+                        draggable: true,
+                        title: "Ubicación Inicial",
+
+                    });
+
+                    markerInicial.addListener("dragend", function () {
+                        const pos = markerInicial.getPosition();
+                        ubicacion.lat = pos.lat();
+                        ubicacion.lng = pos.lng();
+                    });
+
+                    // Cargar eventos geolocalizados
+                    fetch('@Url.Action("ObtenerEventosGeolocalizados", "Home")')
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(evento => {
+                                const evtMarker = new google.maps.Marker({
+                                    position: { lat: parseFloat(evento.Latitud), lng: parseFloat(evento.Longitud) },
+                                    map: map,
+                                    title: evento.Nombre
+                                });
+
+                                const infoWindow = new google.maps.InfoWindow({
+                                    content: `<b>${evento.Nombre}</b><br/>${evento.Ubicacion}`
+                                });
+
+                                evtMarker.addListener('click', () => {
+                                    infoWindow.open(map, evtMarker);
+                                });
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error al cargar eventos:", error);
+                        });
+                });
+        }
+
+       document.getElementById("formGeo").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const calle = document.getElementById("inputCalle").value;
+    const altura = parseInt(document.getElementById("inputAltura").value);
+    const ciudad = document.getElementById("inputCiudad").value;
+    const provincia = document.getElementById("inputProvincia").value;
+
+    const direccionCompleta = `${calle} ${altura}, ${ciudad}, ${provincia}, Argentina`;
+
+    // API para obtener coordenadas actualizadas
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ address: direccionCompleta }, function (results, status) {
+        if (status === "OK" && results.length > 0) {
+            const location = results[0].geometry.location;
+
+
+            const data = {
+                Id: parseInt(document.getElementById("inputIdUbicacion").value),
+                Calle: calle,
+                Altura: altura,
+                Ciudad: ciudad,
+                Provincia: provincia,
+                IdGeolocalizacion: {
+                    IdGeolocalizacion: parseInt(document.getElementById("inputIdGeolocalizacion").value),
+                    Latitud: location.lat(),
+                    Longitud: location.lng()
+                }
+            };
+
+            fetch("@Url.Action("GuardarUbicacionInicial", "Home")", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+                .then(resp => resp.json())
+                .then(result => {
+                    if (result.resultado) {
+                        swal("Ubicación actualizada con éxito");
+
+                        const nuevaPos = { lat: location.lat(), lng: location.lng() };
+                        markerInicial.setPosition(nuevaPos);
+                        map.setCenter(nuevaPos);
+
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editarModal'));
+                        modal.hide();
+                    } else {
+                        swal(result.mensaje || "Error al actualizar");
+                    }
+                })
+                .catch(err => swal("Error: " + err));
+        } else {
+            swal("No se pudo obtener coordenadas de esa dirección. Verificá los datos.");
+        }
+    });
+});
+
+
+        window.initMap = initMap;
+    </script>
+}

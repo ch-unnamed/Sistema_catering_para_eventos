@@ -6,6 +6,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using RolModels = IUVendedor.Models.Rol; //Alias para el Rol que está en IUsuario.Model
+
 
 namespace IUVendedor.Data
 {
@@ -47,7 +49,7 @@ namespace IUVendedor.Data
                     Apellido = row["apellido"].ToString(),
                     Email = row["email"].ToString(),
                     PasswordHash = row["passwordHash"].ToString(),
-                    Rol_id = (Rol)Convert.ToInt32(row["rol_id"])
+                    Rol_id = (RolModels)Convert.ToInt32(row["rol_id"])
                 };
             }
 

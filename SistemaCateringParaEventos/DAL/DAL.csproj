@@ -45,13 +45,17 @@
     <Compile Include="Configuracion_Empresa.cs" />
     <Compile Include="Cotizacion_Menu.cs" />
     <Compile Include="Cotizacion_Menu_Plato.cs" />
+    <Compile Include="Geolocalizacion.cs" />
     <Compile Include="Lote.cs" />
     <Compile Include="PlatoInsumo.cs" />
+    <Compile Include="Rol.cs" />
     <Compile Include="Temporada.cs" />
+    <Compile Include="Tipo_Evento.cs" />
     <Compile Include="Tipo_Insumo.cs" />
     <Compile Include="Estado.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Menu_Plato.cs" />
+    <Compile Include="Ubicacion.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="Cliente.cs" />

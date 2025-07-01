@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -933,81 +934,7 @@ namespace IUVendedor.Controllers
             }
         }
 
-        /// <summary>
-        /// Lista todas las temporadas.
-        /// </summary>
-        [HttpGet]
-        public JsonResult ListarTemporadas()
-        {
-            List<BE.Temporada> oLista = new List<BE.Temporada>();
-            oLista = new BLL.Temporada().ListarTemporada();
-            var TemporadasFormateadas = oLista.Select(t => new
-            {
-                t.IdTemporada,
-                t.CantidadEvento,
-                FechaComienzo = t.FechaComienzoTemp.ToString("yyyy-MM-dd"),
-                FechaFin = t.FechaFin.ToString("yyyy-MM-dd"),
-                Categoria_Temporada = new
-                {
-                    t.Id_CategoriaTemporada.IdCategoriaTemporada,
-                    t.Id_CategoriaTemporada.Nombre
-                },
-            });
-            return Json(new { data = TemporadasFormateadas }, JsonRequestBehavior.AllowGet);
-        }
 
-        /// <summary>
-        /// Obtiene una temporada por su identificador.
-        /// </summary>
-        [HttpGet]
-        public JsonResult ObtenerTemporada(int id)
-        {
-            var temporada = new BLL.Temporada().ObtenerTemporada(id);
-            if (temporada == null)
-                return Json(null, JsonRequestBehavior.AllowGet);
-            var temporadaJson = new
-            {
-                temporada.IdTemporada,
-                temporada.CantidadEvento,
-                FechaComienzo = temporada.FechaComienzoTemp.ToString("yyyy-MM-dd"),
-                FechaFin = temporada.FechaFin.ToString("yyyy-MM-dd"),
-                Categoria_Temporada = new
-                {
-                    temporada.Id_CategoriaTemporada.IdCategoriaTemporada,
-                    temporada.Id_CategoriaTemporada.Nombre
-                }
-            };
-            return Json(temporadaJson, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// Compara la cantidad de eventos entre dos temporadas.
-        /// </summary>
-        [HttpGet]
-        public JsonResult CompararCantidadEventos(int id1, int id2)
-        {
-            string resultado = new BLL.Temporada().CompararCantidadEventos(id1, id2);
-            return Json(new { mensaje = resultado }, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// Lista todos los usuarios.
-        /// </summary>
-        [HttpGet]
-        public JsonResult ListarUsuario()
-        {
-            List<BE.Usuario> oLista = new List<BE.Usuario>();
-            oLista = new BLL.Usuario().ListarUsuario();
-            var UsuariosFormateados = oLista.Select(u => new
-            {
-                u.IdUsuario,
-                u.Email,
-                u.FechaCreacion,
-                u.Nombre,
-                u.Apellido
-            });
-            return Json(new { data = UsuariosFormateados }, JsonRequestBehavior.AllowGet);
-        }
 
         [HttpGet]
         public JsonResult ListarConfiguraciones()
@@ -1055,12 +982,255 @@ namespace IUVendedor.Controllers
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+        //TEMPORADAS
+
+        [HttpGet]
+        public JsonResult ListarTemporadas()
+        {
+            List<BE.Temporada> oLista = new List<BE.Temporada>();
+
+            oLista = new BLL.Temporada().ListarTemporada();
+
+            var TemporadasFormateadas = oLista.Select(t => new
+            {
+                t.IdTemporada,
+                t.CantidadEvento,
+                FechaComienzo = t.FechaComienzoTemp.ToString("yyyy-MM-dd"),
+                FechaFin = t.FechaFin.ToString("yyyy-MM-dd"),
+                Categoria_Temporada = new
+                {
+                    t.Id_CategoriaTemporada.IdCategoriaTemporada,
+                    t.Id_CategoriaTemporada.Nombre
+                },
+            });
+
+
+            return Json(new { data = TemporadasFormateadas }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerTemporada(int id)
+        {
+            var temporada = new BLL.Temporada().ObtenerTemporada(id);
+
+            if (temporada == null)
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            var temporadaJson = new
+            {
+                temporada.IdTemporada,
+                temporada.CantidadEvento,
+                FechaComienzo = temporada.FechaComienzoTemp.ToString("yyyy-MM-dd"),
+                FechaFin = temporada.FechaFin.ToString("yyyy-MM-dd"),
+                Categoria_Temporada = new
+                {
+                    temporada.Id_CategoriaTemporada.IdCategoriaTemporada,
+                    temporada.Id_CategoriaTemporada.Nombre
+                }
+            };
+
+            return Json(temporadaJson, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CompararCantidadEventos(int id1, int id2)
+        {
+            string resultado = new BLL.Temporada().CompararCantidadEventos(id1, id2);
+            return Json(new { mensaje = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CompararCantidadTipoEventos(int id1, int id2, int tipo)
+        {
+            string resultado = new BLL.Temporada().CompararTipoEvento(id1, id2, tipo);
+            return Json(new { mensaje = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public JsonResult ListarTipoEvento()
+        {
+            List<BE.Tipo_Evento> oLista = new List<BE.Tipo_Evento>();
+
+            oLista = new BLL.Tipo_Evento().ListarTipoEvento();
+
+            var TipoEFormateados = oLista.Select(te => new
+            {
+                te.Id_TipoEvento,
+                te.Nombre
+            });
+
+            return Json(new { data = TipoEFormateados }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        // USUARIOS
+
+        [HttpGet]
+        public JsonResult ListarUsuario()
+        {
+            List<BE.Usuario> oLista = new List<BE.Usuario>();
+
+            oLista = new BLL.Usuario().ListarUsuario();
+
+            var UsuariosFormateados = oLista.Select(u => new
+            {
+                u.IdUsuario,
+                u.Email,
+                FechaCreacion = u.FechaCreacion.ToString("yyyy-MM-dd"),
+                u.Nombre,
+                u.Apellido,
+                RolUsuario = new
+                {
+                    u.RolUsuario.IdRol,
+                    u.RolUsuario.NombreRol
+                },
+            });
+
+            return Json(new { data = UsuariosFormateados }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GuardarUsuario(BE.Usuario usuario)
+        {
+            string mensaje = string.Empty;
+            bool exito = true;
+            int nuevoId = 0;
+
+            try
+            {
+                if (usuario.IdUsuario == 0)
+                {
+                    nuevoId = new BLL.Usuario().CrearUsuario(usuario);
+                    mensaje = "Usuario creado correctamente.";
+                }
+            }
+            catch (Exception ex)
+            {
+                exito = false;
+                mensaje = ex.Message;
+            }
+
+            return Json(new { nuevoId = nuevoId, exito = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EliminarUsuario(int Id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new BLL.Usuario().EliminarUsuario(Id);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        // ROLES
+
+        [HttpGet]
+        public JsonResult ListarRol()
+        {
+            List<BE.Rol> oLista = new List<BE.Rol>();
+
+            oLista = new BLL.Rol().ListarRol();
+
+            var RolesFormateados = oLista.Select(r => new
+            {
+                r.IdRol,
+                r.NombreRol
+            });
+
+            return Json(new { data = RolesFormateados }, JsonRequestBehavior.AllowGet);
+        }
+
+        // GEOLOCALIZACION
+
+        [HttpGet]
+        public JsonResult ObtenerEventosGeolocalizados()
+        {
+            var eventoBLL = new BLL.Evento();
+            List<BE.Evento> eventos = eventoBLL.ListarEventosConGeolocalizacion();
+
+            var datos = eventos.Select(ev => new
+            {
+                ev.IdEvento,
+                ev.Nombre,
+                ev.Fecha,
+                Latitud = ev.Ubicacion?.IdGeolocalizacion?.Latitud ?? 0,
+                Longitud = ev.Ubicacion?.IdGeolocalizacion?.Longitud ?? 0,
+                Ubicacion = $"{ev.Ubicacion?.Calle} {ev.Ubicacion?.Altura}, {ev.Ubicacion?.Ciudad}, {ev.Ubicacion?.Provincia}"
+            }).ToList();
+
+            return Json(datos, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public ActionResult ObtenerUbicacionInicial()
+        {
+            var ubiBLL = new BLL.Ubicacion();
+            var ubicacion = ubiBLL.ObtenerUbicacionInicial();
+            if (ubicacion == null) return Json(null, JsonRequestBehavior.AllowGet);
+
+            return Json(new
+            {
+                ubicacion.IdUbicacion,
+                ubicacion.Calle,
+                ubicacion.Altura,
+                ubicacion.Ciudad,
+                ubicacion.Provincia,
+                IdGeolocalizacion = ubicacion.IdGeolocalizacion.IdGeolocalizacion,
+                Latitud = ubicacion.IdGeolocalizacion.Latitud,
+                Longitud = ubicacion.IdGeolocalizacion.Longitud
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GuardarUbicacionInicial(BE.Ubicacion ubicacion)
+        {
+            try
+            {
+                var geoBLL = new BLL.Geolocalizacion();
+
+
+                var geo = await geoBLL.ObtenerGeolocalizacion(
+                    ubicacion.Calle, ubicacion.Altura, ubicacion.Ciudad, ubicacion.Provincia);
+
+                if (geo == null)
+                    return Json(new { resultado = false, mensaje = "No se pudo obtener geolocalización." });
+
+
+                ubicacion.IdUbicacion = 23;
+
+                // Llamar al DAL para actualizar ubicación y geolocalización asociada
+                new DAL.Ubicacion().ActualizarUbicacionInicial(ubicacion, geo.Latitud, geo.Longitud);
+
+                return Json(new { resultado = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { resultado = false, mensaje = $"Error: {ex.Message}" });
+            }
+        }
+
+
+
+
+
+
         //////////////////////////////////////////////////////////////////
         /// <summary>
         /// Muestra la vista de temporadas para el gerente.
         /// </summary>
         [PermisosRol(Models.Rol.Gerente)]
         public ActionResult Temporadas()
+        {
+            return View();
+        }
+
+        [PermisosRol(Models.Rol.Gerente)]
+        public ActionResult Geolocalizacion()
         {
             return View();
         }

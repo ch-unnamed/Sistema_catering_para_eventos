@@ -93,6 +93,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="compararVentas()">Comparar Ventas</button>
+                <button type="button" class="btn btn-primary" onclick="compararTipoEvento()">Comparar por Tipo de Evento</button>
+                <div class="col-sm-4">
+                    <label for="tipoevento" class="form-label">Tipo de Evento</label>
+                    <select id="tipoevento" class="form-select">
+                    </select>
+                </div>
             </div>
 
         </div>
@@ -165,7 +171,7 @@
     return tabla;
 }
 
-   
+
         $('#temporada1').on('input', function () {
             const id = $(this).val();
             if (id) {
@@ -182,7 +188,32 @@
 
 
 
-        function compararVentas() {
+        async function cargarTipoEvento() {
+
+            try {
+                const response = await fetch('/Home/ListarTipoEvento');
+                const dataJSON = await response.json();
+
+                const selecTipoE = document.getElementById("tipoevento");
+                selecTipoE.innerHTML = '';
+                selecTipoE.innerHTML = "<option selected disabled>Selecciona un tipo de evento</option>";
+
+                dataJSON.data.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.Id_TipoEvento;
+                    option.textContent = item.Nombre;
+                    selecTipoE.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error("Error al obtener los tipos:", error);
+            }
+        }
+
+        cargarTipoEvento();
+
+
+    function compararVentas() {
     const id1 = $('#temporada1').val();
     const id2 = $('#temporada2').val();
 
@@ -199,6 +230,33 @@
     $.ajax({
         url: '@Url.Action("CompararCantidadEventos", "Home")',
         data: { id1: id1, id2: id2 },
+        type: 'GET',
+        success: function(response) {
+            $('#resultadoComparacion').text(response.mensaje);
+        },
+        error: function() {
+            $('#resultadoComparacion').text('Error al comparar');
+        }
+    });
+    }
+function compararTipoEvento() {
+    const id1 = $('#temporada1').val();
+    const id2 = $('#temporada2').val();
+    const tipo = $('#tipoevento').val();
+
+    if (!id1 || !id2 || !tipo) {
+        $('#resultadoComparacion').text('Ingrese los IDs y el tipo de evento');
+        return;
+    }
+
+    if (isNaN(id1) || isNaN(id2) || isNaN(tipo) || parseInt(id1) <= 0 || parseInt(id2) <= 0 || parseInt(tipo) <= 0) {
+        $('#resultadoComparacion').text('IDs o tipo no válidos');
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("CompararCantidadTipoEventos", "Home")',
+        data: { id1: id1, id2: id2, tipo: tipo },
         type: 'GET',
         success: function(response) {
             $('#resultadoComparacion').text(response.mensaje);

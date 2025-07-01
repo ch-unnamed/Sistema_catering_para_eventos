@@ -13,10 +13,6 @@ namespace DAL
     {
 
         private readonly Conexion conexion = new Conexion();
-        /// <summary>
-        /// Lista todas las temporadas disponibles desde la base de datos.
-        /// </summary>
-        /// <returns>Lista de objetos BE.Temporada.</returns>
         public List<BE.Temporada> ListarTemporada()
         {
             Conexion conexion = new Conexion();
@@ -39,16 +35,12 @@ namespace DAL
                 unaCategoriaTemp.Nombre = row["nombre_categoria"].ToString();
                 unaTemp.Id_CategoriaTemporada = unaCategoriaTemp;
 
+
                 temporadas.Add(unaTemp);
             }
 
             return temporadas;
         }
-        /// <summary>
-        /// Obtiene una temporada específica por su identificador desde la base de datos.
-        /// </summary>
-        /// <param name="idTemporada">Identificador de la temporada.</param>
-        /// <returns>Objeto BE.Temporada correspondiente al id, o null si no existe.</returns>
         public BE.Temporada ObtenerTemporadaPorId(int idTemporada)
         {
             var entrada = new SqlParameter[]
@@ -78,18 +70,12 @@ namespace DAL
             return unaTemp;
         }
 
-        /// <summary>
-        /// Compara la cantidad de eventos entre dos temporadas.
-        /// </summary>
-        /// <param name="id1">Identificador de la primera temporada.</param>
-        /// <param name="id2">Identificador de la segunda temporada.</param>
-        /// <returns>Lista de objetos BE.Temporada con los datos comparados.</returns>
         public List<BE.Temporada> CompararTemporadas(int id1, int id2)
         {
             var parametros = new SqlParameter[]
             {
-                conexion.crearParametro("@idTemp1", id1),
-                conexion.crearParametro("@idTemp2", id2)
+        conexion.crearParametro("@idTemp1", id1),
+        conexion.crearParametro("@idTemp2", id2)
             };
 
             DataTable dt = conexion.LeerPorStoreProcedure("sp_comparar_ventas_temporadas", parametros);
@@ -113,6 +99,32 @@ namespace DAL
             return temporadas;
         }
 
+
+        public List<BE.Temporada> CompararTemporadasPorTipoEvento(int id1, int id2, int tipo)
+        {
+            var parametros = new SqlParameter[]
+            {
+        conexion.crearParametro("@idTemp1", id1),
+        conexion.crearParametro("@idTemp2", id2),
+        conexion.crearParametro("@idTipoEvento", tipo)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_comparar_tipo_evento_temporadas", parametros);
+            List<BE.Temporada> temporadas = new List<BE.Temporada>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                var temp = new BE.Temporada
+                {
+                    IdTemporada = Convert.ToInt32(row["IdTemporada"]),
+                    CantidadEvento = Convert.ToInt32(row["CantidadEvento"])
+                };
+
+                temporadas.Add(temp);
+            }
+
+            return temporadas;
+        }
 
 
     }

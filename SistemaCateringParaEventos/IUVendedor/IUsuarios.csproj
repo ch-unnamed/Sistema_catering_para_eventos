@@ -529,6 +529,7 @@
     <Content Include="Views\Home\Platos.cshtml" />
     <Content Include="Views\Home\Cotizaciones.cshtml" />
     <Content Include="Views\Home\Ordenes.cshtml" />
+    <Content Include="Views\Home\Geolocalizacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

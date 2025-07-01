@@ -12,6 +12,7 @@
     <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
@@ -61,7 +62,7 @@
                                     Clientes
                                 </a>
                             }
-                            
+
                             if (usuario.Rol_id == Rol.Vendedor)
                             {
                                 <a class="nav-link" href="@Url.Action("Cotizaciones", "Home")">
@@ -110,6 +111,14 @@
                                 <a class="nav-link" href="@Url.Action("Temporadas","Home")">
                                     <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
                                     Temporadas
+                                </a>
+                            }
+
+                            if (usuario.Rol_id == Rol.Gerente)
+                            {
+                                <a class="nav-link" href="@Url.Action("Geolocalizacion","Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-map"></i></div>
+                                    Geolocalización
                                 </a>
                             }
 

@@ -40,6 +40,9 @@
     <Reference Include="MimeKit, Version=4.13.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
       <HintPath>..\packages\MimeKit.4.13.0\lib\net47\MimeKit.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
@@ -78,13 +81,17 @@
     <Compile Include="Configuracion_Empresa.cs" />
     <Compile Include="Cotizacion_Menu.cs" />
     <Compile Include="Cotizacion_Menu_Plato.cs" />
+    <Compile Include="Geolocalizacion.cs" />
     <Compile Include="Lote.cs" />
     <Compile Include="PlatoInsumo.cs" />
+    <Compile Include="Rol.cs" />
+    <Compile Include="Tipo_Evento.cs" />
     <Compile Include="Tipo_Insumo.cs" />
     <Compile Include="Cotizacion.cs" />
     <Compile Include="Estado.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Menu_Plato.cs" />
+    <Compile Include="Ubicacion.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Temporada.cs" />
     <Compile Include="Cliente.cs" />
