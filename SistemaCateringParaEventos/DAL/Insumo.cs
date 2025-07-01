@@ -135,7 +135,7 @@ namespace DAL
                 Id = Convert.ToInt32(row["Id"]),
                 Nombre = row["Nombre"].ToString(),
                 TipoId = Convert.ToInt32(row["tipo_insumo_id"]),
-                StockMinimo = Convert.ToInt32(row["StockMinimo"]),
+                StockMinimo = Convert.ToInt32(row["stock_minimo"])
             };
         }
 

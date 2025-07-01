@@ -135,6 +135,13 @@ namespace BLL
             }
         }
 
+        public BE.Insumo ObtenerPorNombre(string nombre)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return null;
+
+            return objInsumoDAL.Buscar(nombre.Trim());
+        }
 
     }
 }

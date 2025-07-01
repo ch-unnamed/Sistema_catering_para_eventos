@@ -555,6 +555,17 @@ namespace IUVendedor.Controllers
             int nuevoId = 0;
             try
             {
+                var gestor = new BLL.Insumo();
+                var duplicado = gestor.ObtenerPorNombre(oInsumo.Nombre);
+                if (duplicado != null && duplicado.Id != oInsumo.Id)
+                {
+                    return Json(new
+                    {
+                        nuevoId = 0,
+                        exito = false,
+                        mensaje = "Ya existe un insumo con ese nombre."
+                    }, JsonRequestBehavior.AllowGet);
+                }
                 if (oInsumo.Id == 0)
                 {
                     nuevoId = new BLL.Insumo().CrearInsumo(oInsumo);
@@ -732,6 +743,7 @@ namespace IUVendedor.Controllers
                         Id = l.Id,
                         insumo_id = l.InsumoId,
                         Cantidad = l.Cantidad,
+                        fecha_ingreso = l.FechaDeIngreso.ToString("yyyy-MM-dd"),
                         fecha_vencimiento = l.FechaDeVencimiento.ToString("yyyy-MM-dd")
                     })
                     .ToList();

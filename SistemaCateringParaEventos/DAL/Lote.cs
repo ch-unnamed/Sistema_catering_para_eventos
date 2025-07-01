@@ -34,6 +34,7 @@ namespace DAL
                     Id = Convert.ToInt32(fila["Id"]),
                     InsumoId = Convert.ToInt32(fila["insumo_id"]),
                     Cantidad = Convert.ToInt32(fila["Cantidad"]),
+                    FechaDeIngreso = Convert.ToDateTime(fila["fecha_ingreso"]),
                     FechaDeVencimiento = Convert.ToDateTime(fila["fecha_vencimiento"])
                 };
 
