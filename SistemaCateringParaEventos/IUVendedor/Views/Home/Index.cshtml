@@ -23,40 +23,70 @@
 
     <hr />
 
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET es un framework gratuito para crear excelentes sitios web y aplicaciones web usando HTML, CSS y JavaScript.</p>
+    @*  HERO – título principal  *@
+    <section class="py-5 bg-light text-center border-bottom" aria-labelledby="appTitle">
+        <div class="container">
+            <h1 id="appTitle" class="display-5 fw-bold mb-2">
+                <i class="fa-solid fa-utensils me-2"></i>
+                SISTEMA DE CATERING <span class="text-primary">“ALTA MESA”</span>
+            </h1>
+            <p class="lead text-muted mb-0">
+                Gestión integral de eventos, menús e inventario
+            </p>
+        </div>
     </section>
 
-    <div class="">
-        @if (usuario.Rol_id == Rol.Chef)
-        {
-            <div class="card">
-                <div class="card-header">
-                    <i class="fa fa-box"></i> BUZÓN DE SUGERENCIAS
-                </div>
-                <div class="card-body">
-                    <div class="row">
+    @*  DESCRIPCIÓN – card responsive  *@
+    <div class="container my-5">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-primary text-white rounded-top-4">
+                <h2 class="h5 mb-0">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    Descripción de la empresa
+                </h2>
+            </div>
+
+            <div class="card-body">
+                <p>
+                    <strong>Alta Mesa</strong> brinda servicios de catering con menús personalizados.
+                    La gestión manual en Excel y papel ha provocado demoras y un <strong>
+                        30 % de
+                        pérdidas
+                    </strong> en los últimos tres años.
+                </p>
+
+                <p>
+                    Con un sistema web moderno se optimizará la administración de insumos,
+                    cotizaciones y menús, ofreciendo un servicio más ágil y rentable.
+                </p>
+
+                <div class="row gy-4">
+                    <div class="col-md-6">
+                        <h3 class="h6 text-primary fw-bold mb-2">Roles clave en el sistema</h3>
+                        <ul class="list-unstyled lh-lg mb-0">
+                            <li><i class="fa-solid fa-user-gear text-primary me-1"></i> <strong>Admin:</strong> gestiona usuarios y empleados.</li>
+                            <li><i class="fa-solid fa-hat-chef text-primary me-1"></i> <strong>Chef:</strong> controla inventario y vencimientos.</li>
+                            <li><i class="fa-solid fa-handshake text-primary me-1"></i> <strong>Vendedor:</strong> gestiona clientes, eventos y cotizaciones.</li>
+                            <li><i class="fa-solid fa-chart-line text-primary me-1"></i> <strong>Gerente:</strong> analiza costos y ventas.</li>
+                        </ul>
                     </div>
 
-                    <hr />
-
-                    <table id="tablaSugerencias" class="display cell-border" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>HORA</th>
-                                <th>NOMBRE DEL LABURANTE</th>
-                                <th>SUGERENCIA</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @* AJAX *@
-                        </tbody>
-                    </table>
-
-
+                    <div class="col-md-6">
+                        <h3 class="h6 text-primary fw-bold mb-2">Primeras funciones a desarrollar</h3>
+                        <ul class="list-unstyled lh-lg mb-0">
+                            <li><i class="fa-solid fa-bell text-primary me-1"></i> Alertas de stock mínimo.</li>
+                            <li><i class="fa-solid fa-tag text-primary me-1"></i> Descuentos por perfil de cliente.</li>
+                            <li><i class="fa-solid fa-location-dot text-primary me-1"></i> Reportes de ventas geolocalizadas.</li>
+                        </ul>
+                    </div>
                 </div>
+
+                <p class="mt-4 mb-0">
+                    <em>Con este sistema, Alta Mesa podrá reducir errores, acelerar procesos y aumentar su rentabilidad.</em>
+                </p>
             </div>
-        }
+        </div>
     </div>
+
+
 </main>

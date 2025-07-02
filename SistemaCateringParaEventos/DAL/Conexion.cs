@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 
 //Incorporo el espacio de nombre System.Data.SqlClient
@@ -14,7 +15,8 @@ namespace DAL
     public class Conexion
     {
         private SqlConnection objConexion;
-        private string strCadenaDeConexion = "";
+        private string strCadenaDeConexion = System.Configuration.ConfigurationManager.ConnectionStrings["CadenaSQL"].ConnectionString;
+
 
 
         /* -------------------- private void Conectar() ------------ 
@@ -23,14 +25,11 @@ namespace DAL
          * 
          */
         private void Conectar()
-        {   // HACK: Cadena de conexión hardcodeada. Luego ponerla como parametro de configuración del proyecto u otra alternativa.
-            strCadenaDeConexion = @"Integrated Security = SSPI; Persist Security Info = False; Initial Catalog=CATERING;Data Source=.\SQLEXPRESS";
-
-            //Instanció un objeto del tipo SqlConnection
-            objConexion = new SqlConnection();
-            objConexion.ConnectionString = strCadenaDeConexion;
+        {
+            objConexion = new SqlConnection(strCadenaDeConexion);
             objConexion.Open();
         }
+
 
         /* -------------------- private void Desconectar() ------------ 
          * Este metodo como indica su nombre... me permite desconectarme de la
