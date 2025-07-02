@@ -59,7 +59,7 @@ namespace DAL
                     conexion.crearParametro("@IdTemporada", idTemporada)
             };
 
-            DataTable dt = conexion.LeerPorStoreProcedure("sp_obtener_temporada_por_id", entrada);
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_temporada_por_id", entrada);
 
             if (dt.Rows.Count == 0)
                 return null;

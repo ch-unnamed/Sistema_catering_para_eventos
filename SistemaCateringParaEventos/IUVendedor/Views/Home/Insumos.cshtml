@@ -313,7 +313,7 @@
                     });
                 },
                 error: function () {
-                    alert("No se pudieron cargar los insumos.");
+                    swal("Error", "No se pudieron cargar los insumos", "error");
                 }
             });
         }
@@ -374,10 +374,10 @@
 
                 success: function (resp) {
                     $('#FormModalLote').modal('hide');
-                    alert('Lote guardado correctamente');
+                    swal("Lote guardado correctamente!", "Presione OK para continuar", "success");
                 },
                 error: function () {
-                    alert('Error al guardar el lote');
+                    swal("Error al guardar lote", "Presione OK para continuar", "error");
                 }
             });
         }
@@ -407,7 +407,7 @@
             $("#id").val(json.Id);
             $("#nombre").val(json.Nombre);
             $("#stockMinimo").val(json.StockMinimo);
-            $("#tipo").val(json.Tipo);
+            $("#tipo").val(json.TipoNombre);
             $("#costo").val(json.Costo);
             $("#Unidades").val(json.Unidades);
             $("#fechaDeCreacion").val(json.FechaDeCreacion);
@@ -551,11 +551,13 @@ $('#tablaInsumos tbody').on('click', '.btn-eliminar', function () {
                             $("#msjError").text(data.mensaje || "Error al crear insumo.").show();
                         }
                     } else {
+                        
                         if (data.exito) {
                             tabledata.row(filaSeleccionada).data(Insumo).draw(false);
                             location.reload();
                             filaSeleccionada = null;
                             $("#FormModal").modal("hide");
+                            
                         } else {
                             $("#msjError").text(data.mensaje || "Error al editar insumo.").show();
                         }

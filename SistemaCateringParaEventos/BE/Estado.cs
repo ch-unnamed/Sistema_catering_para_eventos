@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BE
 {   
-/ <summary>
+
     /// Representa un estado con un identificador y un nombre restringido a ciertos valores.
     /// </summary>
     public class Estado

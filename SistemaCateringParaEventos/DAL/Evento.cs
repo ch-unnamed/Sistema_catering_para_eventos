@@ -75,18 +75,19 @@ namespace DAL
                 new SqlParameter("@ciudad", evento.Ubicacion.Ciudad),
                 new SqlParameter("@provincia", evento.Ubicacion.Provincia),
                 new SqlParameter("@fecha", evento.Fecha),
-                new SqlParameter("@id_geolocalizacion", evento.Ubicacion.IdGeolocalizacion.IdGeolocalizacion),
                 new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
                 new SqlParameter("@Resultado", SqlDbType.Int) { Direction = ParameterDirection.Output }
             };
-            // Ejecutar el procedimiento almacenado
+            // Ejecupar el proc.alm
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_crear_evento", parametros);
 
-            mensaje = parametros[9].Value.ToString();
-            resultado = Convert.ToInt32(parametros[10].Value);
+            mensaje = parametros[8].Value.ToString();
+            resultado = Convert.ToInt32(parametros[9].Value);
+
 
             return resultado;
         }
+
 
         /// <summary>
         /// Edita los datos de un evento existente en la base de datos.
@@ -193,7 +194,8 @@ namespace DAL
                 return new BE.Evento
                 {
                     IdEvento = Convert.ToInt32(fila["id"]),
-                    Capacidad = Convert.ToInt32(fila["capacidad"])
+                    Capacidad = Convert.ToInt32(fila["capacidad"]),
+                    Fecha = Convert.ToDateTime(fila["fecha"])
                 };
             }
 
@@ -318,5 +320,35 @@ namespace DAL
 
             return eventos;
         }
+
+        public List<BE.Evento> ListarPorUbicacion()
+        {
+            Conexion conexion = new Conexion();
+
+            List<BE.Evento> eventos = new List<BE.Evento>();
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_ubicacion_eventos");
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Evento unEvento = new BE.Evento();
+
+                // tomar cada fila como se usa en el procedimiento almacenado
+                unEvento.IdEvento = Convert.ToInt32(fila["id"]);
+                unEvento.Nombre = fila["nombre"].ToString();
+
+                BE.Ubicacion ubicacion = new BE.Ubicacion();
+                ubicacion.Calle = $"{fila["Calle"]}";
+                ubicacion.Altura = Convert.ToInt32(fila["Altura"]);
+                ubicacion.Ciudad = $"{fila["Ciudad"]}";
+                ubicacion.Provincia = $"{fila["Provincia"]}";
+                unEvento.Ubicacion = ubicacion;
+
+                eventos.Add(unEvento);
+            }
+
+            return eventos;
+        }
+
     }
 }

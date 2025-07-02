@@ -151,5 +151,11 @@ namespace BLL
             return eventoDAL.ListarEventosConGeolocalizacion();
         }
 
+        public List<BE.Evento> ListarPorUbicacion()
+        {
+            DAL.Evento eventoDAL = new DAL.Evento();
+            return eventoDAL.ListarPorUbicacion();
+        }
+
     }
 }

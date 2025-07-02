@@ -765,7 +765,7 @@ namespace IUVendedor.Controllers
             return View();
         }
         
-mary>
+
         /// Muestra la vista de órdenes para el chef.
         /// </summary>
         [PermisosRol(Models.Rol.Chef)]
@@ -1089,6 +1089,27 @@ mary>
 
             return Json(new { data = TipoEFormateados }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult ListarEventosPorUbicacion()
+        {
+            List<BE.Evento> oLista = new List<BE.Evento>();
+            oLista = new BLL.Evento().ListarPorUbicacion();
+            var eventosFormateados = oLista.Select(e => new
+            {
+                e.IdEvento,
+                e.Nombre,
+                Ubicacion = new
+                {
+                    e.Ubicacion.Calle,
+                    e.Ubicacion.Altura,
+                    e.Ubicacion.Ciudad,
+                    e.Ubicacion.Provincia
+                }
+            });
+            return Json(new { data = eventosFormateados }, JsonRequestBehavior.AllowGet);
+        }
+
 
 
         // USUARIOS
