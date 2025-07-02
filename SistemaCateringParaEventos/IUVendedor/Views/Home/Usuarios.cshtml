@@ -48,36 +48,49 @@
             <div class="modal-body">
                 <div class="row g-2">
                     <input type="hidden" id="id" value="0" />
-                    
+
                     <div class="col-sm-6">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" autocomplete="off">
+                        <input type="text" class="form-control" id="nombre" autocomplete="no">
+                        <span class="text-danger" id="error-nombre"></span>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="apellido" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" id="apellido" autocomplete="off">
+                        <input type="text" class="form-control" id="apellido" autocomplete="no">
+                        <span class="text-danger" id="error-apellido"></span>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" autocomplete="off">
+                        <span class="text-danger" id="error-email"></span>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="¨password" class="form-label">Contraseña</label>
                         <input type="password" class="form-control" id="password" autocomplete="off">
+                        <span class="text-danger" id="error-password"></span>
                     </div>
 
                     <div class="col-sm-6">
                         <label for="rol" class="form-label">Rol</label>
                         <select id="rol" class="form-select">
                         </select>
+                        <span class="text-danger" id="error-rol"></span>
                     </div>
 
                     <input type="hidden" id="fechacreacion" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")" />
 
 
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="msjError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -130,29 +143,27 @@
         type: "GET",
         datatype: "json"
     },
-    columns: [
-        { data: "IdUsuario" },
-        { data: "Nombre" },
-        { data: "Apellido" },
-        { data: "FechaCreacion" },
-        { data: "Email" },
-        {
-            data: "RolUsuario",
-            render: function (data, type, row) {
-                return data.NombreRol;
-            }
-        },
-        {
-            data: null,
-            defaultContent: `
-
+        columns: [
+            { data: "IdUsuario" },
+            { data: "Nombre" },
+            { data: "Apellido" },
+            { data: "Email" },
+            { data: "FechaCreacion" },
+            {
+                data: "RolUsuario",
+                render: function (data) {
+                    return data.NombreRol;
+                }
+            },
+            {
+                data: null,
+                defaultContent: `
             <button class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>
-
         `,
-            orderable: false,
-            searchable: false
-        }
-    ],
+                orderable: false,
+                searchable: false
+            }
+        ],
     language: {
         url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
     }
@@ -216,6 +227,7 @@
                         $('#modalCrearUsuario').modal('hide');
 
                         limpiarFormularioUsuario();
+                        swal("¡Usuario creado exitosamente!", "Presiona OK para continuar", "success");
                     }
                     else {
                         if (data.errores) {
@@ -239,6 +251,13 @@
             }
 
         }
+
+        $('#modalCrearUsuario').on('show.bs.modal', function () {
+            $(".text-danger").text("");
+            $("#msjError").hide().text("");
+            limpiarFormularioUsuario();
+        });
+
 
        $('#tablaUsuario tbody').on('click', '.btn-eliminar', function () {
     var usuario = $(this).closest("tr");

@@ -1093,26 +1093,30 @@ namespace IUVendedor.Controllers
         [HttpPost]
         public JsonResult GuardarUsuario(BE.Usuario usuario)
         {
-            string mensaje = string.Empty;
-            bool exito = true;
+            Dictionary<string, string> errores = new Dictionary<string, string>();
             int nuevoId = 0;
+            bool exito = true;
+            string mensaje = string.Empty;
 
             try
             {
-                if (usuario.IdUsuario == 0)
+                if (usuario.IdUsuario == 0) // Crear
                 {
-                    nuevoId = new BLL.Usuario().CrearUsuario(usuario);
-                    mensaje = "Usuario creado correctamente.";
+                    nuevoId = new BLL.Usuario().CrearUsuario(usuario, out errores);
+                    if (nuevoId == 0) exito = false;
+                    else mensaje = "Usuario creado correctamente.";
                 }
             }
             catch (Exception ex)
             {
                 exito = false;
                 mensaje = ex.Message;
+                errores.Add("general", ex.Message);
             }
 
-            return Json(new { nuevoId = nuevoId, exito = exito, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            return Json(new { resultado = nuevoId, exito = exito, mensaje = mensaje, errores = errores }, JsonRequestBehavior.AllowGet);
         }
+
 
         [HttpPost]
         public JsonResult EliminarUsuario(int Id)
@@ -1192,7 +1196,7 @@ namespace IUVendedor.Controllers
             try
             {
                 var geoBLL = new BLL.Geolocalizacion();
-
+                var ubiBLL = new BLL.Ubicacion();
 
                 var geo = await geoBLL.ObtenerGeolocalizacion(
                     ubicacion.Calle, ubicacion.Altura, ubicacion.Ciudad, ubicacion.Provincia);
@@ -1200,10 +1204,13 @@ namespace IUVendedor.Controllers
                 if (geo == null)
                     return Json(new { resultado = false, mensaje = "No se pudo obtener geolocalización." });
 
+                var ubicacionInicial = ubiBLL.ObtenerUbicacionInicial();
 
-                ubicacion.IdUbicacion = 23;
+                if (ubicacionInicial == null)
+                    return Json(new { resultado = false, mensaje = "No hay ubicaciones en la base de datos" });
 
-                // Llamar al DAL para actualizar ubicación y geolocalización asociada
+                ubicacion.IdUbicacion = ubicacionInicial.IdUbicacion;
+
                 new DAL.Ubicacion().ActualizarUbicacionInicial(ubicacion, geo.Latitud, geo.Longitud);
 
                 return Json(new { resultado = true });
@@ -1213,6 +1220,7 @@ namespace IUVendedor.Controllers
                 return Json(new { resultado = false, mensaje = $"Error: {ex.Message}" });
             }
         }
+
 
 
 

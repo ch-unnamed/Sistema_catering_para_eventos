@@ -1,47 +1,36 @@
-﻿using BE;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Net;
-using System.Net.Http;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-
-namespace BLL
+namespace BE
 {
     public class Geolocalizacion
     {
+		private int _idGeolocalizacion;
 
-        public async Task<BE.Geolocalizacion> ObtenerGeolocalizacion(string calle, int altura, string ciudad, string provincia)
-        {
-            string direccion = $"{calle} {altura}, {ciudad}, {provincia}, Argentina";
-            string apiKey = ConfigurationManager.AppSettings["GoogleMapsApiKey"]; ;
-            string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={WebUtility.UrlEncode(direccion)}&key={apiKey}";
+		public int IdGeolocalizacion
+		{
+			get { return _idGeolocalizacion; }
+			set { _idGeolocalizacion = value; }
+		}
 
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetStringAsync(url);
-                var json = JObject.Parse(response);
+		private decimal _latitud;
 
-                var results = json["results"];
-                if (results != null && results.HasValues)
-                {
-                    var location = results[0]["geometry"]["location"];
+		public decimal Latitud
+		{
+			get { return _latitud; }
+			set { _latitud = value; }
+		}
 
-                    return new BE.Geolocalizacion
-                    {
-                        Latitud = location.Value<decimal>("lat"),
-                        Longitud = location.Value<decimal>("lng")
-                    };
-                }
-            }
+		private decimal _longitud;
 
-            return null;
-        }
+		public decimal  Longitud
+		{
+			get { return _longitud; }
+			set { _longitud = value; }
+		}
 
-
-
-    }
+	}
 }

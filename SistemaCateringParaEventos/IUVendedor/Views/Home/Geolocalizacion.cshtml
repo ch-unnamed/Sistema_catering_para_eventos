@@ -190,7 +190,7 @@
                 .then(resp => resp.json())
                 .then(result => {
                     if (result.resultado) {
-                        swal("Ubicación actualizada con éxito");
+                        swal("Ubicación actualizada con éxito","Exito", "success");
 
                         const nuevaPos = { lat: location.lat(), lng: location.lng() };
                         markerInicial.setPosition(nuevaPos);
@@ -204,7 +204,7 @@
                 })
                 .catch(err => swal("Error: " + err));
         } else {
-            swal("No se pudo obtener coordenadas de esa dirección. Verificá los datos.");
+            swal("No se pudo obtener coordenadas de esa dirección", "Verificá los datos.");
         }
     });
 });
