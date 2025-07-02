@@ -6,23 +6,31 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa un rol dentro del sistema.
+    /// </summary>
     public class Rol
     {
-		private int _idRol;
+        private int _idRol;
 
-		public int IdRol
-		{
-			get { return _idRol; }
-			set { _idRol = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece el identificador único del rol.
+        /// </summary>
+        public int IdRol
+        {
+            get { return _idRol; }
+            set { _idRol = value; }
+        }
 
-		private string _nombre;
+        private string _nombre;
 
-		public string NombreRol
-		{
-			get { return _nombre; }
-			set { _nombre = value; }
-		}
-
-	}
+        /// <summary>
+        /// Obtiene o establece el nombre del rol.
+        /// </summary>
+        public string NombreRol
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
+        }
+    }
 }

@@ -143,6 +143,11 @@ namespace BLL
             return idCotizacion;
         }
 
+        /// <summary>
+        /// Consulta un plato específico por su identificador.
+        /// </summary>
+        /// <param name="idPlato">Identificador único del plato a consultar.</param>
+        /// <returns>Objeto <see cref="BE.Plato"/> correspondiente al identificador proporcionado, o <c>null</c> si no se encuentra.</returns>
         public BE.Plato ConsultarPlato(int idPlato)
         {
             DAL.Plato platoDAL = new DAL.Plato();

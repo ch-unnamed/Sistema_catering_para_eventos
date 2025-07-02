@@ -211,6 +211,14 @@ namespace DAL
             return idCotizacion;
         }
 
+        /// <summary>
+        /// Consulta un plato específico por su identificador.
+        /// </summary>
+        /// <param name="idPlato">Identificador único del plato a consultar.</param>
+        /// <returns>
+        /// Objeto <see cref="BE.Plato"/> con el nombre y precio del plato correspondiente al identificador proporcionado,
+        /// o <c>null</c> si no se encuentra.
+        /// </returns>
         public BE.Plato ConsultarPlato(int idPlato)
         {
             Conexion conexion = new Conexion();
@@ -232,7 +240,7 @@ namespace DAL
                 };
             }
 
-            return null; 
+            return null;
         }
 
     }

@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa una cotización de un evento, incluyendo información del cliente, vendedor, menú, estado y totales.
+    /// </summary>
     public class Cotizacion
     {
         private int _idCotizacion;
+        /// <summary>
+        /// Obtiene o establece el identificador único de la cotización.
+        /// </summary>
         public int IdCotizacion
         {
             get { return _idCotizacion; }
@@ -16,7 +22,9 @@ namespace BE
         }
 
         private Evento _evento;
-
+        /// <summary>
+        /// Obtiene o establece el evento asociado a la cotización.
+        /// </summary>
         public Evento Evento
         {
             get { return _evento; }
@@ -24,6 +32,9 @@ namespace BE
         }
 
         private Cliente _cliente;
+        /// <summary>
+        /// Obtiene o establece el cliente asociado a la cotización.
+        /// </summary>
         public Cliente Cliente
         {
             get { return _cliente; }
@@ -31,6 +42,9 @@ namespace BE
         }
 
         private Usuario _vendedor;
+        /// <summary>
+        /// Obtiene o establece el vendedor responsable de la cotización.
+        /// </summary>
         public Usuario Vendedor
         {
             get { return _vendedor; }
@@ -38,7 +52,9 @@ namespace BE
         }
 
         private Estado _estado;
-
+        /// <summary>
+        /// Obtiene o establece el estado actual de la cotización.
+        /// </summary>
         public Estado Estado
         {
             get { return _estado; }
@@ -46,24 +62,30 @@ namespace BE
         }
 
         private Menu _menu;
-
+        /// <summary>
+        /// Obtiene o establece el menú seleccionado en la cotización.
+        /// </summary>
         public Menu Menu
         {
             get { return _menu; }
             set { _menu = value; }
         }
 
-
         private DateTime _fechaPedido;
+        /// <summary>
+        /// Obtiene o establece la fecha en que se realizó el pedido de la cotización.
+        /// </summary>
         public DateTime FechaPedido
         {
             get { return _fechaPedido; }
             set { _fechaPedido = value; }
         }
 
-        //El total se deberia calcular en base a la cantidad de platos o el menu
-
         private decimal _total;
+        /// <summary>
+        /// Obtiene o establece el total de la cotización. No puede ser negativo.
+        /// </summary>
+        /// <exception cref="ArgumentException">Se lanza si el valor es negativo.</exception>
         public decimal Total
         {
             get { return _total; }
@@ -81,6 +103,9 @@ namespace BE
         }
 
         private DateTime _fechaRealizacion;
+        /// <summary>
+        /// Obtiene o establece la fecha de realización de la cotización.
+        /// </summary>
         public DateTime FechaRealizacion
         {
             get { return _fechaRealizacion; }

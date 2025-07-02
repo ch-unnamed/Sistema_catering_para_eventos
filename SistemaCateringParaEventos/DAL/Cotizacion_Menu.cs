@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
+    /// <summary>
+    /// Clase de acceso a datos para la gestión de la relación Cotización-Menú.
+    /// </summary>
     public class Cotizacion_Menu
     {
+        /// <summary>
+        /// Lista todas las relaciones Cotización-Menú obtenidas desde la base de datos.
+        /// </summary>
+        /// <returns>Lista de objetos <see cref="BE.Cotizacion_Menu"/>.</returns>
         public List<BE.Cotizacion_Menu> Listar()
         {
             Conexion conexion = new Conexion();
@@ -25,12 +32,11 @@ namespace DAL
 
                 BE.Cotizacion unaCotizacion = new BE.Cotizacion();
                 unaCotizacion.IdCotizacion = Convert.ToInt32(fila["cotizacion_id"]);
-                unaContizacionMenus.Cotizacion = unaCotizacion; 
+                unaContizacionMenus.Cotizacion = unaCotizacion;
 
                 BE.Menu unMenu = new BE.Menu();
                 unMenu.Id = Convert.ToInt32(fila["id"]);
                 unaContizacionMenus.Menu = unMenu;
-
 
                 unaContizacionMenus.Estado = Convert.ToInt32(fila["estado"]);
 
@@ -40,6 +46,12 @@ namespace DAL
             return contizacionMenus;
         }
 
+        /// <summary>
+        /// Edita una relación Cotización-Menú en la base de datos utilizando un procedimiento almacenado.
+        /// </summary>
+        /// <param name="cotizacionMenu">Objeto <see cref="BE.Cotizacion_Menu"/> con los datos a editar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>True si la edición fue exitosa, false en caso contrario.</returns>
         public bool EditarCotizacionMenu(BE.Cotizacion_Menu cotizacionMenu, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -49,10 +61,10 @@ namespace DAL
 
             SqlParameter[] parametrosSql = new SqlParameter[]
             {
-                new SqlParameter("@Id", cotizacionMenu.Id),
-                new SqlParameter("@Estado", cotizacionMenu.Estado),
-                new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
-                new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
+                    new SqlParameter("@Id", cotizacionMenu.Id),
+                    new SqlParameter("@Estado", cotizacionMenu.Estado),
+                    new SqlParameter("@Mensaje", SqlDbType.VarChar, 500) { Direction = ParameterDirection.Output },
+                    new SqlParameter("@Resultado", SqlDbType.Bit) { Direction = ParameterDirection.Output }
             };
 
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_editar_cotizacion_menu", parametrosSql);

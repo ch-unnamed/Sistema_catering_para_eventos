@@ -6,31 +6,42 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa la relación entre un plato y un insumo, indicando la cantidad de insumo utilizada en el plato.
+    /// </summary>
     public class PlatoInsumo
     {
-		private Plato _plato;
+        private Plato _plato;
 
-		public Plato Plato
-		{
-			get { return _plato; }
-			set { _plato = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece el plato asociado.
+        /// </summary>
+        public Plato Plato
+        {
+            get { return _plato; }
+            set { _plato = value; }
+        }
 
+        private Insumo _insumo;
 
-		private Insumo _insumo;
+        /// <summary>
+        /// Obtiene o establece el insumo asociado.
+        /// </summary>
+        public Insumo Insumo
+        {
+            get { return _insumo; }
+            set { _insumo = value; }
+        }
 
-		public Insumo Insumo
-		{
-			get { return _insumo; }
-			set { _insumo = value; }
-		}
+        private int _cantidad;
 
-		private int _cantidad;
-
-		public int Cantidad
-		{
-			get { return _cantidad; }
-			set { _cantidad = value; }
-		}
-	}
+        /// <summary>
+        /// Obtiene o establece la cantidad del insumo utilizada en el plato.
+        /// </summary>
+        public int Cantidad
+        {
+            get { return _cantidad; }
+            set { _cantidad = value; }
+        }
+    }
 }

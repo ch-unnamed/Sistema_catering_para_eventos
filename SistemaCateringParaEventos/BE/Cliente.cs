@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa un cliente con información personal y de contacto.
+    /// </summary>
     public class Cliente
     {
         private int _idCliente;
+
+        /// <summary>
+        /// Obtiene o establece el identificador único del cliente.
+        /// </summary>
         public int IdCliente
         {
             get { return _idCliente; }
@@ -16,6 +23,10 @@ namespace BE
         }
 
         private long _dni;
+
+        /// <summary>
+        /// Obtiene o establece el DNI del cliente.
+        /// </summary>
         public long Dni
         {
             get { return _dni; }
@@ -23,6 +34,10 @@ namespace BE
         }
 
         private string _email;
+
+        /// <summary>
+        /// Obtiene o establece el correo electrónico del cliente.
+        /// </summary>
         public string Email
         {
             get { return _email; }
@@ -30,6 +45,10 @@ namespace BE
         }
 
         private DateTime _fechaCreacion;
+
+        /// <summary>
+        /// Obtiene o establece la fecha de creación del cliente.
+        /// </summary>
         public DateTime FechaCreacion
         {
             get { return _fechaCreacion; }
@@ -37,6 +56,10 @@ namespace BE
         }
 
         private string _nombre;
+
+        /// <summary>
+        /// Obtiene o establece el nombre del cliente.
+        /// </summary>
         public string Nombre
         {
             get { return _nombre; }
@@ -44,6 +67,10 @@ namespace BE
         }
 
         private string _apellido;
+
+        /// <summary>
+        /// Obtiene o establece el apellido del cliente.
+        /// </summary>
         public string Apellido
         {
             get { return _apellido; }
@@ -51,6 +78,10 @@ namespace BE
         }
 
         private string _region;
+
+        /// <summary>
+        /// Obtiene o establece la región del cliente.
+        /// </summary>
         public string Region
         {
             get { return _region; }
@@ -58,6 +89,10 @@ namespace BE
         }
 
         private long _telefono;
+
+        /// <summary>
+        /// Obtiene o establece el número de teléfono del cliente.
+        /// </summary>
         public long Telefono
         {
             get { return _telefono; }
@@ -66,11 +101,13 @@ namespace BE
 
         private Tipo_Cliente _tipo_cliente;
 
+        /// <summary>
+        /// Obtiene o establece el tipo de cliente.
+        /// </summary>
         public Tipo_Cliente Tipo_Cliente
         {
             get { return _tipo_cliente; }
             set { _tipo_cliente = value; }
         }
-
     }
 }

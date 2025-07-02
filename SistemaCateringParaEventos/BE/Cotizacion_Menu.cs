@@ -6,39 +6,53 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa la relación entre una cotización y un menú, incluyendo su estado.
+    /// </summary>
     public class Cotizacion_Menu
     {
-		private int id;
+        private int id;
 
-		public int Id
-		{
-			get { return id; }
-			set { id = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece el identificador único de la relación Cotizacion_Menu.
+        /// </summary>
+        public int Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
 
-		private Cotizacion _cotizacion;
+        private Cotizacion _cotizacion;
 
-		public Cotizacion Cotizacion
-		{
-			get { return _cotizacion; }
-			set { _cotizacion = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece la cotización asociada.
+        /// </summary>
+        public Cotizacion Cotizacion
+        {
+            get { return _cotizacion; }
+            set { _cotizacion = value; }
+        }
 
-		private Menu _menu;
+        private Menu _menu;
 
-		public Menu Menu
-		{
-			get { return _menu; }
-			set { _menu = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece el menú asociado.
+        /// </summary>
+        public Menu Menu
+        {
+            get { return _menu; }
+            set { _menu = value; }
+        }
 
-		private int _estado;
+        private int _estado;
 
-		public int Estado
-		{
-			get { return _estado; }
-			set { _estado = value; }
-		}
-
-	}
+        /// <summary>
+        /// Obtiene o establece el estado de la relación Cotizacion_Menu.
+        /// </summary>
+        public int Estado
+        {
+            get { return _estado; }
+            set { _estado = value; }
+        }
+    }
 }

@@ -6,31 +6,51 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa una ubicación geográfica con latitud y longitud.
+    /// </summary>
     public class Geolocalizacion
     {
-		private int _idGeolocalizacion;
+        /// <summary>
+        /// Identificador único de la geolocalización.
+        /// </summary>
+        private int _idGeolocalizacion;
 
-		public int IdGeolocalizacion
-		{
-			get { return _idGeolocalizacion; }
-			set { _idGeolocalizacion = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece el identificador único de la geolocalización.
+        /// </summary>
+        public int IdGeolocalizacion
+        {
+            get { return _idGeolocalizacion; }
+            set { _idGeolocalizacion = value; }
+        }
 
-		private decimal _latitud;
+        /// <summary>
+        /// Latitud de la ubicación geográfica.
+        /// </summary>
+        private decimal _latitud;
 
-		public decimal Latitud
-		{
-			get { return _latitud; }
-			set { _latitud = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece la latitud de la ubicación geográfica.
+        /// </summary>
+        public decimal Latitud
+        {
+            get { return _latitud; }
+            set { _latitud = value; }
+        }
 
-		private decimal _longitud;
+        /// <summary>
+        /// Longitud de la ubicación geográfica.
+        /// </summary>
+        private decimal _longitud;
 
-		public decimal  Longitud
-		{
-			get { return _longitud; }
-			set { _longitud = value; }
-		}
-
-	}
+        /// <summary>
+        /// Obtiene o establece la longitud de la ubicación geográfica.
+        /// </summary>
+        public decimal Longitud
+        {
+            get { return _longitud; }
+            set { _longitud = value; }
+        }
+    }
 }

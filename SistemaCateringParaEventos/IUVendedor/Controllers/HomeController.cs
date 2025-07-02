@@ -765,6 +765,9 @@ namespace IUVendedor.Controllers
             return View();
         }
         
+mary>
+        /// Muestra la vista de órdenes para el chef.
+        /// </summary>
         [PermisosRol(Models.Rol.Chef)]
         public ActionResult Ordenes()
         {
@@ -881,17 +884,27 @@ namespace IUVendedor.Controllers
         }
 
 
+        /// <summary>
+        /// Edita una relación Cotización-Menú después de validar los datos.
+        /// </summary>
+        /// <param name="oCotizacionMenu">La relación Cotización-Menú a editar.</param>
+        /// <returns>Resultado de la edición y posibles errores de validación.</returns>
         [HttpPost]
         public JsonResult EditarCotizacionMenu(BE.Cotizacion_Menu oCotizacionMenu)
         {
             Dictionary<string, string> errores;
             object resultado;
 
-            resultado = new BLL.Cotizacion_Menu().EditarCotizacionMenu(oCotizacionMenu, out errores);        
+            resultado = new BLL.Cotizacion_Menu().EditarCotizacionMenu(oCotizacionMenu, out errores);
 
             return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Lista las relaciones Cotización-Menú-Plato según el identificador proporcionado.
+        /// </summary>
+        /// <param name="cotizacionMenuPlatoId">Identificador de la relación Cotización-Menú-Plato.</param>
+        /// <returns>Lista de platos asociados a la cotización-menú.</returns>
         [HttpGet]
         public JsonResult ListarCotizacionMenuPlato(int cotizacionMenuPlatoId)
         {
@@ -936,6 +949,10 @@ namespace IUVendedor.Controllers
 
 
 
+        /// <summary>
+        /// Lista todas las configuraciones de empresa.
+        /// </summary>
+        /// <returns>Lista de configuraciones de empresa.</returns>
         [HttpGet]
         public JsonResult ListarConfiguraciones()
         {
@@ -953,6 +970,11 @@ namespace IUVendedor.Controllers
             return Json(new { data = configuraciones }, JsonRequestBehavior.AllowGet); // SE PUEDEN CAMBIAR LOS VALORES DEL JSON
         }
 
+        /// <summary>
+        /// Guarda una configuración de empresa nueva o edita una existente.
+        /// </summary>
+        /// <param name="oConfiguracion">Configuración de empresa a guardar o editar.</param>
+        /// <returns>Resultado de la operación y posibles errores de validación.</returns>
         [HttpPost]
         public JsonResult GuardarConfiguracion(BE.Configuracion_Empresa oConfiguracion)
         {
@@ -971,6 +993,11 @@ namespace IUVendedor.Controllers
             return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Elimina una configuración de empresa por su identificador.
+        /// </summary>
+        /// <param name="idConfiguracion">Identificador de la configuración a eliminar.</param>
+        /// <returns>Resultado de la operación y mensaje asociado.</returns>
         [HttpPost]
         public JsonResult EliminarConfiguracion(int idConfiguracion)
         {

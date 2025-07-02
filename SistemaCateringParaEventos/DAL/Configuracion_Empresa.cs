@@ -90,6 +90,12 @@ namespace DAL
 
         }
 
+        /// <summary>
+        /// Crea una nueva configuración de empresa en la base de datos.
+        /// </summary>
+        /// <param name="configuracion">Instancia de <see cref="BE.Configuracion_Empresa"/> con los datos a registrar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación (éxito o error).</param>
+        /// <returns>Identificador de la configuración creada, o 0 si hubo error.</returns>
         public int CrearConfiguracion(BE.Configuracion_Empresa configuracion, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -114,6 +120,12 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Edita una configuración de empresa existente en la base de datos.
+        /// </summary>
+        /// <param name="configuracion">Instancia de <see cref="BE.Configuracion_Empresa"/> con los datos a modificar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación (éxito o error).</param>
+        /// <returns>True si la edición fue exitosa, false en caso contrario.</returns>
         public bool EditarConfiguracion(BE.Configuracion_Empresa configuracion, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -138,6 +150,12 @@ namespace DAL
             return resultado;
         }
 
+        /// <summary>
+        /// Elimina una configuración de empresa de la base de datos.
+        /// </summary>
+        /// <param name="idConfiguracion">Identificador de la configuración a eliminar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación (éxito o error).</param>
+        /// <returns>True si la eliminación fue exitosa, false en caso contrario.</returns>
         public bool EliminarConfiguracion(int idConfiguracion, out string mensaje)
         {
             Conexion conexion = new Conexion();
@@ -158,7 +176,6 @@ namespace DAL
             resultado = Convert.ToBoolean(parametrosSql[2].Value);
 
             return resultado;
-
         }
     }
 }

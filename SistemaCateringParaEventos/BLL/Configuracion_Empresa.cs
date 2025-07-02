@@ -35,13 +35,21 @@ namespace BLL
             return configuracionDAL.consultarCliente(cliente_id);
         }
 
+        /// <summary>
+        /// Lista todas las configuraciones de empresa existentes.
+        /// </summary>
+        /// <returns>Lista de instancias de <see cref="BE.Configuracion_Empresa"/>.</returns>
         public List<BE.Configuracion_Empresa> Listar()
         {
             DAL.Configuracion_Empresa configuracionDAL = new DAL.Configuracion_Empresa();
-
             return configuracionDAL.Listar();
         }
 
+        /// <summary>
+        /// Valida los datos de una configuración de empresa.
+        /// </summary>
+        /// <param name="configuracion">Instancia de <see cref="BE.Configuracion_Empresa"/> a validar.</param>
+        /// <returns>Diccionario con los errores encontrados, donde la clave es el campo y el valor es el mensaje de error.</returns>
         public Dictionary<string, string> ValidarConfiguracion(BE.Configuracion_Empresa configuracion)
         {
             var errores = new Dictionary<string, string>();
@@ -56,6 +64,12 @@ namespace BLL
             return errores;
         }
 
+        /// <summary>
+        /// Crea una nueva configuración de empresa si los datos son válidos.
+        /// </summary>
+        /// <param name="configuracion">Instancia de <see cref="BE.Configuracion_Empresa"/> a crear.</param>
+        /// <param name="errores">Diccionario de errores de validación encontrados.</param>
+        /// <returns>Identificador de la configuración creada, o 0 si hay errores.</returns>
         public int CrearConfiguracion(BE.Configuracion_Empresa configuracion, out Dictionary<string, string> errores)
         {
             DAL.Configuracion_Empresa configuracionDAL = new DAL.Configuracion_Empresa();
@@ -67,6 +81,12 @@ namespace BLL
                 return 0;
         }
 
+        /// <summary>
+        /// Edita una configuración de empresa existente si los datos son válidos.
+        /// </summary>
+        /// <param name="configuracion">Instancia de <see cref="BE.Configuracion_Empresa"/> a editar.</param>
+        /// <param name="errores">Diccionario de errores de validación encontrados.</param>
+        /// <returns>True si la edición fue exitosa, false en caso contrario.</returns>
         public bool EditarConfiguracion(BE.Configuracion_Empresa configuracion, out Dictionary<string, string> errores)
         {
             DAL.Configuracion_Empresa configuracionDAL = new DAL.Configuracion_Empresa();
@@ -78,6 +98,12 @@ namespace BLL
                 return false;
         }
 
+        /// <summary>
+        /// Elimina una configuración de empresa por su identificador.
+        /// </summary>
+        /// <param name="idConfiguracion">Identificador de la configuración a eliminar.</param>
+        /// <param name="mensaje">Mensaje resultante de la operación.</param>
+        /// <returns>True si la eliminación fue exitosa, false en caso contrario.</returns>
         public bool EliminarConfiguracion(int idConfiguracion, out string mensaje)
         {
             DAL.Configuracion_Empresa configuracionDAL = new DAL.Configuracion_Empresa();

@@ -135,6 +135,13 @@ namespace BLL
             }
         }
 
+        /// <summary>
+        /// Obtiene un insumo por su nombre exacto.
+        /// </summary>
+        /// <param name="nombre">Nombre exacto del insumo a buscar.</param>
+        /// <returns>
+        /// Un objeto <see cref="BE.Insumo"/> si se encuentra una coincidencia; de lo contrario, <c>null</c>.
+        /// </returns>
         public BE.Insumo ObtenerPorNombre(string nombre)
         {
             if (string.IsNullOrWhiteSpace(nombre))

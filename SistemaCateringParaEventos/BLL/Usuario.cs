@@ -11,21 +11,39 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
+    /// <summary>
+    /// Proporciona métodos de negocio para la gestión de usuarios.
+    /// </summary>
     public class Usuario
     {
+        /// <summary>
+        /// Instancia de la capa de acceso a datos para usuarios.
+        /// </summary>
         private readonly DAL.Usuario oUsuarioDAL;
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="Usuario"/>.
+        /// </summary>
         public Usuario()
         {
             oUsuarioDAL = new DAL.Usuario();
         }
 
+        /// <summary>
+        /// Obtiene una lista de todos los usuarios.
+        /// </summary>
+        /// <returns>Lista de objetos <see cref="BE.Usuario"/>.</returns>
         public List<BE.Usuario> ListarUsuario()
         {
             DAL.Usuario usuarioDAL = new DAL.Usuario();
             return usuarioDAL.ListarUsuario();
         }
 
+        /// <summary>
+        /// Valida si el email proporcionado tiene un formato correcto.
+        /// </summary>
+        /// <param name="email">Email a validar.</param>
+        /// <returns>True si el email es válido, false en caso contrario.</returns>
         bool EmailValido(string email)
         {
             try
@@ -39,6 +57,11 @@ namespace BLL
             }
         }
 
+        /// <summary>
+        /// Valida los datos de un usuario.
+        /// </summary>
+        /// <param name="usuario">Usuario a validar.</param>
+        /// <returns>Diccionario con los errores encontrados, si los hay.</returns>
         public Dictionary<string, string> ValidarUsuario(BE.Usuario usuario)
         {
             var errores = new Dictionary<string, string>();
@@ -61,6 +84,12 @@ namespace BLL
             return errores;
         }
 
+        /// <summary>
+        /// Crea un nuevo usuario si los datos son válidos.
+        /// </summary>
+        /// <param name="usuario">Usuario a crear.</param>
+        /// <param name="errores">Diccionario de errores de validación.</param>
+        /// <returns>Id del usuario creado, o 0 si hay errores.</returns>
         public int CrearUsuario(BE.Usuario usuario, out Dictionary<string, string> errores)
         {
             DAL.Usuario userDAL = new DAL.Usuario();
@@ -72,7 +101,11 @@ namespace BLL
                 return 0;
         }
 
-
+        /// <summary>
+        /// Elimina un usuario por su identificador.
+        /// </summary>
+        /// <param name="Id">Id del usuario a eliminar.</param>
+        /// <returns>True si se eliminó correctamente, false si hubo error.</returns>
         public bool EliminarUsuario(int Id)
         {
             DAL.Usuario usuarioDAL = new DAL.Usuario();
@@ -88,13 +121,15 @@ namespace BLL
             }
         }
 
-
+        /// <summary>
+        /// Obtiene un usuario con rol de vendedor según el id de rol.
+        /// </summary>
+        /// <param name="rol_id">Id del rol.</param>
+        /// <returns>Usuario con el rol especificado.</returns>
         public BE.Usuario idVendedor(int rol_id)
         {
             DAL.Usuario usuario = new DAL.Usuario();
-
             return usuario.idVendedor(rol_id);
         }
-
     }
 }

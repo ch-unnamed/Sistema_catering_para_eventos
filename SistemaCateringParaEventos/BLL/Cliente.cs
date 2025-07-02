@@ -11,15 +11,26 @@ using System.Net.Mail;
 
 namespace BLL
 {
+    /// <summary>
+    /// Lógica de negocio para la gestión de clientes.
+    /// </summary>
     public class Cliente
     {
+        /// <summary>
+        /// Obtiene la lista de todos los clientes.
+        /// </summary>
+        /// <returns>Lista de objetos BE.Cliente.</returns>
         public List<BE.Cliente> Listar()
         {
             DAL.Cliente clienteDAL = new DAL.Cliente();
             return clienteDAL.Listar();
         }
 
-        // validar email con MailAddres
+        /// <summary>
+        /// Valida si el email tiene un formato correcto.
+        /// </summary>
+        /// <param name="email">Email a validar.</param>
+        /// <returns>True si el email es válido, false en caso contrario.</returns>
         bool EmailValido(string email)
         {
             try
@@ -33,6 +44,11 @@ namespace BLL
             }
         }
 
+        /// <summary>
+        /// Valida los datos de un cliente.
+        /// </summary>
+        /// <param name="cliente">Cliente a validar.</param>
+        /// <returns>Diccionario con los errores encontrados, vacío si no hay errores.</returns>
         public Dictionary<string, string> ValidarCliente(BE.Cliente cliente)
         {
             var errores = new Dictionary<string, string>();
@@ -61,17 +77,29 @@ namespace BLL
             return errores;
         }
 
+        /// <summary>
+        /// Crea un nuevo cliente si los datos son válidos.
+        /// </summary>
+        /// <param name="cliente">Cliente a crear.</param>
+        /// <param name="errores">Diccionario de errores de validación.</param>
+        /// <returns>Id del cliente creado, o 0 si hay errores.</returns>
         public int CrearCliente(BE.Cliente cliente, out Dictionary<string, string> errores)
         {
             DAL.Cliente clienteDAL = new DAL.Cliente();
             errores = ValidarCliente(cliente);
 
-            if(errores.Count == 0)
+            if (errores.Count == 0)
                 return clienteDAL.CrearCliente(cliente, out _);
             else
                 return 0;
         }
 
+        /// <summary>
+        /// Edita un cliente existente si los datos son válidos.
+        /// </summary>
+        /// <param name="cliente">Cliente a editar.</param>
+        /// <param name="errores">Diccionario de errores de validación.</param>
+        /// <returns>True si la edición fue exitosa, false en caso contrario.</returns>
         public bool EditarCliente(BE.Cliente cliente, out Dictionary<string, string> errores)
         {
             DAL.Cliente clienteDAL = new DAL.Cliente();
@@ -83,12 +111,23 @@ namespace BLL
                 return false;
         }
 
+        /// <summary>
+        /// Elimina un cliente por su identificador.
+        /// </summary>
+        /// <param name="idCliente">Id del cliente a eliminar.</param>
+        /// <param name="mensaje">Mensaje de resultado de la operación.</param>
+        /// <returns>True si la eliminación fue exitosa, false en caso contrario.</returns>
         public bool EliminarCliente(int idCliente, out string mensaje)
         {
             DAL.Cliente clienteDAL = new DAL.Cliente();
             return clienteDAL.EliminarCliente(idCliente, out mensaje);
         }
 
+        /// <summary>
+        /// Obtiene la cantidad de registros asociados a un cliente.
+        /// </summary>
+        /// <param name="cliente_id">Id del cliente.</param>
+        /// <returns>Cantidad de registros encontrados.</returns>
         public int cantidadCliente(int cliente_id)
         {
             DAL.Cliente cliente = new DAL.Cliente();
@@ -96,6 +135,11 @@ namespace BLL
             return cliente.cantidadCliente(cliente_id);
         }
 
+        /// <summary>
+        /// Obtiene el cliente por su identificador.
+        /// </summary>
+        /// <param name="cliente_id">Id del cliente.</param>
+        /// <returns>Objeto BE.Cliente correspondiente al id.</returns>
         public BE.Cliente dniCliente(int cliente_id)
         {
             DAL.Cliente clienteDAL = new DAL.Cliente();

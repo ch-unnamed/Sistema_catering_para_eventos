@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa la relación entre una categoría y una temporada.
+    /// </summary>
     public class Categoria_Temporada
     {
         private int _idCategoriaTemporada;
+
+        /// <summary>
+        /// Obtiene o establece el identificador único de la categoría-temporada.
+        /// </summary>
         public int IdCategoriaTemporada
         {
             get { return _idCategoriaTemporada; }
@@ -16,6 +23,10 @@ namespace BE
         }
 
         private string _nombre;
+
+        /// <summary>
+        /// Obtiene o establece el nombre de la categoría-temporada.
+        /// </summary>
         public string Nombre
         {
             get { return _nombre; }

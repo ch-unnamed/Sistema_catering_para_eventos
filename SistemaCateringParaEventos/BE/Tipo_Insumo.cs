@@ -6,23 +6,31 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa un tipo de insumo con identificador y nombre.
+    /// </summary>
     public class Tipo_Insumo
     {
-		private int _id;
+        private int _id;
 
-		public int Id
-		{
-			get { return _id; }
-			set { _id = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece el identificador único del tipo de insumo.
+        /// </summary>
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
 
-		private string _nombre;
+        private string _nombre;
 
-		public string Nombre
-		{
-			get { return _nombre; }
-			set { _nombre = value; }
-		}
-
-	}
+        /// <summary>
+        /// Obtiene o establece el nombre del tipo de insumo.
+        /// </summary>
+        public string Nombre
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
+        }
+    }
 }

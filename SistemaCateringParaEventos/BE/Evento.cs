@@ -7,9 +7,16 @@ using System.Threading.Tasks;
 namespace BE
 {
 
+    /// <summary>
+    /// Representa un evento con información relevante como nombre, capacidad, ubicación, tipo, temporada y fecha.
+    /// </summary>
     public class Evento
     {
         private int _idEvento;
+
+        /// <summary>
+        /// Obtiene o establece el identificador único del evento.
+        /// </summary>
         public int IdEvento
         {
             get { return _idEvento; }
@@ -17,6 +24,10 @@ namespace BE
         }
 
         private string _nombre;
+
+        /// <summary>
+        /// Obtiene o establece el nombre del evento.
+        /// </summary>
         public string Nombre
         {
             get { return _nombre; }
@@ -24,6 +35,12 @@ namespace BE
         }
 
         private int _capacidad;
+
+        /// <summary>
+        /// Obtiene o establece la capacidad máxima de asistentes al evento.
+        /// Debe ser mayor a 0.
+        /// </summary>
+        /// <exception cref="ArgumentException">Se lanza si el valor es menor o igual a 0.</exception>
         public int Capacidad
         {
             get { return _capacidad; }
@@ -40,8 +57,11 @@ namespace BE
             }
         }
 
-
         private Ubicacion _ubicacion;
+
+        /// <summary>
+        /// Obtiene o establece la ubicación donde se realiza el evento.
+        /// </summary>
         public Ubicacion Ubicacion
         {
             get { return _ubicacion; }
@@ -50,6 +70,9 @@ namespace BE
 
         private Tipo_Evento _tipo_evento;
 
+        /// <summary>
+        /// Obtiene o establece el tipo de evento.
+        /// </summary>
         public Tipo_Evento Tipo_Evento
         {
             get { return _tipo_evento; }
@@ -58,6 +81,9 @@ namespace BE
 
         private Temporada _temporada;
 
+        /// <summary>
+        /// Obtiene o establece la temporada a la que pertenece el evento.
+        /// </summary>
         public Temporada Temporada
         {
             get { return _temporada; }
@@ -65,6 +91,10 @@ namespace BE
         }
 
         private DateTime _fecha;
+
+        /// <summary>
+        /// Obtiene o establece la fecha en la que se realiza el evento.
+        /// </summary>
         public DateTime Fecha
         {
             get { return _fecha; }

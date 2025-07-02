@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa un plato del menú, incluyendo sus propiedades básicas como identificador, nombre, precio, descripción, fecha de creación e insumos asociados.
+    /// </summary>
     public class Plato
     {
         private int _id;
 
+        /// <summary>
+        /// Identificador único del plato.
+        /// </summary>
         public int Id
         {
             get { return _id; }
@@ -18,6 +24,9 @@ namespace BE
 
         private string _nombre;
 
+        /// <summary>
+        /// Nombre del plato.
+        /// </summary>
         public string Nombre
         {
             get { return _nombre; }
@@ -26,6 +35,9 @@ namespace BE
 
         private decimal _precio;
 
+        /// <summary>
+        /// Precio del plato.
+        /// </summary>
         public decimal Precio
         {
             get { return _precio; }
@@ -34,6 +46,9 @@ namespace BE
 
         private string _descripcion;
 
+        /// <summary>
+        /// Descripción del plato.
+        /// </summary>
         public string Descripcion
         {
             get { return _descripcion; }
@@ -42,6 +57,9 @@ namespace BE
 
         private DateTime _fechaDeCreacion;
 
+        /// <summary>
+        /// Fecha de creación del plato.
+        /// </summary>
         public DateTime FechaDeCreacion
         {
             get { return _fechaDeCreacion; }
@@ -50,12 +68,13 @@ namespace BE
 
         private List<Insumo> _insumos;
 
+        /// <summary>
+        /// Lista de insumos asociados al plato.
+        /// </summary>
         public List<Insumo> Insumos
         {
             get { return _insumos; }
             set { _insumos = value; }
         }
-
-
     }
 }

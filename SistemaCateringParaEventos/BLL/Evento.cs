@@ -141,6 +141,10 @@ namespace BLL
             return evento.nombreEvento(evento_id);
         }
 
+        /// <summary>
+        /// Lista todos los eventos que cuentan con información de geolocalización asociada.
+        /// </summary>
+        /// <returns>Lista de objetos BE.Evento con datos de geolocalización.</returns>
         public List<BE.Evento> ListarEventosConGeolocalizacion()
         {
             DAL.Evento eventoDAL = new DAL.Evento();

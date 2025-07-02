@@ -6,23 +6,37 @@ using System.Threading.Tasks;
 
 namespace BE
 {
+    /// <summary>
+    /// Representa un tipo de cliente en el sistema.
+    /// </summary>
     public class Tipo_Cliente
     {
-		private int _id_tipo_cliente;
+        /// <summary>
+        /// Identificador único del tipo de cliente.
+        /// </summary>
+        private int _id_tipo_cliente;
 
-		public int Id_Tipo_Cliente
-		{
-			get { return _id_tipo_cliente; }
-			set { _id_tipo_cliente = value; }
-		}
+        /// <summary>
+        /// Obtiene o establece el identificador único del tipo de cliente.
+        /// </summary>
+        public int Id_Tipo_Cliente
+        {
+            get { return _id_tipo_cliente; }
+            set { _id_tipo_cliente = value; }
+        }
 
-		private string _nombre;
+        /// <summary>
+        /// Nombre descriptivo del tipo de cliente.
+        /// </summary>
+        private string _nombre;
 
-		public string Nombre
-		{
-			get { return _nombre; }
-			set { _nombre = value; }
-		}
-
-	}
+        /// <summary>
+        /// Obtiene o establece el nombre del tipo de cliente.
+        /// </summary>
+        public string Nombre
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
+        }
+    }
 }

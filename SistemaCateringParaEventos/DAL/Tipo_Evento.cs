@@ -8,9 +8,20 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
+    /// <summary>
+    /// Proporciona métodos para acceder y manipular los tipos de evento en la base de datos.
+    /// </summary>
     public class Tipo_Evento
     {
+        /// <summary>
+        /// Instancia de la clase <see cref="Conexion"/> para gestionar la conexión a la base de datos.
+        /// </summary>
         private readonly Conexion conexion = new Conexion();
+
+        /// <summary>
+        /// Obtiene una lista de todos los tipos de evento disponibles desde la base de datos.
+        /// </summary>
+        /// <returns>Lista de objetos <see cref="BE.Tipo_Evento"/> que representan los tipos de evento.</returns>
         public List<BE.Tipo_Evento> ListarTipoEvento()
         {
             Conexion conexion = new Conexion();
@@ -31,6 +42,12 @@ namespace DAL
 
             return tipos;
         }
+
+        /// <summary>
+        /// Obtiene un tipo de evento específico por su identificador único.
+        /// </summary>
+        /// <param name="idTipoEvento">Identificador único del tipo de evento.</param>
+        /// <returns>Objeto <see cref="BE.Tipo_Evento"/> si se encuentra; de lo contrario, <c>null</c>.</returns>
         public BE.Tipo_Evento ObtenerTipoEventoPorId(int idTipoEvento)
         {
             Conexion conexion = new Conexion();
@@ -49,6 +66,5 @@ namespace DAL
                 Nombre = row["nombre"].ToString()
             };
         }
-
     }
 }
