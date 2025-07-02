@@ -1,36 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using BE;
+using Newtonsoft.Json;
+using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BE
+namespace BLL
 {
     public class Geolocalizacion
     {
-		private int _idGeolocalizacion;
+        public async Task<BE.Geolocalizacion> ObtenerGeolocalizacion(string calle, int altura, string ciudad, string provincia)
+        {
+            try
+            {
+                string direccion = $"{calle} {altura}, {ciudad}, {provincia}, Argentina";
+                string apiKey = System.Configuration.ConfigurationManager.AppSettings["ApiKeyGoogleMaps"];
+                string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(direccion)}&key={apiKey}";
 
-		public int IdGeolocalizacion
-		{
-			get { return _idGeolocalizacion; }
-			set { _idGeolocalizacion = value; }
-		}
+                using (HttpClient client = new HttpClient())
+                {
+                    var response = await client.GetAsync(url);
 
-		private decimal _latitud;
+                    if (!response.IsSuccessStatusCode)
+                        return null;
 
-		public decimal Latitud
-		{
-			get { return _latitud; }
-			set { _latitud = value; }
-		}
+                    var json = await response.Content.ReadAsStringAsync();
+                    dynamic resultado = JsonConvert.DeserializeObject(json);
 
-		private decimal _longitud;
+                    if (resultado.status != "OK")
+                        return null;
 
-		public decimal  Longitud
-		{
-			get { return _longitud; }
-			set { _longitud = value; }
-		}
+                    var location = resultado.results[0].geometry.location;
 
-	}
+                    return new BE.Geolocalizacion
+                    {
+                        Latitud = (decimal)location.lat,
+                        Longitud = (decimal)location.lng
+                    };
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
 }
