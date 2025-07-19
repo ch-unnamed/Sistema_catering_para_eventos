@@ -7,7 +7,8 @@
         $("#apellido").val("");
         $("#dni").val("");
         $("#email").val("");
-        $("#region").val("");
+        $("#localidad").val("");
+        $("#provincia").val("");
         $("#telefono").val("");
         $("#tipo_cliente").val("");
 
@@ -24,7 +25,8 @@
             $("#apellido").val(json.Apellido);
             $("#dni").val(json.Dni);
             $("#email").val(json.Email);
-            $("#region").val(json.Region);
+            $("#localidad").val(json.Localidad.Nombre);
+            $("#provincia").val(json.Localidad.Provincia.Nombre);
             $("#telefono").val(json.Telefono);
             $("#tipo_cliente").val(json.Tipo_Cliente.Nombre == 'Personal' ? 1 : 2);
 

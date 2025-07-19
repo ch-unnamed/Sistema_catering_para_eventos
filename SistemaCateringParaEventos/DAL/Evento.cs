@@ -280,47 +280,6 @@ namespace DAL
             return "";
         }
 
-        /// <summary>
-        /// Lista todos los eventos que cuentan con información de geolocalización asociada.
-        /// </summary>
-        /// <returns>Lista de objetos <see cref="BE.Evento"/> con datos de geolocalización.</returns>
-        public List<BE.Evento> ListarEventosConGeolocalizacion()
-        {
-            Conexion conexion = new Conexion();
-
-            List<BE.Evento> eventos = new List<BE.Evento>();
-
-            DataTable dt = conexion.LeerPorStoreProcedure("sp_listar_eventos_geolocalizados");
-
-            foreach (DataRow fila in dt.Rows)
-            {
-                BE.Evento unEvento = new BE.Evento
-                {
-                    IdEvento = Convert.ToInt32(fila["id"]),
-                    Nombre = fila["nombre"].ToString(),
-                    Fecha = Convert.ToDateTime(fila["fecha"]),
-
-                    Ubicacion = new BE.Ubicacion
-                    {
-                        Calle = fila["calle"].ToString(),
-                        Altura = Convert.ToInt32(fila["altura"]),
-                        Ciudad = fila["ciudad"].ToString(),
-                        Provincia = fila["provincia"].ToString(),
-
-                        IdGeolocalizacion = new BE.Geolocalizacion
-                        {
-                            Latitud = Convert.ToDecimal(fila["latitud"]),
-                            Longitud = Convert.ToDecimal(fila["longitud"])
-                        }
-                    }
-                };
-
-                eventos.Add(unEvento);
-            }
-
-            return eventos;
-        }
-
         public List<BE.Evento> ListarPorUbicacion()
         {
             Conexion conexion = new Conexion();

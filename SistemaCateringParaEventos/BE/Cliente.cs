@@ -77,15 +77,15 @@ namespace BE
             set { _apellido = value; }
         }
 
-        private string _region;
+        private Localidad _localidad;
 
         /// <summary>
-        /// Obtiene o establece la región del cliente.
+        /// Obtiene o establece la localidad del cliente.
         /// </summary>
-        public string Region
+        public Localidad Localidad
         {
-            get { return _region; }
-            set { _region = value; }
+            get { return _localidad; }
+            set { _localidad = value; }
         }
 
         private long _telefono;

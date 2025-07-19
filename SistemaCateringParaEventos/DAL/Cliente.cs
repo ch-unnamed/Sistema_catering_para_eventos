@@ -29,12 +29,19 @@ namespace DAL
                 unCliente.IdCliente = Convert.ToInt32(fila["cliente_id"]);
                 unCliente.Dni = Convert.ToInt64(fila["dni"]);
                 unCliente.Email = fila["email"].ToString();
-                unCliente.Region = fila["region"].ToString();
                 unCliente.Telefono = Convert.ToInt64(fila["telefono"]);
                 unCliente.Nombre = fila["nombre"].ToString();
                 unCliente.Apellido = fila["apellido"].ToString();
 
-                // Crear instancia de tipocliente para obtener el ID
+                BE.Provincia provincia = new BE.Provincia();
+                provincia.Nombre = fila["nombre_provincia"].ToString();
+
+                BE.Localidad localidad = new BE.Localidad();
+                localidad.Id = Convert.ToInt32(fila["localidad_id"]);
+                localidad.Nombre = fila["localidad"].ToString();
+                localidad.Provincia = provincia;
+                unCliente.Localidad = localidad;
+
                 BE.Tipo_Cliente tipo_cliente = new BE.Tipo_Cliente();
                 tipo_cliente.Id_Tipo_Cliente = Convert.ToInt32(fila["tipo_cliente_id"]);
                 tipo_cliente.Nombre = $"{fila["tipo_cliente_nombre"]}";
@@ -62,7 +69,8 @@ namespace DAL
             {
                 new SqlParameter("@dni", cliente.Dni),
                 new SqlParameter("@email", cliente.Email),
-                new SqlParameter("@region", cliente.Region),
+                new SqlParameter("@localidad", cliente.Localidad.Nombre),
+                new SqlParameter("@provincia", cliente.Localidad.Provincia.Nombre),
                 new SqlParameter("@telefono", cliente.Telefono),
                 new SqlParameter("@nombre", cliente.Nombre),
                 new SqlParameter("@apellido", cliente.Apellido),
@@ -75,8 +83,8 @@ namespace DAL
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_crear_cliente", parametrosSql);
 
             // Capturamos los valores de salida
-            mensaje = parametrosSql[7].Value.ToString();
-            resultado = Convert.ToInt32(parametrosSql[8].Value);
+            mensaje = parametrosSql[8].Value.ToString();
+            resultado = Convert.ToInt32(parametrosSql[9].Value);
 
             return resultado;
         }
@@ -99,7 +107,8 @@ namespace DAL
                 new SqlParameter("@id", cliente.IdCliente),
                 new SqlParameter("@dni", cliente.Dni),
                 new SqlParameter("@email", cliente.Email),
-                new SqlParameter("@region", cliente.Region),
+                new SqlParameter("@localidad", cliente.Localidad.Nombre),
+                new SqlParameter("@provincia", cliente.Localidad.Provincia.Nombre),
                 new SqlParameter("@telefono", cliente.Telefono),
                 new SqlParameter("@nombre", cliente.Nombre),
                 new SqlParameter("@apellido", cliente.Apellido),
@@ -112,8 +121,8 @@ namespace DAL
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_editar_cliente", parametrosSql);
 
             // Capturamos los valores de salida
-            mensaje = parametrosSql[8].Value.ToString();
-            resultado = Convert.ToBoolean(parametrosSql[9].Value);
+            mensaje = parametrosSql[9].Value.ToString();
+            resultado = Convert.ToBoolean(parametrosSql[10].Value);
 
             return resultado;
         }
@@ -215,5 +224,54 @@ namespace DAL
             }
             return null;
         }
+
+        public bool repiteDNI(long dni, int id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@id", id),
+                new SqlParameter("@dni", dni)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_repite_dni", parametros);
+            
+            return dt.Rows.Count > 0 ? true : false;
+            
+        }
+
+        public bool repiteEmail(string email, long id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@id", id),
+                new SqlParameter("@email", email)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_repite_email", parametros);
+
+            return dt.Rows.Count > 0 ? true : false;
+
+        }
+
+        public bool repiteTelfono(long telefono, long id)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@id", id),
+                new SqlParameter("@telefono", telefono)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_repite_telefono", parametros);
+
+            return dt.Rows.Count > 0 ? true : false;
+
+        }
+
     }
 }

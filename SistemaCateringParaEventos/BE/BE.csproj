@@ -45,10 +45,9 @@
     <Compile Include="Configuracion_Empresa.cs" />
     <Compile Include="Cotizacion_Menu.cs" />
     <Compile Include="Cotizacion_Menu_Plato.cs" />
-    <Compile Include="Descuento.cs" />
-    <Compile Include="Descuento_Cotizacion.cs" />
-    <Compile Include="Geolocalizacion.cs" />
+    <Compile Include="Localidad.cs" />
     <Compile Include="Menu_Plato.cs" />
+    <Compile Include="Provincia.cs" />
     <Compile Include="Temporada.cs" />
     <Compile Include="Cliente.cs" />
     <Compile Include="Cotizacion.cs" />

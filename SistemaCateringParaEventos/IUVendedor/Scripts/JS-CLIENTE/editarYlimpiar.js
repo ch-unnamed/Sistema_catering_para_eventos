@@ -6,6 +6,8 @@
 
         var data = tabledata.row(filaSeleccionada).data(); // los datos de la fila seleccionada
 
+        console.log(data);
+
         abrirModal(data);
     });
 

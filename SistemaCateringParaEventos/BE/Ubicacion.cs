@@ -22,17 +22,6 @@ namespace BE
             set { _idUbicacion = value; }
         }
 
-        private Geolocalizacion _idGeolocalizacion;
-
-        /// <summary>
-        /// Obtiene o establece la geolocalización asociada a la ubicación.
-        /// </summary>
-        public Geolocalizacion IdGeolocalizacion
-        {
-            get { return _idGeolocalizacion; }
-            set { _idGeolocalizacion = value; }
-        }
-
         private string _calle;
 
         /// <summary>

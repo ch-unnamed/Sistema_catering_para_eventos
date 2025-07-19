@@ -19,7 +19,18 @@
                 }
             },
             { "data": "Email" },
-            { "data": "Region" },
+            {
+                "data": "Localidad",
+                "render": function (data, type, row) {
+                    return row.Localidad.Nombre;
+                }
+            },
+            {
+                "data": "Provincia",
+                "render": function (data, type, row) {
+                    return row.Localidad.Provincia.Nombre;
+                }
+            },
             { "data": "Telefono" },
             {   
                 "data": "Tipo_Cliente",

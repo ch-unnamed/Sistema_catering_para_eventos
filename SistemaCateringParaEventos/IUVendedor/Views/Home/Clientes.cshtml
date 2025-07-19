@@ -26,7 +26,8 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Email</th>
-                    <th>Region</th>
+                    <th>Localidad</th>
+                    <th>Provincia</th>
                     <th>Telefono</th>
                     <th>Tipo</th>
                     <th></th>
@@ -53,7 +54,7 @@
                 <div class="row g-2">
 
                     @* Ocultar id para que solo se maneje con ajax *@
-                    <input type="hidden" id="id" value="0" />
+                    <input type="text" id="id" value="0" />
 
                     <div class="col-sm-6">
                         <label for="nombre" class="form-label fw-bold">Nombre</label>
@@ -86,9 +87,15 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="region" class="form-label fw-bold">Region</label>
-                        <input type="text" class="form-control" id="region" autocomplete="off">
-                        <span class="text-danger" id="error-region"></span>
+                        <label for="localidad" class="form-label fw-bold">Localidad</label>
+                        <input type="text" class="form-control" id="localidad" autocomplete="off">
+                        <span class="text-danger" id="error-localidad"></span>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="provincia" class="form-label fw-bold">Provincia</label>
+                        <input type="text" class="form-control" id="provincia" autocomplete="off">
+                        <span class="text-danger" id="error-provincia"></span>
                     </div>
 
                     <div class="col-sm-6">

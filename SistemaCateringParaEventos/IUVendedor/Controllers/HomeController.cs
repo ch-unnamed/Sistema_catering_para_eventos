@@ -58,6 +58,7 @@ namespace IUVendedor.Controllers
         /// Obtiene la lista de clientes y la retorna en formato JSON.
         /// </summary>
         [HttpGet]
+        [AllowAnonymous]
         public JsonResult ListarClientes()
         {
             List<BE.Cliente> oLista = new List<BE.Cliente>();
@@ -67,7 +68,15 @@ namespace IUVendedor.Controllers
                 e.IdCliente,
                 e.Dni,
                 e.Email,
-                e.Region,
+                Localidad = new 
+                {
+                    e.Localidad.Nombre,
+                    e.Localidad.Provincia
+                },
+                Provincia = new 
+                {
+                    e.Localidad.Provincia.Nombre
+                },
                 e.Telefono,
                 e.Nombre,
                 e.Apellido,
@@ -86,8 +95,10 @@ namespace IUVendedor.Controllers
         [HttpPost]
         public JsonResult GuardarCliente(BE.Cliente oCliente)
         {
+
             Dictionary<string, string> errores;
             object resultado;
+
             if (oCliente.IdCliente == 0)
             {
                 resultado = new BLL.Cliente().CrearCliente(oCliente, out errores);
@@ -98,6 +109,21 @@ namespace IUVendedor.Controllers
             }
             return Json(new { resultado = resultado, errores = errores }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult ObtenerProvincia(string nombreLocalidad)
+        {
+            BE.Provincia provincia = new BE.Provincia();
+            provincia = new BLL.Provincia().obtenerProvincia(nombreLocalidad);
+
+            var resultado = new
+            {
+                Nombre = provincia.Nombre
+            };
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
 
         /// <summary>
         /// Elimina un cliente por su identificador.
@@ -110,6 +136,30 @@ namespace IUVendedor.Controllers
             string mensaje = string.Empty;
             respuesta = new BLL.Cliente().EliminarCliente(id, out mensaje);
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpGet]
+        public JsonResult repiteDNI(long dni, int id)
+        {
+            bool cliente = new BLL.Cliente().repiteDNI(dni, id);
+
+            return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpGet]
+        public JsonResult repiteEmail(string email, int id)
+        {
+            bool cliente = new BLL.Cliente().repiteEmail(email, id);
+
+            return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpGet]
+        public JsonResult repiteTelefono(long telefono, int id)
+        {
+            bool cliente = new BLL.Cliente().repiteTelefono(telefono, id);
+
+            return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -1195,85 +1245,6 @@ namespace IUVendedor.Controllers
 
             return Json(new { data = RolesFormateados }, JsonRequestBehavior.AllowGet);
         }
-
-        // GEOLOCALIZACION
-
-        [HttpGet]
-        public JsonResult ObtenerEventosGeolocalizados()
-        {
-            var eventoBLL = new BLL.Evento();
-            List<BE.Evento> eventos = eventoBLL.ListarEventosConGeolocalizacion();
-
-            var datos = eventos.Select(ev => new
-            {
-                ev.IdEvento,
-                ev.Nombre,
-                ev.Fecha,
-                Latitud = ev.Ubicacion?.IdGeolocalizacion?.Latitud ?? 0,
-                Longitud = ev.Ubicacion?.IdGeolocalizacion?.Longitud ?? 0,
-                Ubicacion = $"{ev.Ubicacion?.Calle} {ev.Ubicacion?.Altura}, {ev.Ubicacion?.Ciudad}, {ev.Ubicacion?.Provincia}"
-            }).ToList();
-
-            return Json(datos, JsonRequestBehavior.AllowGet);
-        }
-
-
-        [HttpGet]
-        public ActionResult ObtenerUbicacionInicial()
-        {
-            var ubiBLL = new BLL.Ubicacion();
-            var ubicacion = ubiBLL.ObtenerUbicacionInicial();
-            if (ubicacion == null) return Json(null, JsonRequestBehavior.AllowGet);
-
-            return Json(new
-            {
-                ubicacion.IdUbicacion,
-                ubicacion.Calle,
-                ubicacion.Altura,
-                ubicacion.Ciudad,
-                ubicacion.Provincia,
-                IdGeolocalizacion = ubicacion.IdGeolocalizacion.IdGeolocalizacion,
-                Latitud = ubicacion.IdGeolocalizacion.Latitud,
-                Longitud = ubicacion.IdGeolocalizacion.Longitud
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> GuardarUbicacionInicial(BE.Ubicacion ubicacion)
-        {
-            try
-            {
-                var geoBLL = new BLL.Geolocalizacion();
-                var ubiBLL = new BLL.Ubicacion();
-
-                var geo = await geoBLL.ObtenerGeolocalizacion(
-                    ubicacion.Calle, ubicacion.Altura, ubicacion.Ciudad, ubicacion.Provincia);
-
-                if (geo == null)
-                    return Json(new { resultado = false, mensaje = "No se pudo obtener geolocalización." });
-
-                var ubicacionInicial = ubiBLL.ObtenerUbicacionInicial();
-
-                if (ubicacionInicial == null)
-                    return Json(new { resultado = false, mensaje = "No hay ubicaciones en la base de datos" });
-
-                ubicacion.IdUbicacion = ubicacionInicial.IdUbicacion;
-
-                new DAL.Ubicacion().ActualizarUbicacionInicial(ubicacion, geo.Latitud, geo.Longitud);
-
-                return Json(new { resultado = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { resultado = false, mensaje = $"Error: {ex.Message}" });
-            }
-        }
-
-
-
-
-
-
 
         //////////////////////////////////////////////////////////////////
         /// <summary>

@@ -65,8 +65,11 @@ namespace BLL
             if (string.IsNullOrWhiteSpace(cliente.Email) || !EmailValido(cliente.Email))
                 errores["email"] = "El Cliente debe tener un Email valido";
 
-            if (string.IsNullOrWhiteSpace(cliente.Region))
-                errores["region"] = "El Cliente debe tener una Region";
+            if (string.IsNullOrWhiteSpace(cliente.Localidad.Nombre))
+                errores["localidad"] = "El Cliente debe tener una Localidad";
+            
+            if (string.IsNullOrWhiteSpace(cliente.Localidad.Provincia.Nombre))
+                errores["provincia"] = "El Cliente debe tener una Provincia";
 
             if (cliente.Telefono <= 0 || cliente.Telefono.ToString().Length < 6 || cliente.Telefono.ToString().Length > 15)
                 errores["telefono"] = "El Cliente debe tener un Telefono valido";
@@ -146,5 +149,24 @@ namespace BLL
 
             return clienteDAL.dniCliente(cliente_id);
         }
+
+        public bool repiteDNI(long dni, int id)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+            return clienteDAL.repiteDNI(dni, id);
+        }
+
+        public bool repiteEmail(string email, int id)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+            return clienteDAL.repiteEmail(email, id);
+        }
+
+        public bool repiteTelefono(long telefono, int id)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+            return clienteDAL.repiteTelfono(telefono, id);
+        }
+
     }
 }
