@@ -4,6 +4,9 @@
 
         const Evento = {
             IdEvento: $("#id").val(),
+            Cliente: {
+                IdCliente: $("#idCliente").val(),
+            },
             Nombre: $("#nombre").val(),
             Capacidad: $("#capacidad").val(),
             Tipo_Evento: {
@@ -17,7 +20,7 @@
             },
             Fecha: $("#fecha").val(),
         };
-
+        console.log(Evento);
         try {
             
             const response = await fetch("/Home/GuardarEvento", {

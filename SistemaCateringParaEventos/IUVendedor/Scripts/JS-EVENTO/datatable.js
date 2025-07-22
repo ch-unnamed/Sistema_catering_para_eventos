@@ -47,6 +47,12 @@
             },
             { "data": "Fecha" },
             {
+                "data": "Cliente",
+                "render": function (data, type, row) {
+                    return row.Cliente.IdCliente;
+                }
+            },
+            {
                 "data": null,
                 "defaultContent": '<div class="btn-group">' +
                     '<button class="btn btn-primary btn-sm rounded-2 btn-editar"><i class="fas fa-pen"></i></button>' +

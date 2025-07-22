@@ -33,6 +33,7 @@
                     <th>Ciudad</th>
                     <th>Provincia</th>
                     <th>Fecha</th>
+                    <th>Cliente</th>
                     <th></th>
                 </tr>
             </thead>
@@ -58,6 +59,24 @@
 
                     @* id manejado con ajax*@
                     <input type="hidden" id="id" value="0" />
+                    <input type="hidden" id="idCliente" value="0">
+
+
+                    <div class="col-sm-6">
+                        <label for="cliente" class="form-label fw-bold">Cliente</label>
+                        <div class="dropdown">
+                            <input type="text"
+                                   id="cliente"
+                                   class="form-control dropdown-toggle"
+                                   placeholder="Buscar por nombre"
+                                   autocomplete="off"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false" />
+                            <ul class="dropdown-menu w-100" id="listaClientes"></ul>
+                        </div>
+                        <input type="hidden" id="idCliente" />
+                        <span class="text-danger" id="error-cliente"></span>
+                    </div>
 
                     <div class="col-sm-6">
                         <label for="nombre" class="form-label fw-bold">Nombre</label>

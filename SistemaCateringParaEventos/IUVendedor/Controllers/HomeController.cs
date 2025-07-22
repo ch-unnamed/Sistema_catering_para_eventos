@@ -162,6 +162,38 @@ namespace IUVendedor.Controllers
             return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult NombresClientes(BE.Cliente cliente)
+        {
+            List<BE.Cliente> oCliente = new List<BE.Cliente>();
+            oCliente = new BLL.Cliente().nombreCliente(cliente);
+
+            var resultado = oCliente.Select(e => new
+            {
+                e.IdCliente,
+                e.Nombre,
+                e.Apellido
+            });
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult NombreClientePorId(BE.Cliente cliente)
+        {
+            List<BE.Cliente> oCliente = new List<BE.Cliente>();
+            oCliente = new BLL.Cliente().nombreClientePorId(cliente);
+
+            var resultado = oCliente.Select(e => new
+            {
+                e.IdCliente,
+                e.Nombre,
+                e.Apellido
+            });
+
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// Obtiene la lista de eventos y la retorna en formato JSON.
         /// </summary>
@@ -187,6 +219,10 @@ namespace IUVendedor.Controllers
                     e.Ubicacion.Altura,
                     e.Ubicacion.Ciudad,
                     e.Ubicacion.Provincia
+                },
+                Cliente = new
+                {
+                    e.Cliente.IdCliente
                 }
             });
             return Json(new { data = eventosFormateados }, JsonRequestBehavior.AllowGet);

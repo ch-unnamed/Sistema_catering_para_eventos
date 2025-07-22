@@ -46,6 +46,10 @@ namespace DAL
                 tipo_evento_nombre.Nombre = $"{fila["tipo_evento_nombre"]}";
                 unEvento.Tipo_Evento = tipo_evento_nombre;
 
+                BE.Cliente unCliente = new BE.Cliente();
+                unCliente.IdCliente = Convert.ToInt32(fila["cliente_id"]);
+                unEvento.Cliente = unCliente;
+
                 eventos.Add(unEvento);
             }
 
@@ -67,6 +71,7 @@ namespace DAL
 
             SqlParameter[] parametros = new SqlParameter[]
             {
+                new SqlParameter("@idCliente", evento.Cliente.IdCliente),
                 new SqlParameter("@nombre", evento.Nombre),
                 new SqlParameter("@capacidad", evento.Capacidad),
                 new SqlParameter("@tipo", evento.Tipo_Evento.Nombre),
@@ -81,8 +86,8 @@ namespace DAL
             // Ejecupar el proc.alm
             int filasAfectadas = conexion.EscribirPorStoreProcedure("sp_crear_evento", parametros);
 
-            mensaje = parametros[8].Value.ToString();
-            resultado = Convert.ToInt32(parametros[9].Value);
+            mensaje = parametros[9].Value.ToString();
+            resultado = Convert.ToInt32(parametros[10].Value);
 
 
             return resultado;

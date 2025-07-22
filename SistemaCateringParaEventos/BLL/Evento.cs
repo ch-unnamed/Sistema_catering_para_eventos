@@ -27,6 +27,9 @@ namespace BLL
         {
             var errores = new Dictionary<string, string>();
 
+            if (evento.Cliente?.IdCliente <= 0)
+                errores["cliente"] = "El evento debe tener un Cliente";
+            
             if (string.IsNullOrWhiteSpace(evento.Nombre))
                 errores["nombre"] = "El evento debe tener un Nombre";
 

@@ -273,5 +273,60 @@ namespace DAL
 
         }
 
+        public List<BE.Cliente> nombreClientes(BE.Cliente cliente)
+        {
+            Conexion conexion = new Conexion();
+
+            List<BE.Cliente> clientes = new List<BE.Cliente>();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@nombreCompleto", cliente.Nombre)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_nombre_cliente", parametros);
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Cliente unCliente = new BE.Cliente();
+
+                unCliente.IdCliente = Convert.ToInt32(fila["id"]);
+                unCliente.Nombre = fila["nombre"].ToString();
+                unCliente.Apellido = fila["apellido"].ToString();
+
+                clientes.Add(unCliente);
+            }
+
+            return clientes;
+        }
+
+        public List<BE.Cliente> nombreClientePorId(BE.Cliente cliente)
+        {
+            Conexion conexion = new Conexion();
+
+            List<BE.Cliente> clientes = new List<BE.Cliente>();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@idCliente", cliente.IdCliente)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_nombre_cliente_por_id", parametros);
+
+            foreach (DataRow fila in dt.Rows)
+            {
+                BE.Cliente unCliente = new BE.Cliente();
+
+                unCliente.IdCliente = Convert.ToInt32(fila["id"]);
+                unCliente.Nombre = fila["nombre"].ToString();
+                unCliente.Apellido = fila["apellido"].ToString();
+
+                clientes.Add(unCliente);
+            }
+
+            return clientes;
+        }
+
     }
 }
+

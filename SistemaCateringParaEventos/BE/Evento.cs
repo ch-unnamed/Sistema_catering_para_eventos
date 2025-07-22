@@ -100,5 +100,14 @@ namespace BE
             get { return _fecha; }
             set { _fecha = value; }
         }
+
+        private Cliente _cliente;
+
+        public Cliente Cliente
+        {
+            get { return _cliente; }
+            set { _cliente = value; }
+        }
+
     }
 }

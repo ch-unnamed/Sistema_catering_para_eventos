@@ -168,5 +168,16 @@ namespace BLL
             return clienteDAL.repiteTelfono(telefono, id);
         }
 
+        public List<BE.Cliente> nombreCliente(BE.Cliente cliente)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+            return clienteDAL.nombreClientes(cliente);
+        }
+
+        public List<BE.Cliente> nombreClientePorId(BE.Cliente cliente)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+            return clienteDAL.nombreClientePorId(cliente);
+        }
     }
 }

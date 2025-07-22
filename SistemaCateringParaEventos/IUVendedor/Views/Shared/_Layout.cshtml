@@ -46,14 +46,6 @@
                         <div class="sb-sidenav-menu-heading">Dashboard</div>
                         @if (usuario != null)
                         {
-                            // Ambos roles pueden ver Eventos
-                            if (usuario.Rol_id == Rol.Gerente || usuario.Rol_id == Rol.Vendedor)
-                            {
-                                <a class="nav-link" href="@Url.Action("Eventos", "Home")">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
-                                    Eventos
-                                </a>
-                            }
 
                             // Solo Vendedores pueden ver Clientes
                             if (usuario.Rol_id == Rol.Vendedor)
@@ -61,6 +53,15 @@
                                 <a class="nav-link" href="@Url.Action("Clientes", "Home")">
                                     <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                     Clientes
+                                </a>
+                            }
+
+                            // Ambos roles pueden ver Eventos
+                            if (usuario.Rol_id == Rol.Gerente || usuario.Rol_id == Rol.Vendedor)
+                            {
+                                <a class="nav-link" href="@Url.Action("Eventos", "Home")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                                    Eventos
                                 </a>
                             }
 
