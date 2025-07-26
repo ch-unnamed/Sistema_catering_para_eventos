@@ -15,14 +15,14 @@ jobs:
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Restaurar paquetes NuGet
-        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
+      - name: Compilar proyecto IUsuarios Release
+        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release
 
-      - name: Compilar solución en Release
-        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release
-
-      - name: Publicar proyecto IUsuarios con DeployOnBuild
-        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+      - name: Copiar archivos publicados manualmente
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path SistemaCateringParaEventos/IUVendedor/bin/app.publish
+          Copy-Item -Path SistemaCateringParaEventos/IUVendedor/bin/Release/* -Destination SistemaCateringParaEventos/IUVendedor/bin/app.publish -Recurse -Force
 
       - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
