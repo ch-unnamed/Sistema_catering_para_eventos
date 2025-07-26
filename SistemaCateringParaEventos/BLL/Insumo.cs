@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -28,15 +30,15 @@ namespace BLL
 
             List<BE.Insumo> listaInsumos = insumoDAL.ListarInsumos();
 
-            foreach (var insumo in listaInsumos)
-            {
-                var lotesVigentes = loteDAL.ListarLotes(insumo.Id)
-                                    .Where(l => l.FechaDeVencimiento > DateTime.Today);
+            //foreach (var insumo in listaInsumos)
+            //{
+            //    var lotesVigentes = loteDAL.ListarLotes(insumo.Id)
+            //                        .Where(l => l.FechaDeVencimiento > DateTime.Today);
 
-                int stockActual = lotesVigentes.Sum(l => l.Cantidad);
+            //    int stockActual = lotesVigentes.Sum(l => l.Cantidad);
 
-                insumo.Unidad = stockActual;
-            }
+            //    insumo.Unidad = stockActual;
+            //}
 
             return listaInsumos;
         }
@@ -148,6 +150,20 @@ namespace BLL
                 return null;
 
             return objInsumoDAL.Buscar(nombre.Trim());
+        }
+
+        public void DescontarCantidadInsumo(List<int> platoIds)
+        {
+            DAL.Insumo insumoDAL = new DAL.Insumo();
+
+            insumoDAL.DescontarCantidadInsumo(platoIds);
+        }
+
+        public void CargarCantidadInsumo(List<int> platoIds)
+        {
+            DAL.Insumo insumoDAL = new DAL.Insumo();
+
+            insumoDAL.CargarCantidadInsumo(platoIds);
         }
 
     }

@@ -35,7 +35,7 @@ namespace DAL
                 unaContizacionMenus.Cotizacion = unaCotizacion;
 
                 BE.Menu unMenu = new BE.Menu();
-                unMenu.Id = Convert.ToInt32(fila["id"]);
+                unMenu.Id = Convert.ToInt32(fila["menu_id"]);
                 unaContizacionMenus.Menu = unMenu;
 
                 unaContizacionMenus.Estado = Convert.ToInt32(fila["estado"]);

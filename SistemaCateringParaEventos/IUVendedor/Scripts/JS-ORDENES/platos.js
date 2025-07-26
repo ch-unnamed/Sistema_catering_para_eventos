@@ -23,6 +23,7 @@ async function verPlatos(idCotizacionMenu) {
 
     const resultado = await consultarPlatos(idCotizacionMenu);
 
+    console.log(resultado);
 
     if ($.fn.DataTable.isDataTable('#tablaPlatosCotizacion')) {
         $('#tablaPlatosCotizacion').DataTable().clear().destroy();
@@ -45,5 +46,9 @@ $("#tabla tbody").on("click", '.btn-ver-platosCotizacionMenu', async function ()
 
     const filaSeleccionada = $(this).closest("tr");
     const data = tabledata.row(filaSeleccionada).data();
+
+    console.log(data);
+
     await verPlatos(data.Id);
 })
+

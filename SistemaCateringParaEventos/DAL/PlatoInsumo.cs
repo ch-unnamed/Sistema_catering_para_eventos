@@ -40,6 +40,7 @@ namespace DAL
                 unPlatoInsumo.Insumo.Id = Convert.ToInt32(fila["id"]);
                 unPlatoInsumo.Insumo.Nombre = fila["Nombre"].ToString();
                 unPlatoInsumo.Insumo.TipoNombre = fila["tipoNombre"].ToString();
+                unPlatoInsumo.Cantidad = Convert.ToInt32(fila["cantidad"]);
 
                 insumosPorPlatoId.Add(unPlatoInsumo);
             }

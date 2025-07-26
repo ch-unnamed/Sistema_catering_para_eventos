@@ -1,11 +1,26 @@
 ﻿
+    async function idClienteIdEvento(eventoId) {
+
+        try {
+
+            const response = await fetch(`/Home/IdClienteIdEvento?idEvento=${eventoId}`);
+            const data = await response.json();
+
+            return data.data.IdCliente;
+
+        } catch (error) {
+            return 0;
+        }
+    }
     async function abrirModal(json) {
 
         $("#menuNuevo").remove();
         const modal = document.getElementById("FormModal");
+        const idEvento = document.getElementById("idEvento");
         const btnGuardarCotizacion = document.getElementById("btnGuardarSeleccion");
         btnGuardarCotizacion.classList.remove('d-none');
 
+       
         // eliminar mensajes y menus si es que existian
         document.querySelectorAll('.mensaje-menu-extra').forEach(el => el.remove());
         document.querySelectorAll(".menu-dinamico, [id*='contenedor-platos-']").forEach(el => el.remove());
@@ -24,11 +39,24 @@
 
         $("#estado").val("0");
         $("#total").val("0");
+        document.getElementById("idEvento")
 
         // Si es nuevo (sin datos JSON)
         if (json == null) {
 
             await cargarEstados();
+
+
+            idEvento.addEventListener("input", async () => {
+                const idEvento = document.getElementById("idEvento").value.trim();
+
+                if (idEvento !== "") {
+                    const clienteId = await idClienteIdEvento(idEvento);
+                    $("#idCliente").val(clienteId);
+                } else {
+                    $("#idCliente").val(0);
+                }
+            });
 
             // Cambiar nombre de Labels para ingresar lo adecuado
             $("label[for='idEvento']").text("Evento (ID)");
@@ -47,6 +75,7 @@
                     "user-select": "",
                     "cursor": ""
                 });
+
         } else {
 
             await cargarEstados(1);

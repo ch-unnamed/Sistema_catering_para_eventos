@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BE;
 
 namespace DAL
 {
@@ -327,6 +328,28 @@ namespace DAL
             return clientes;
         }
 
+        public BE.Cliente idClienteIdEvento(int idEvento)
+        {
+            Conexion conexion = new Conexion();
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@idEvento", idEvento)
+            };
+
+            DataTable dt = conexion.LeerPorStoreProcedure("sp_cliente_id_evento", parametros);
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow fila = dt.Rows[0];
+
+                return new BE.Cliente
+                {
+                    IdCliente = Convert.ToInt32(fila["id"])
+                };
+            }
+            return null;
+        }
     }
 }
 

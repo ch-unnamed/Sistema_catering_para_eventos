@@ -179,5 +179,12 @@ namespace BLL
             DAL.Cliente clienteDAL = new DAL.Cliente();
             return clienteDAL.nombreClientePorId(cliente);
         }
+
+        public BE.Cliente idClienteIdEvento(int idEvento)
+        {
+            DAL.Cliente clienteDAL = new DAL.Cliente();
+
+            return clienteDAL.idClienteIdEvento(idEvento);
+        }
     }
 }

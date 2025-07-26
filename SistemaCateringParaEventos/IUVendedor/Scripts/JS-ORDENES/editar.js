@@ -1,16 +1,48 @@
-﻿$("#tabla tbody").on("click", '.btn-editar', function () {
+﻿
+let resultado = 0;
+$("#tabla tbody").on("click", '.btn-editar', async function () {
 
     filaSeleccionada = $(this).closest("tr");
 
+    // DATA DE LA TABLA COTIZACION_MENU_PLATO
     var data = tabledata.row(filaSeleccionada).data(); 
+
+    // Si ya se concreto no dejo que se pueda poner en esperar para evitar confictos
+    if (data.Estado === 2) {
+        return;
+    }
+
+    // DATA DE LOS PLATOS
+    resultado = await consultarPlatos(data.Id);
 
     abrirModal(data);
 });
 
+async function descontarStock(resultado, menu) {
+
+    const ids = resultado.map(item => item.Plato.Id);
+
+    const response = await fetch('/Home/DescontarCantidadInsumo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ids)
+    });
+
+    if (response.ok) {
+        swal("¡Orden atendida Exitosamente!", "Presiona OK para continuar", "success");
+        return true;
+    } else {
+        swal("¡Error al descontar stock!", `Cargue insumos al Menu Nº${menu}`, "error");
+        document.querySelector(".btn-cargar-insumos").classList.remove('d-none');
+        return false;
+    }
+}
+
 async function editar() {
 
     var estadoActual = parseInt($("#estado").val());
-
     // editar el valor del estado en base al del html
     var nuevoEstado = estadoActual === 1 ? 2 : 1;
 
@@ -28,6 +60,11 @@ async function editar() {
 
     };
 
+    if (CotizacionMenu.Estado === 2) {
+        const success = await descontarStock(resultado.data, CotizacionMenu.Menu.Id);
+        if (!success) return; 
+    }
+
     try {
         const response = await fetch("/Home/EditarCotizacionMenu", {
             method: "POST",
@@ -43,6 +80,8 @@ async function editar() {
 
         const data = await response.json();
 
+        
+
         // limpiar errores
         $(".text-danger").text("");
 
@@ -55,12 +94,12 @@ async function editar() {
         } else {
             // se edita un usuario
             if (data.resultado) {
+
                 // se edito correctamente
                 tabledata.row(filaSeleccionada).data(CotizacionMenu).draw(false);
                 filaSeleccionada = null;
 
                 $("#FormModal").modal("hide");
-                swal("¡Cotizacion-Menu Editado Exitosamente!", "Presiona OK para continuar", "success");
             } else {
                 // mostrar errores por campo
                 if (data.errores) {

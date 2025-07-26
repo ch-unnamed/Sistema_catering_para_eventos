@@ -168,5 +168,53 @@ namespace DAL
             }
         }
 
+        public void DescontarCantidadInsumo(List<int> platoIds)
+        {
+            Conexion conexion = new Conexion();
+
+            DataTable dtPlatos = new DataTable();
+            dtPlatos.Columns.Add("plato_id", typeof(int));
+
+            foreach (int id in platoIds)
+            {
+                dtPlatos.Rows.Add(id);
+            }
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@Platos", SqlDbType.Structured)
+                {
+                    TypeName = "PlatoIDList",
+                    Value = dtPlatos
+                }
+            };
+
+            conexion.EscribirPorStoreProcedure("sp_descontar_cantidad_insumo2", parametros);
+        }
+
+        public void CargarCantidadInsumo(List<int> platoIds)
+        {
+            Conexion conexion = new Conexion();
+
+            DataTable dtPlatos = new DataTable();
+            dtPlatos.Columns.Add("plato_id", typeof(int));
+
+            foreach (int id in platoIds)
+            {
+                dtPlatos.Rows.Add(id);
+            }
+
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@Platos", SqlDbType.Structured)
+                {
+                    TypeName = "PlatoIDList",
+                    Value = dtPlatos
+                }
+            };
+
+            conexion.EscribirPorStoreProcedure("sp_cargar_cantidad_insumo", parametros);
+        }
+
     }
 }

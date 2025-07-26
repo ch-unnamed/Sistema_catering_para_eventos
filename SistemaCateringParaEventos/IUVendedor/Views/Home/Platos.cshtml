@@ -127,6 +127,7 @@
                                     <tr>
                                         <th>Nombre del Insumo</th>
                                         <th>Tipo</th>
+                                        <th>Cantidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -190,7 +191,7 @@
         // PARA EDITAR O CREAR PLATO
         function abrirModal(json) {
             $("#msjError").hide();
-
+            console.log(json);
             if (json != null) { // entra acá para editar
                 $("#id").val(json.Id);
                 $("#nombre").val(json.Nombre);
@@ -206,7 +207,7 @@
             }
 
             cargarInsumos(json?.Insumos || []);
-
+            console.log(json?.Insumos);
             $("#FormModal").modal("show");
 
             $("#FormModal").on("shown.bs.modal", function () {
@@ -217,6 +218,7 @@
 
         $('#tablaPlatos tbody').on('click', '.btn-ver-insumosPlato', function () {
             var data = tabledataPlatos.row($(this).parents('tr')).data();
+            console.log(data);
             verInsumosPlato(data.Id, data.Nombre);
         });
 
@@ -238,6 +240,7 @@
                 type: 'GET',
                 data: { plato_id: data.Id },
                 success: function (response) {
+
                     abrirModal({
                         Id: data.Id,
                         Nombre: data.Nombre,
@@ -391,17 +394,23 @@
             if ($.fn.DataTable.isDataTable('#tablaInsumos')) {
                 $('#tablaInsumos').DataTable().clear().destroy();
             }
-
+            //console.log(data);
             $('#tablaInsumos').DataTable({
                 ajax: {
                     url: '@Url.Action("ObtenerInsumosDelPlato", "Home")',
                     type: 'GET',
                     data: { plato_id: idPlato },
-                    dataSrc: 'data'
+                    dataSrc: function (json) {
+                        console.log('Datos recibidos:', json);  // 👈 Esto imprime todo el objeto JSON
+                        console.log('Contenido de json.data:', json.data);  // 👈 Esto imprime el array específico si está bajo la propiedad 'data'
+                        return json.data;
+                    }
                 },
+
                 columns: [
                     { data: 'Nombre', title: 'Nombre del Insumo' },
-                    { data: 'TipoNombre', title: 'Tipo' }
+                    { data: 'TipoNombre', title: 'Tipo' },
+                    { data: 'Cantidad', title: 'Cantidad' }
                 ],
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'

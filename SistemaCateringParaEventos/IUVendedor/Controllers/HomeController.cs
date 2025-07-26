@@ -2,16 +2,18 @@ using BE;
 using BLL;
 using DAL;
 using IUVendedor.Permisos;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Web.Security; 
+using System.Web.Security;
 using System.Web.Services.Description;
 
 namespace IUVendedor.Controllers
@@ -68,12 +70,12 @@ namespace IUVendedor.Controllers
                 e.IdCliente,
                 e.Dni,
                 e.Email,
-                Localidad = new 
+                Localidad = new
                 {
                     e.Localidad.Nombre,
                     e.Localidad.Provincia
                 },
-                Provincia = new 
+                Provincia = new
                 {
                     e.Localidad.Provincia.Nombre
                 },
@@ -137,7 +139,7 @@ namespace IUVendedor.Controllers
             respuesta = new BLL.Cliente().EliminarCliente(id, out mensaje);
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpGet]
         public JsonResult repiteDNI(long dni, int id)
         {
@@ -145,7 +147,7 @@ namespace IUVendedor.Controllers
 
             return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpGet]
         public JsonResult repiteEmail(string email, int id)
         {
@@ -153,7 +155,7 @@ namespace IUVendedor.Controllers
 
             return Json(new { data = cliente }, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpGet]
         public JsonResult repiteTelefono(long telefono, int id)
         {
@@ -518,6 +520,17 @@ namespace IUVendedor.Controllers
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult IdClienteIdEvento(int idEvento)
+        {
+            BE.Cliente cliente = new BLL.Cliente().idClienteIdEvento(idEvento);
+            var resultado = new
+            {
+                IdCliente = cliente.IdCliente
+            };
+            return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// Obtiene el identificador de un vendedor por el id de rol.
         /// </summary>
@@ -762,10 +775,13 @@ namespace IUVendedor.Controllers
             {
                 Id = p_i.Insumo.Id,
                 Nombre = p_i.Insumo.Nombre,
-                TipoNombre = p_i.Insumo.TipoNombre
+                TipoNombre = p_i.Insumo.TipoNombre,
+                Cantidad = p_i.Cantidad
             }).ToList();
             return Json(new { data = insumos }, JsonRequestBehavior.AllowGet);
         }
+
+
 
         /// <summary>
         /// Guarda o edita un lote de insumo.
@@ -842,6 +858,20 @@ namespace IUVendedor.Controllers
             }
         }
 
+        [HttpPost]
+        public void DescontarCantidadInsumo(List<int> platoIds)
+        {
+            BLL.Insumo insumoBLL = new BLL.Insumo();
+            insumoBLL.DescontarCantidadInsumo(platoIds);
+        }
+
+        [HttpPost]
+        public void CargarCantidadInsumo(List<int> platoIds)
+        {
+            BLL.Insumo insumoBLL = new BLL.Insumo();
+            insumoBLL.CargarCantidadInsumo(platoIds);
+        }
+
         /// <summary>
         /// Muestra la vista de menús para el chef.
         /// </summary>
@@ -850,7 +880,7 @@ namespace IUVendedor.Controllers
         {
             return View();
         }
-        
+
 
         /// Muestra la vista de órdenes para el chef.
         /// </summary>
@@ -909,11 +939,11 @@ namespace IUVendedor.Controllers
                 Nombre = plato.Nombre,
                 Precio = plato.Precio
             };
-            
+
             return Json(new { data = resultado }, JsonRequestBehavior.AllowGet);
         }
 
-        
+
         /// <summary>
         /// Guarda un menú nuevo o edita uno existente.
         /// </summary>
