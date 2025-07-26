@@ -36,7 +36,7 @@ jobs:
       - name: Subir a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: SistemaDeCatering.somee.com
+          server: ftp://155.254.246.25/www.SistemaDeCatering.somee.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: SistemaCateringParaEventos/IUVendedor/bin/app.publish/
