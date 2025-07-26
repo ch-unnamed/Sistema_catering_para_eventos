@@ -16,15 +16,15 @@ jobs:
         uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Restaurar paquetes NuGet
-        run: nuget restore SistemaCateringParaEventos.sln
+        run: nuget restore Sistema_catering_para_eventos/SistemaCateringParaEventos/SistemaCateringParaEventos.sln
 
       - name: Compilar solución en modo Release
-        run: msbuild IUVendedor.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=bin\app.publish
+        run: msbuild Sistema_catering_para_eventos/SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=Sistema_catering_para_eventos/SistemaCateringParaEventos/bin/app.publish
 
       - name: Subir archivos a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ftp://ftp.somee.com
+          server: ftp.somee.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./IUVendedor/bin/app.publish
+          local-dir: ./Sistema_catering_para_eventos/SistemaCateringParaEventos/bin/app.publish
