@@ -1,0 +1,30 @@
+name: Deploy ASP.NET Framework App to Somee via FTP
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v3
+
+      - name: Instalar MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Restaurar paquetes NuGet
+        run: nuget restore IUVendedor.sln
+
+      - name: Compilar solución en modo Release
+        run: msbuild IUVendedor.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=bin\app.publish
+
+      - name: Subir archivos a Somee por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ftp://ftp.somee.com
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./IUVendedor/bin/app.publish
