@@ -20,8 +20,11 @@ jobs:
       - name: Compilar solución en Release
         run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release
 
-      - name: Buscar carpetas app.publish
-        run: dir SistemaCateringParaEventos /s /b | findstr app.publish$
+      - name: Buscar carpetas app.publish (PowerShell)
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path SistemaCateringParaEventos -Recurse -Directory -Filter "app.publish" | ForEach-Object { $_.FullName }
+
 
       - name: Publicar proyecto IUVendedor
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj /p:Configuration=Release /t:Publish /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
