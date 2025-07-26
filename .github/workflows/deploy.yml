@@ -29,7 +29,11 @@ jobs:
           msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
           /p:Configuration=Release `
           /p:DeployOnBuild=true `
+          /p:WebPublishMethod=FileSystem `
           /p:PublishDir="$(pwd)/SistemaCateringParaEventos/publish_output/"
+
+      - name: Mostrar archivos publicados
+        run: Get-ChildItem -Recurse SistemaCateringParaEventos/publish_output
 
 
       - name: Verificar carpeta publicada
