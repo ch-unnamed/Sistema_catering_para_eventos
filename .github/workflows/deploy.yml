@@ -24,11 +24,9 @@ jobs:
       - name: Compilar proyecto IUsuarios Release
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release
 
-      - name: Copiar archivos publicados manualmente (todo bin)
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path SistemaCateringParaEventos/IUVendedor/bin/app.publish
-          Copy-Item -Path SistemaCateringParaEventos/IUVendedor/bin/**/*.* -Destination SistemaCateringParaEventos/IUVendedor/bin/app.publish -Recurse -Force
+      - name: Publicar proyecto IUsuarios en Release
+        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=publish_output
+
 
       - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish
@@ -36,17 +34,18 @@ jobs:
       - name: 📂 Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: 155.254.246.25
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          port: 21
-          server-dir: /www.SistemaDeCatering.somee.com/
-          dangerous-clean-slate: true
-          local-dir: SistemaCateringParaEventos/IUVendedor/bin/app.publish/
-          exclude: |
+            server: 155.254.246.25
+            username: ${{ secrets.FTP_USERNAME }}
+            password: ${{ secrets.FTP_PASSWORD }}
+            protocol: ftp
+            port: 21
+            server-dir: /www.SistemaDeCatering.somee.com/
+            dangerous-clean-slate: true
+            local-dir: publish_output/
+            exclude: |
               **/packages/**
               **/*.nupkg
               **/*.config
               **/*.cs
               **/*.csproj
+
