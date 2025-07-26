@@ -26,11 +26,12 @@ jobs:
       - name: Compilar y publicar (ASP.NET clásico)
         run: |
           msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
-            /p:Configuration=Release `
-            /p:DeployOnBuild=true `
-            /p:WebPublishMethod=FileSystem `
-            /p:PublishDir="$(System.DefaultWorkingDirectory)\publish_output\" `
-            /p:Platform="Any CPU"
+           /p:Configuration=Release `
+          /p:DeployOnBuild=true `
+          /p:WebPublishMethod=FileSystem `
+          /p:PublishDir="$(pwd)\publish_output\" `
+          /p:Platform="Any CPU"
+
 
       - name: Verificar contenido publicado
         run: dir publish_output /s
