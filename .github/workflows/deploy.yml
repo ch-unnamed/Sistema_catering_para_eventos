@@ -16,7 +16,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Restaurar paquetes NuGet
-        run: nuget restore IUVendedor.sln
+        run: nuget restore SistemaCateringParaEventos.sln
 
       - name: Compilar solución en modo Release
         run: msbuild IUVendedor.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=bin\app.publish
