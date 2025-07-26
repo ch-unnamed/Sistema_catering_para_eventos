@@ -21,11 +21,19 @@ jobs:
       - name: Limpiar solución
         run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /t:Clean
 
+      - name: Crear carpeta de publicación
+        run: mkdir SistemaCateringParaEventos/publish_output
+
       - name: Compilar y publicar proyecto IUsuarios en Release
-        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=publish_output/
+        run: |
+          msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
+            /p:Configuration=Release `
+            /p:DeployOnBuild=true `
+            /p:PublishProfile=FolderProfile `
+            /p:PublishDir="$(pwd)/SistemaCateringParaEventos/publish_output/"
 
       - name: Verificar carpeta publicada
-        run: dir publish_output
+        run: dir SistemaCateringParaEventos\publish_output
 
       - name: 📂 Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -37,7 +45,7 @@ jobs:
           port: 21
           server-dir: /www.SistemaDeCatering.somee.com/
           dangerous-clean-slate: true
-          local-dir: publish_output/
+          local-dir: SistemaCateringParaEventos/publish_output/
           exclude: |
             **/packages/**
             **/*.nupkg
