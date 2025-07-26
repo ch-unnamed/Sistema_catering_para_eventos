@@ -15,6 +15,9 @@ jobs:
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
+      - name: Restaurar paquetes NuGet
+        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
+
       - name: Compilar proyecto IUsuarios Release
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release
 
