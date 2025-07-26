@@ -20,6 +20,7 @@ jobs:
       - name: Restaurar paquetes NuGet
         run: nuget restore SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj
 
+
       - name: Compilar y publicar (ASP.NET clásico)
         run: |
           msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
