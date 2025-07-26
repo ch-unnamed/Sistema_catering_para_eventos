@@ -27,10 +27,10 @@ jobs:
       - name: Compilar y publicar proyecto IUsuarios en Release
         run: |
           msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
-            /p:Configuration=Release `
-            /p:DeployOnBuild=true `
-            /p:PublishProfile=FolderProfile `
-            /p:PublishDir="$(pwd)/SistemaCateringParaEventos/publish_output/"
+          /p:Configuration=Release `
+          /p:DeployOnBuild=true `
+          /p:PublishDir="$(pwd)/SistemaCateringParaEventos/publish_output/"
+
 
       - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos\publish_output
