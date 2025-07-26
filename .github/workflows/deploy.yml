@@ -15,6 +15,12 @@ jobs:
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
+      - name: Restaurar paquetes NuGet (modo offline)
+        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln -NoCache -DisableParallelProcessing
+
+      - name: Limpiar solución
+        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /t:Clean
+
       - name: Compilar proyecto IUsuarios Release
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release
 
