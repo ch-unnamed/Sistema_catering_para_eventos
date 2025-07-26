@@ -9,8 +9,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout código fuente
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
@@ -18,11 +17,11 @@ jobs:
       - name: Restaurar paquetes NuGet
         run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
 
-      - name: Compilar y publicar IUVendedor
-        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+      - name: Compilar proyecto IUsuarios en Release
+        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release
 
-      - name: Verificar carpeta publicada
-        run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+      - name: Listar carpeta Release
+        run: dir SistemaCateringParaEventos/IUVendedor/bin/Release
 
       - name: Subir a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -30,4 +29,4 @@ jobs:
           server: ftp.somee.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+          local-dir: SistemaCateringParaEventos/IUVendedor/bin/Release/
