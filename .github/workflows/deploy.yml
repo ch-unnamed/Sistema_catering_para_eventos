@@ -12,18 +12,8 @@ jobs:
       - name: Checkout código fuente
         uses: actions/checkout@v3
 
-      - name: Ver estructura del repo
-        run: dir
-
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
-
-      - name: Ver estructura completa del proyecto
-        shell: pwsh
-        run: Get-ChildItem -Recurse | ForEach-Object { $_.FullName }
-
-      - name: Restaurar paquetes NuGet
-        run: nuget restore SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj
 
       - name: Compilar y publicar IUVendedor
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
