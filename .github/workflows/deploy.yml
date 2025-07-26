@@ -38,7 +38,6 @@ jobs:
         shell: powershell
         run: Get-ChildItem -Recurse publish_output
 
-
       - name: Deploy por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -50,3 +49,4 @@ jobs:
           protocol: ftp
           port: 21
           dangerous-clean-slate: true
+
