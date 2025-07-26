@@ -24,8 +24,11 @@ jobs:
       - name: Restaurar paquetes NuGet
         run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
 
-      - name: Compilar solución en modo Release
-        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=SistemaCateringParaEventos/bin/app.publish
+      - name: Compilar solución en modo Release y publicar
+        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/bin/app.publish/
+
+      - name: Listar archivos publicados
+        run: dir SistemaCateringParaEventos/bin/app.publish
 
       - name: Subir archivos a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -34,4 +37,3 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./SistemaCateringParaEventos/bin/app.publish/
-
