@@ -21,6 +21,9 @@ jobs:
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
+      - name: Listar contenido de SistemaCateringParaEventos (para ver dónde está el csproj)
+        run: dir SistemaCateringParaEventos /s /b
+
       - name: Restaurar paquetes NuGet
         run: nuget restore SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj
 
