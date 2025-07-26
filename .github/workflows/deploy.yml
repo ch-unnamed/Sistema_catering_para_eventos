@@ -14,6 +14,18 @@ jobs:
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
+      - name: Listar archivos .csproj en todo el repo (PowerShell)
+        shell: pwsh
+        run: |
+          Write-Host "Buscando proyectos .csproj..."
+          Get-ChildItem -Path . -Recurse -Filter *.csproj | ForEach-Object { Write-Host $_.FullName }
+
+      - name: Listar todas las carpetas (PowerShell)
+        shell: pwsh
+        run: |
+          Write-Host "Listando estructura de carpetas y archivos..."
+          Get-ChildItem -Path . -Recurse | ForEach-Object { Write-Host $_.FullName }
+
       - name: Restaurar paquetes NuGet
         run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
 
@@ -23,10 +35,11 @@ jobs:
       - name: Buscar carpetas app.publish (PowerShell)
         shell: pwsh
         run: |
-          Get-ChildItem -Path SistemaCateringParaEventos -Recurse -Directory -Filter "app.publish" | ForEach-Object { $_.FullName }
+          Write-Host "Buscando carpetas app.publish..."
+          Get-ChildItem -Path . -Recurse -Directory -Filter "app.publish" | ForEach-Object { Write-Host $_.FullName }
 
-
-      - name: Publicar proyecto IUVendedor
+      # Después de confirmar las rutas, ajusta esta parte con las rutas correctas:
+      - name: Publicar proyecto IUVendedor (ajustar ruta según corresponda)
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj /p:Configuration=Release /t:Publish /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
       - name: Listar carpeta publicada
