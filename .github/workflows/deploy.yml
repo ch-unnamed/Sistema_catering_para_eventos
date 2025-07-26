@@ -15,20 +15,17 @@ jobs:
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Restaurar paquetes NuGet
-        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
-
       - name: Compilar proyecto IUsuarios Release
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release
 
-      - name: Copiar archivos publicados manualmente
+      - name: Copiar archivos publicados manualmente (todo bin)
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path SistemaCateringParaEventos/IUVendedor/bin/app.publish
-          Copy-Item -Path SistemaCateringParaEventos/IUVendedor/bin/Release/* -Destination SistemaCateringParaEventos/IUVendedor/bin/app.publish -Recurse -Force
+          Copy-Item -Path SistemaCateringParaEventos/IUVendedor/bin/**/*.* -Destination SistemaCateringParaEventos/IUVendedor/bin/app.publish -Recurse -Force
 
       - name: Verificar carpeta publicada
-        run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+        run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish
 
       - name: Subir a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
