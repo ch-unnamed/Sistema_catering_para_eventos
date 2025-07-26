@@ -23,10 +23,10 @@ jobs:
         run: Get-ChildItem -Recurse | ForEach-Object { $_.FullName }
 
       - name: Restaurar paquetes NuGet
-        run: nuget restore SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj
+        run: nuget restore SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj
 
       - name: Compilar y publicar IUVendedor
-        run: msbuild SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
       - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
