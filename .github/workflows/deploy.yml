@@ -44,7 +44,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: SistemaCateringParaEventos/IUVendedor/obj/Release/Package/PackageTmp
+          local-dir: SistemaCateringParaEventos/IUVendedor/obj/Release/Package/PackageTmp/
           server-dir: /www.SistemaDeCatering.somee.com/
           protocol: ftp
           port: 21
