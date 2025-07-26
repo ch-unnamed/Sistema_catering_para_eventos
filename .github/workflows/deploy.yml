@@ -26,15 +26,20 @@ jobs:
 
       - name: Compilar y publicar proyecto IUsuarios en Release
         run: |
+          $publishPath = Resolve-Path SistemaCateringParaEventos/publish_output
           msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
           /p:Configuration=Release `
           /p:DeployOnBuild=true `
           /p:WebPublishMethod=FileSystem `
-          /p:PublishDir="$(pwd)/SistemaCateringParaEventos/publish_output/"
+          /p:PublishDir="$publishPath\"
 
       - name: Mostrar archivos publicados
-        run: Get-ChildItem -Recurse SistemaCateringParaEventos/publish_output
-
+        run: |
+          if (Test-Path SistemaCateringParaEventos/publish_output) {
+            Get-ChildItem -Recurse SistemaCateringParaEventos/publish_output
+          } else {
+            Write-Error "La carpeta publish_output no fue generada correctamente."
+          }
 
       - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos\publish_output
