@@ -15,18 +15,17 @@ jobs:
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Listar todos los archivos .csproj para saber la ruta exacta
-        shell: pwsh
-        run: |
-          Write-Host "Buscando archivos .csproj en el repositorio..."
-          Get-ChildItem -Path . -Recurse -Filter *.csproj | ForEach-Object { Write-Host $_.FullName }
+      - name: Restaurar paquetes NuGet
+        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
 
-      # --- IMPORTANTE: en el siguiente paso reemplazá la ruta del csproj por la que viste en el paso anterior ---
-      - name: Compilar y publicar proyecto
-        run: msbuild Ruta/Correcta/Del/Proyecto.csproj /p:Configuration=Release /t:Publish /p:PublishDir=Ruta/Correcta/Del/Proyecto/bin/app.publish/
+      - name: Compilar solución en Release
+        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release
+
+      - name: Compilar y publicar proyecto IUsuarios
+        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /t:Publish /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
       - name: Listar carpeta publicada
-        run: dir Ruta/Correcta/Del/Proyecto/bin/app.publish/
+        run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
       - name: Subir a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -34,4 +33,4 @@ jobs:
           server: ftp.somee.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: Ruta/Correcta/Del/Proyecto/bin/app.publish/
+          local-dir: SistemaCateringParaEventos/IUVendedor/bin/app.publish/
