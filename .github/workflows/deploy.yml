@@ -1,62 +1,43 @@
-name: Deploy ASP.NET Framework App to Somee via FTP
+name: Deploy ASP.NET Framework a FTP
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout código fuente
+      - name: Clonar el repositorio
         uses: actions/checkout@v3
 
       - name: Instalar MSBuild
-        uses: microsoft/setup-msbuild@v1.3.1
-
-      - name: Restaurar paquetes NuGet (modo offline)
-        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln -NoCache -DisableParallelProcessing
-
-      - name: Limpiar solución
-        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /t:Clean
-
-      - name: Crear carpeta de publicación
-        run: mkdir SistemaCateringParaEventos/publish_output
-
-      - name: Compilar y publicar proyecto IUsuarios en Release
-        run: |
-          $publishPath = Resolve-Path SistemaCateringParaEventos/publish_output
-          msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
-          /p:Configuration=Release `
-          /p:DeployOnBuild=true `
-          /p:WebPublishMethod=FileSystem `
-          /p:PublishDir="$publishPath\"
-
-      - name: Mostrar archivos publicados
-        run: |
-          if (Test-Path SistemaCateringParaEventos/publish_output) {
-            Get-ChildItem -Recurse SistemaCateringParaEventos/publish_output
-          } else {
-            Write-Error "La carpeta publish_output no fue generada correctamente."
-          }
-
-      - name: Verificar carpeta publicada
-        run: dir SistemaCateringParaEventos\publish_output
-
-      - name: 📂 Deploy to FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: microsoft/setup-msbuild@v1.1
         with:
-          server: 155.254.246.25
+          vs-version: 'latest'
+
+      - name: Restaurar paquetes NuGet
+        run: nuget restore SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj
+
+      - name: Compilar y publicar (ASP.NET clásico)
+        run: |
+          msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj `
+            /p:Configuration=Release `
+            /p:DeployOnBuild=true `
+            /p:WebPublishMethod=FileSystem `
+            /p:PublishDir="$(pwd)\publish_output" `
+            /p:Platform="Any CPU"
+
+      - name: Verificar contenido publicado
+        run: |
+          echo "Contenido de publish_output:"
+          dir publish_output /s
+
+      - name: Deploy por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          port: 21
-          server-dir: /www.SistemaDeCatering.somee.com/
-          dangerous-clean-slate: true
-          local-dir: SistemaCateringParaEventos/publish_output/
-          exclude: |
-            **/packages/**
-            **/*.nupkg
-            **/*.cs
-            **/*.csproj
+          local-dir: publish_output
