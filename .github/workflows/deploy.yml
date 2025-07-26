@@ -12,17 +12,15 @@ jobs:
       - name: Checkout código fuente
         uses: actions/checkout@v3
 
-      - name: Listar estructura raíz del repo
+      - name: Ver estructura del repo
         run: dir
-
-      - name: Listar contenido de SistemaCateringParaEventos
-        run: dir SistemaCateringParaEventos
 
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Listar contenido de SistemaCateringParaEventos (para ver dónde está el csproj)
-        run: dir SistemaCateringParaEventos /s /b
+      - name: Ver estructura completa del proyecto
+        shell: pwsh
+        run: Get-ChildItem -Recurse | ForEach-Object { $_.FullName }
 
       - name: Restaurar paquetes NuGet
         run: nuget restore SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj
@@ -30,7 +28,7 @@ jobs:
       - name: Compilar y publicar IUVendedor
         run: msbuild SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
-      - name: Listar carpeta publicada
+      - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
       - name: Subir a Somee por FTP
@@ -40,5 +38,3 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./SistemaCateringParaEventos/IUVendedor/bin/app.publish/
-
-
