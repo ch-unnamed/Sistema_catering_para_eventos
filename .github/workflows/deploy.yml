@@ -33,16 +33,6 @@ jobs:
       - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish
 
-      - name: 🔥 Limpiar directorio remoto completamente (FTP)
-        uses: sebastianpopp/ftp-action@v1
-        with:
-          host: 155.254.246.25
-          user: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          command: |
-            cd /www.SistemaDeCatering.somee.com/
-            mdelete *
-
       - name: 📂 Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -52,4 +42,4 @@ jobs:
             protocol: ftp
             port: 21
             server-dir: /www.SistemaDeCatering.somee.com/
-            delete: true
+            dangerous-clean-slate: true 
