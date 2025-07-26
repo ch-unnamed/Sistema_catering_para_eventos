@@ -5,7 +5,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: windows-latest
 
     steps:
@@ -18,8 +18,10 @@ jobs:
           vs-version: 'latest'
 
       - name: Restaurar paquetes NuGet
-        run: nuget restore SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj
+        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
 
+      - name: Crear carpeta de publicación
+        run: mkdir publish_output
 
       - name: Compilar y publicar (ASP.NET clásico)
         run: |
@@ -27,13 +29,11 @@ jobs:
             /p:Configuration=Release `
             /p:DeployOnBuild=true `
             /p:WebPublishMethod=FileSystem `
-            /p:PublishDir="$(System.DefaultWorkingDirectory)\publish_output" `
+            /p:PublishDir="$(System.DefaultWorkingDirectory)\publish_output\" `
             /p:Platform="Any CPU"
 
       - name: Verificar contenido publicado
-        run: |
-          echo "Contenido de publish_output:"
-          dir publish_output /s
+        run: dir publish_output /s
 
       - name: Deploy por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -42,4 +42,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: publish_output
-
+          server-dir: /www.SistemaDeCatering.somee.com/
+          protocol: ftp
+          port: 21
+          dangerous-clean-slate: true
