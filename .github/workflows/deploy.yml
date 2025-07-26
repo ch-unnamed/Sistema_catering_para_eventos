@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Clonar el repositorio
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.1
@@ -26,7 +26,7 @@ jobs:
             /p:Configuration=Release `
             /p:DeployOnBuild=true `
             /p:WebPublishMethod=FileSystem `
-            /p:PublishDir="$(pwd)\publish_output" `
+            /p:PublishDir="$(System.DefaultWorkingDirectory)\publish_output" `
             /p:Platform="Any CPU"
 
       - name: Verificar contenido publicado
