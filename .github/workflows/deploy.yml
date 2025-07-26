@@ -12,6 +12,15 @@ jobs:
       - name: Checkout código fuente
         uses: actions/checkout@v3
 
+      - name: Listar estructura raíz del repo
+        run: dir
+
+      - name: Listar contenido de Sistema_catering_para_eventos
+        run: dir Sistema_catering_para_eventos
+
+      - name: Listar contenido de Sistema_catering_para_eventos/SistemaCateringParaEventos
+        run: dir Sistema_catering_para_eventos/SistemaCateringParaEventos
+
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
