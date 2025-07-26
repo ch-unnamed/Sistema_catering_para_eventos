@@ -9,41 +9,24 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout código fuente
+        uses: actions/checkout@v3
 
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Listar archivos .csproj en todo el repo (PowerShell)
+      - name: Listar todos los archivos .csproj para saber la ruta exacta
         shell: pwsh
         run: |
-          Write-Host "Buscando proyectos .csproj..."
+          Write-Host "Buscando archivos .csproj en el repositorio..."
           Get-ChildItem -Path . -Recurse -Filter *.csproj | ForEach-Object { Write-Host $_.FullName }
 
-      - name: Listar todas las carpetas (PowerShell)
-        shell: pwsh
-        run: |
-          Write-Host "Listando estructura de carpetas y archivos..."
-          Get-ChildItem -Path . -Recurse | ForEach-Object { Write-Host $_.FullName }
-
-      - name: Restaurar paquetes NuGet
-        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
-
-      - name: Compilar solución en Release
-        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release
-
-      - name: Buscar carpetas app.publish (PowerShell)
-        shell: pwsh
-        run: |
-          Write-Host "Buscando carpetas app.publish..."
-          Get-ChildItem -Path . -Recurse -Directory -Filter "app.publish" | ForEach-Object { Write-Host $_.FullName }
-
-      # Después de confirmar las rutas, ajusta esta parte con las rutas correctas:
-      - name: Publicar proyecto IUVendedor (ajustar ruta según corresponda)
-        run: msbuild SistemaCateringParaEventos/IUVendedor/IUVendedor.csproj /p:Configuration=Release /t:Publish /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+      # --- IMPORTANTE: en el siguiente paso reemplazá la ruta del csproj por la que viste en el paso anterior ---
+      - name: Compilar y publicar proyecto
+        run: msbuild Ruta/Correcta/Del/Proyecto.csproj /p:Configuration=Release /t:Publish /p:PublishDir=Ruta/Correcta/Del/Proyecto/bin/app.publish/
 
       - name: Listar carpeta publicada
-        run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+        run: dir Ruta/Correcta/Del/Proyecto/bin/app.publish/
 
       - name: Subir a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -51,4 +34,4 @@ jobs:
           server: ftp.somee.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+          local-dir: Ruta/Correcta/Del/Proyecto/bin/app.publish/
