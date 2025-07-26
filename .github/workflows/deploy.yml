@@ -15,20 +15,17 @@ jobs:
       - name: Listar estructura raíz del repo
         run: dir
 
-      - name: Listar contenido de Sistema_catering_para_eventos
-        run: dir Sistema_catering_para_eventos
-
-      - name: Listar contenido de Sistema_catering_para_eventos/SistemaCateringParaEventos
-        run: dir Sistema_catering_para_eventos/SistemaCateringParaEventos
+      - name: Listar contenido de SistemaCateringParaEventos
+        run: dir SistemaCateringParaEventos
 
       - name: Instalar MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Restaurar paquetes NuGet
-        run: nuget restore Sistema_catering_para_eventos/SistemaCateringParaEventos/SistemaCateringParaEventos.sln
+        run: nuget restore SistemaCateringParaEventos/SistemaCateringParaEventos.sln
 
       - name: Compilar solución en modo Release
-        run: msbuild Sistema_catering_para_eventos/SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=Sistema_catering_para_eventos/SistemaCateringParaEventos/bin/app.publish
+        run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=SistemaCateringParaEventos/bin/app.publish
 
       - name: Subir archivos a Somee por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -36,4 +33,4 @@ jobs:
           server: ftp.somee.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./Sistema_catering_para_eventos/SistemaCateringParaEventos/bin/app.publish
+          local-dir: ./SistemaCateringParaEventos/bin/app.publish
