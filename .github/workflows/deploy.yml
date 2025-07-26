@@ -21,10 +21,10 @@ jobs:
       - name: Compilar solución en Release
         run: msbuild SistemaCateringParaEventos/SistemaCateringParaEventos.sln /p:Configuration=Release
 
-      - name: Compilar y publicar proyecto IUsuarios
-        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /t:Publish /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
+      - name: Publicar proyecto IUsuarios con DeployOnBuild
+        run: msbuild SistemaCateringParaEventos/IUVendedor/IUsuarios.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishDir=SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
-      - name: Listar carpeta publicada
+      - name: Verificar carpeta publicada
         run: dir SistemaCateringParaEventos/IUVendedor/bin/app.publish/
 
       - name: Subir a Somee por FTP
