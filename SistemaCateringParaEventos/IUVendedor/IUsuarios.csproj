@@ -497,6 +497,7 @@
     <Content Include="Scripts\JS-EVENTO\guardar.js" />
     <Content Include="Scripts\JS-EVENTO\modal.js" />
     <Content Include="Scripts\JS-ORDENES\base.js" />
+    <Content Include="Scripts\JS-ORDENES\cargarInsumos.js" />
     <Content Include="Scripts\JS-ORDENES\datatable.js" />
     <Content Include="Scripts\JS-ORDENES\editar.js" />
     <Content Include="Scripts\JS-ORDENES\modal.js" />

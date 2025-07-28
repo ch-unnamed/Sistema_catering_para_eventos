@@ -39,7 +39,7 @@ tabledata = $('#tabla').DataTable({
             "defaultContent": `<div class="btn-group gap-2">
                 <button class="btn btn-primary btn-sm rounded-2 btn-editar"><i class="fas fa-pen"></i></button>
                 <button class="btn btn-info btn-sm rounded-2 btn-ver-platosCotizacionMenu">Ver platos</button>
-                <button class= "btn btn-secondary btn-sm rounded-2 btn-cargar-insumos d-none" > Cargar Insumos</button> 
+                <button class= "btn btn-secondary btn-sm rounded-2 btn-cargar-insumos d-none" >Cargar Insumos</button> 
                 </div>`,
             "orderable": false,
             "searchable": false

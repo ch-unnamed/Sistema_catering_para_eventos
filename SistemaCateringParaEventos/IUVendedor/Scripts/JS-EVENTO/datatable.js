@@ -54,10 +54,12 @@
             },
             {
                 "data": null,
-                "defaultContent": '<div class="btn-group">' +
+                "defaultContent": (idRol != 1) ? (
+                    '<div class="btn-group">' +
                     '<button class="btn btn-primary btn-sm rounded-2 btn-editar"><i class="fas fa-pen"></i></button>' +
                     '<button class="btn btn-danger btn-sm rounded-2 ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>' +
-                    '</div>',
+                    '</div>'
+                ) : '',
                 "orderable": false,
                 "searchable": false
             }
