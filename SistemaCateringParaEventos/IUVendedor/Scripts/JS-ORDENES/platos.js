@@ -9,7 +9,7 @@ async function consultarPlatos(IdCotizacionMenu){
         return data;
 
     } catch (error) {
-
+        console.log(error);
     }
 }
 
@@ -51,4 +51,3 @@ $("#tabla tbody").on("click", '.btn-ver-platosCotizacionMenu', async function ()
 
     await verPlatos(data.Id);
 })
-

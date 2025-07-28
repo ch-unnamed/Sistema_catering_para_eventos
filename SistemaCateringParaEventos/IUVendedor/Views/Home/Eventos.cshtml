@@ -15,11 +15,11 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
+                <button id="crearEvento" type="button" class="btn btn-success" onclick="abrirModal(null)">Crear Nuevo</button>
             </div>
         </div>
 
-        <hr />
+        <hr id="hr"/>
 
         <table id="tabla" class="display cell-border" style="width:100%">
             <thead>
@@ -34,7 +34,7 @@
                     <th>Provincia</th>
                     <th>Fecha</th>
                     <th>Cliente</th>
-                    <th></th>
+                    <th ></th>
                 </tr>
             </thead>
             <tbody>
@@ -154,6 +154,12 @@
         var tabledata;
         var filaSeleccionada;
         const urlListarEventos = '@Url.Action("ListarEventos", "Home")';
+        const idRol = document.getElementById("idUsuario").value;
+
+        if (idRol == 1) {
+            $("#crearEvento").addClass('d-none');
+            $("#hr").addClass('d-none');
+        }
 
     </script>
 
